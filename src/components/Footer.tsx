@@ -1,0 +1,282 @@
+"use client";
+
+import {
+  MapPin,
+  Mail,
+  Phone,
+  Heart,
+  Instagram,
+  Twitter,
+  Facebook,
+  ArrowUp,
+} from "lucide-react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+
+const Footer = () => {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const navigationLinks = [
+    { href: "/", label: "Home" },
+    { href: "/umkm", label: "Jelajahi UMKM" },
+    { href: "/auth?mode=login", label: "Login" },
+    { href: "/auth?mode=register", label: "Daftar" },
+  ];
+
+  const companyLinks = [
+    { href: "/about", label: "Tentang Kami" },
+    { href: "/blog", label: "Blog" },
+    { href: "/careers", label: "Karir" },
+    { href: "/press", label: "Press Kit" },
+  ];
+
+  const supportLinks = [
+    { href: "/help", label: "Pusat Bantuan" },
+    { href: "/contact", label: "Kontak" },
+    { href: "/privacy", label: "Privacy Policy" },
+    { href: "/terms", label: "Terms of Service" },
+  ];
+
+  const socialLinks = [
+    {
+      href: "https://instagram.com/mapinaja",
+      label: "Instagram",
+      icon: Instagram,
+      color: "hover:text-pink-600",
+    },
+    {
+      href: "https://twitter.com/mapinaja",
+      label: "Twitter",
+      icon: Twitter,
+      color: "hover:text-blue-400",
+    },
+    {
+      href: "https://facebook.com/mapinaja",
+      label: "Facebook",
+      icon: Facebook,
+      color: "hover:text-blue-600",
+    },
+  ];
+
+  return (
+    <footer className="bg-gradient-to-b from-[#FAF3E0] to-[#DCC1A0] border-t border-[#DCC1A0] relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-10 left-10 w-64 h-64 bg-[#8B5E3C] rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-80 h-80 bg-[#A3B18A] rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Footer Content */}
+        <div className="py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
+            {/* Brand Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="lg:col-span-1 space-y-6"
+            >
+              {/* Logo */}
+              <Link href="/" className="inline-flex items-center gap-2 group">
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className="w-10 h-10 bg-gradient-to-br from-[#8B5E3C] to-[#A3B18A] rounded-lg flex items-center justify-center shadow-lg"
+                >
+                  <MapPin className="h-5 w-5 text-white" />
+                </motion.div>
+                <span className="text-2xl font-bold bg-gradient-to-r from-[#8B5E3C] to-[#A3B18A] bg-clip-text text-transparent">
+                  MapinAja
+                </span>
+              </Link>
+
+              {/* Description */}
+              <p className="text-[#3E2C23]/80 leading-relaxed text-lg">
+                Temukan yang{" "}
+                <span className="text-[#8B5E3C] font-semibold">Dekat</span>,
+                Dukung yang{" "}
+                <span className="text-[#A3B18A] font-semibold">Lokal</span>.
+                Platform direktori UMKM Indonesia yang menghubungkan komunitas
+                dengan produk terbaik.
+              </p>
+
+              {/* Social Links */}
+              <div className="flex items-center gap-4">
+                {socialLinks.map((social, index) => (
+                  <motion.a
+                    key={index}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.2, y: -2 }}
+                    whileTap={{ scale: 0.9 }}
+                    className={`p-2 bg-white/80 backdrop-blur-sm rounded-xl border border-[#DCC1A0] text-[#3E2C23]/60 transition-all duration-200 ${social.color} hover:shadow-lg hover:border-[#8B5E3C]`}
+                  >
+                    <social.icon className="h-5 w-5" />
+                  </motion.a>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Navigation Links */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="space-y-6"
+            >
+              <h3 className="text-lg font-bold text-[#3E2C23]">Navigasi</h3>
+              <div className="space-y-3">
+                {navigationLinks.map((link, index) => (
+                  <Link
+                    key={index}
+                    href={link.href}
+                    className="block text-[#3E2C23]/70 hover:text-[#8B5E3C] transition-colors duration-200 font-medium group"
+                  >
+                    <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">
+                      {link.label}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Perusahaan */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="space-y-6"
+            >
+              <h3 className="text-lg font-bold text-[#3E2C23]">Perusahaan</h3>
+              <div className="space-y-3">
+                {companyLinks.map((link, index) => (
+                  <Link
+                    key={index}
+                    href={link.href}
+                    className="block text-[#3E2C23]/70 hover:text-[#8B5E3C] transition-colors duration-200 font-medium group"
+                  >
+                    <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">
+                      {link.label}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Support & Contact */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="space-y-6"
+            >
+              <h3 className="text-lg font-bold text-[#3E2C23]">Support</h3>
+              <div className="space-y-3">
+                {supportLinks.map((link, index) => (
+                  <Link
+                    key={index}
+                    href={link.href}
+                    className="block text-[#3E2C23]/70 hover:text-[#8B5E3C] transition-colors duration-200 font-medium group"
+                  >
+                    <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">
+                      {link.label}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+
+              {/* Contact Info */}
+              <div className="pt-4 space-y-3">
+                <a
+                  href="mailto:hello@mapinaja.com"
+                  className="flex items-center gap-3 text-[#3E2C23]/70 hover:text-[#8B5E3C] transition-colors duration-200 group"
+                >
+                  <Mail className="h-5 w-5 text-[#8B5E3C] group-hover:scale-110 transition-transform" />
+                  <span className="font-medium">hello@mapinaja.com</span>
+                </a>
+                <a
+                  href="tel:+6281234567890"
+                  className="flex items-center gap-3 text-[#3E2C23]/70 hover:text-[#8B5E3C] transition-colors duration-200 group"
+                >
+                  <Phone className="h-5 w-5 text-[#8B5E3C] group-hover:scale-110 transition-transform" />
+                  <span className="font-medium">+62 812 3456 7890</span>
+                </a>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="border-t border-[#DCC1A0] py-8"
+        >
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+            {/* Copyright */}
+            <div className="flex items-center gap-2 text-[#3E2C23]/70 text-sm">
+              <span>© {new Date().getFullYear()} MapinAja. Made with</span>
+              <motion.div
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                <Heart className="h-4 w-4 text-red-500 fill-current" />
+              </motion.div>
+              <span>in Indonesia</span>
+            </div>
+
+            {/* Additional Links */}
+            <div className="flex items-center gap-6 text-sm text-[#3E2C23]/70">
+              <Link
+                href="/privacy"
+                className="hover:text-[#8B5E3C] transition-colors"
+              >
+                Privacy
+              </Link>
+              <Link
+                href="/terms"
+                className="hover:text-[#8B5E3C] transition-colors"
+              >
+                Terms
+              </Link>
+              <Link
+                href="/sitemap"
+                className="hover:text-[#8B5E3C] transition-colors"
+              >
+                Sitemap
+              </Link>
+            </div>
+
+            {/* Back to Top Button */}
+            <motion.button
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={scrollToTop}
+              className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-[#DCC1A0] text-[#3E2C23] rounded-xl hover:bg-white hover:border-[#8B5E3C] transition-all duration-200 font-medium"
+            >
+              <ArrowUp className="h-4 w-4" />
+              Back to Top
+            </motion.button>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Floating UMKM Elements */}
+      <div className="absolute bottom-20 left-10 opacity-10">
+        <div className="text-6xl">🛍️</div>
+      </div>
+      <div className="absolute top-20 right-10 opacity-10">
+        <div className="text-6xl">☕</div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
