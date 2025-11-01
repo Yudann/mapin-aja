@@ -1,431 +1,337 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, Variants } from "framer-motion";
-import {
-  MapPin,
-  Search,
-  ArrowRight,
-  MessageCircle,
-  Sparkles,
-  Star,
-  ChevronDown,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import React from "react";
+import { motion } from "framer-motion";
+import { MapPin, Store, TrendingUp, MessageCircle, Users } from "lucide-react";
+import Particles from "../HeroBg";
 
-// Types
-interface HeroProps {
-  className?: string;
-}
+const gradientPrimary =
+  "linear-gradient(to bottom right, var(--color-brown-accent), var(--color-brown-dark))";
+const gradientSecondary =
+  "linear-gradient(to bottom right, var(--color-brown-accent), var(--color-brown-light))";
 
-const HeroSection: React.FC<HeroProps> = ({ className = "" }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [counter1, setCounter1] = useState(0);
-  const [counter2, setCounter2] = useState(0);
-  const [counter3, setCounter3] = useState(0);
-
-  // Counter animation
-  useEffect(() => {
-    const animateCounter = (
-      setValue: React.Dispatch<React.SetStateAction<number>>,
-      target: number,
-      duration: number,
-      delay: number
-    ) => {
-      let start = 0;
-      const increment = target / (duration * 60);
-
-      const timer = setTimeout(() => {
-        const interval = setInterval(() => {
-          start += increment;
-          if (start >= target) {
-            setValue(target);
-            clearInterval(interval);
-          } else {
-            setValue(Math.round(start));
-          }
-        }, 1000 / 60);
-
-        return () => clearInterval(interval);
-      }, delay * 1000);
-
-      return () => clearTimeout(timer);
-    };
-
-    animateCounter(setCounter1, 5000, 2, 0.5);
-    animateCounter(setCounter2, 50, 2, 0.7);
-    animateCounter(setCounter3, 100, 2, 0.9);
-  }, []);
-
-  // Animation variants with proper typing
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3,
     },
-  };
+  },
+};
 
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.22, 1, 0.36, 1],
-      },
-    },
-  };
+const itemTitle = {
+  hidden: { y: 30, opacity: 0 },
+  show: { y: 0, opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
+};
 
+const itemContent = {
+  hidden: { opacity: 0, scale: 0.95 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
+const HeroSection = () => {
   return (
-    <section
-      className={`relative min-h-screen flex items-center bg-background overflow-hidden ${className}`}
-    >
-      {/* Background Decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* linear Orbs */}
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            x: [0, 30, 0],
-            y: [0, -30, 0],
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-20 -right-20 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-linear-to-br from-accent/30 to-transparent rounded-full blur-3xl"
+    <section className="relative min-h-screen bg-black text-white overflow-hidden pt-20">
+      {/* Background Particles - Diperbaiki untuk full height */}
+      <div className="absolute inset-0 z-0">
+        <Particles
+          particleColors={["#ffffff", "#ffffff"]}
+          particleCount={200}
+          particleSpread={10}
+          speed={0.1}
+          particleBaseSize={100}
+          moveParticlesOnHover={true}
+          alphaParticles={false}
+          disableRotation={false}
+          className="w-full h-full"
         />
-        <motion.div
-          animate={{
-            scale: [1, 1.3, 1],
-            x: [0, -30, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-20 -left-20 w-[400px] h-[400px] md:w-[600px] md:h-[600px] bg-linear-to-tr from-primary/20 to-transparent rounded-full blur-3xl"
-        />
-
-        {/* Floating Icons - Hidden on mobile */}
-        <motion.div
-          animate={{ y: [0, -20, 0], rotate: [0, 10, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="hidden lg:block absolute top-32 left-[10%] text-primary/10"
-        >
-          <MapPin className="w-12 h-12 lg:w-16 lg:h-16" />
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, 20, 0], rotate: [0, -10, 0] }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-          className="hidden lg:block absolute bottom-32 right-[15%] text-accent/10"
-        >
-          <MessageCircle className="w-16 h-16 lg:w-20 lg:h-20" />
-        </motion.div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-12 md:py-20">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center"
-        >
-          {/* Left Content */}
-          <div className="space-y-6 md:space-y-8 text-center lg:text-left order-2 lg:order-1">
-            {/* Badge */}
-            <motion.div variants={itemVariants}>
-              <Badge
-                variant="secondary"
-                className="inline-flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 border-2 border-border rounded-full text-primary text-xs md:text-sm font-semibold shadow-sm"
-              >
-                <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
-                <span className="whitespace-nowrap">
-                  Platform Direktori UMKM #1 di Indonesia
-                </span>
-              </Badge>
-            </motion.div>
+      {/* Kontainer Utama Animasi */}
+      <motion.div
+        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20"
+        variants={container}
+        initial="hidden"
+        animate="show"
+      >
+        {/* Main Hero Text */}
+        <div className="mb-16 sm:mb-24">
+          {/* Baris 1: Temukan UMKM */}
+          <motion.h1
+            variants={itemTitle}
+            className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-none mb-4"
+          >
+            <span className="text-white">Temukan</span>{" "}
+            <span className="relative inline-block">
+              <span className="text-brown-accent">UMKM</span>
+              {/* Icon Store - Diperbaiki positioning */}
+              <div className="absolute top-4 sm:top-6 lg:top-4 xl:top-6 -right-4 sm:-right-2 lg:-right-4 xl:-right-2 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 rounded-full overflow-hidden border-4 border-black shadow-xl transform -rotate-12 z-20">
+                <div
+                  className="w-full h-full flex items-center justify-center"
+                  style={{ background: gradientPrimary }}
+                >
+                  <Store className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 xl:w-14 xl:h-14 text-white" />
+                </div>
+              </div>
+            </span>
+          </motion.h1>
 
-            {/* Main Headline */}
-            <motion.div variants={itemVariants}>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-foreground leading-[1.1]">
-                Temukan UMKM,{" "}
-                <span className="relative inline-block">
-                  <span className="relative z-10 text-primary">
-                    Chat Langsung
+          {/* Baris 2: lokal di */}
+          <motion.h1
+            variants={itemTitle}
+            className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-none mb-4"
+          >
+            <span className="text-brown-light">lokal</span>{" "}
+            <span className="relative inline-block">
+              <span className="text-white">di</span>
+            </span>
+          </motion.h1>
+
+          {/* Baris 3: sekitar mu. */}
+          <motion.h1
+            variants={itemTitle}
+            className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-none"
+          >
+            <span className="text-white">sekitar</span>
+            <span className="relative inline-block ml-4">
+              <span className="text-white">mu.</span>
+              {/* Icon MapPin - Diperbaiki positioning */}
+              <div className="absolute -top-2 -right-2 w-12 h-12 sm:w-16 sm:h-16 lg:w-18 lg:h-18 xl:w-20 xl:h-20 rounded-full overflow-hidden border-4 border-black shadow-xl transform rotate-12 z-20">
+                <div
+                  className="w-full h-full flex items-center justify-center"
+                  style={{ background: gradientPrimary }}
+                >
+                  <MapPin className="w-6 h-6 sm:w-8 sm:h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 text-white" />
+                </div>
+              </div>
+            </span>
+          </motion.h1>
+        </div>
+
+        {/* Cards Section */}
+        <div className="grid lg:grid-cols-2 gap-6 max-w-5xl">
+          {/* Left Card - Statistics */}
+          <motion.div
+            variants={itemContent}
+            className="bg-white text-gray-900 rounded-3xl p-6 sm:p-8 shadow-2xl relative z-10"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-3">
+                <div className="flex -space-x-3">
+                  <div
+                    className="w-12 h-12 rounded-full border-4 border-white flex items-center justify-center text-white font-bold z-10"
+                    style={{ background: gradientPrimary }}
+                  >
+                    A
+                  </div>
+                  <div
+                    className="w-12 h-12 rounded-full border-4 border-white flex items-center justify-center font-bold text-brown-dark z-20"
+                    style={{ background: gradientSecondary }}
+                  >
+                    B
+                  </div>
+                  <div
+                    className="w-12 h-12 rounded-full border-4 border-white flex items-center justify-center text-white font-bold z-30"
+                    style={{
+                      background:
+                        "linear-gradient(to bottom right, var(--color-brown-dark), var(--color-brown-accent))",
+                    }}
+                  >
+                    C
+                  </div>
+                </div>
+                <div className="text-2xl font-black">+15K</div>
+              </div>
+              <div className="text-right">
+                <div className="text-xs text-gray-500 font-semibold mb-1">
+                  Top Spaces
+                </div>
+                <div className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-xl">
+                  <div
+                    className="w-6 h-6 rounded-lg"
+                    style={{ background: gradientPrimary }}
+                  ></div>
+                  <span className="font-bold text-sm text-brown-dark">
+                    fashion-talks
                   </span>
-                  <motion.span
-                    initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
-                    transition={{ delay: 1, duration: 0.8 }}
-                    className="absolute bottom-1 md:bottom-2 left-0 h-2 md:h-3 bg-accent/30 -z-10"
-                  />
-                </span>{" "}
-                & Belanja Lokal
-              </h1>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-gray-50 rounded-2xl p-4">
+                <div className="text-xs text-gray-500 font-semibold mb-2">
+                  New members
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="text-3xl font-black">+55</div>
+                  <TrendingUp className="w-5 h-5 text-brown-accent" />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-xl">
+                  <div className="w-6 h-6 bg-brown-dark rounded-lg flex items-center justify-center">
+                    <MessageCircle className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-bold text-sm text-brown-dark">
+                    general-chat
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-xl">
+                  <div className="w-6 h-6 bg-brown-accent rounded-lg flex items-center justify-center">
+                    <Users className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-bold text-sm text-brown-dark">
+                    workshop-group
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 bg-gray-50 rounded-2xl p-4">
+              <div className="text-xs text-gray-500 font-semibold mb-2">
+                New messages
+              </div>
+              <div className="text-3xl font-black">+29,127</div>
+            </div>
+          </motion.div>
+
+          {/* Right Side - Text & Cards */}
+          <div className="space-y-6">
+            {/* Description Text & Button */}
+            <motion.div variants={itemContent} className="relative z-10">
+              <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 leading-relaxed mb-8">
+                Platform direktori UMKM berbasis lokasi untuk membantu Anda
+                menemukan dan mendukung bisnis lokal.
+              </p>
+              <button className="bg-brown-accent hover:opacity-80 text-brown-dark font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center space-x-2 relative z-20">
+                <span>GET STARTED FREE</span>
+                <span className="text-2xl">✨</span>
+              </button>
             </motion.div>
 
-            {/* Description */}
-            <motion.p
-              variants={itemVariants}
-              className="text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0"
-            >
-              MapinAja menghubungkan kamu dengan ribuan UMKM lokal. Temukan
-              berdasarkan lokasi, chat langsung dengan penjual, dan dukung
-              ekonomi Indonesia.
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center lg:justify-start"
-            >
-              <Button
-                size="lg"
-                className="px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-bold shadow-xl"
+            {/* Bottom Cards Container */}
+            <motion.div variants={container} className="space-y-4">
+              {/* Automated Message Card */}
+              <motion.div
+                variants={itemContent}
+                className="bg-white text-gray-900 rounded-2xl p-6 shadow-xl relative z-10"
               >
-                <Search className="w-4 h-4 md:w-5 md:h-5" />
-                Jelajahi UMKM Sekarang
-              </Button>
+                <div className="text-xs text-gray-500 font-semibold mb-3">
+                  Automated Message
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div
+                    className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white font-bold"
+                    style={{ background: gradientPrimary }}
+                  >
+                    N
+                  </div>
+                  <div>
+                    <div className="font-bold mb-1">Nicole Anderson</div>
+                    <p className="text-sm text-gray-600">
+                      Hi Adam 👋 welcome to our community - the best first step
+                      is to join the #intros channel and let us know more about
+                      you!
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
 
-              <Button
-                variant="outline"
-                size="lg"
-                className="px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-bold border-2"
+              {/* Automations Card */}
+              <motion.div
+                variants={itemContent}
+                className="bg-white text-gray-900 rounded-2xl p-6 shadow-xl relative z-10"
               >
-                Daftar sebagai Seller
-                <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-              </Button>
-            </motion.div>
-
-            {/* Stats Counter */}
-            <motion.div
-              variants={itemVariants}
-              className="grid grid-cols-3 gap-4 md:gap-6 pt-6 md:pt-8 border-t-2 border-border"
-            >
-              <div className="text-center lg:text-left">
-                <div className="text-2xl md:text-3xl lg:text-4xl font-black text-primary mb-1">
-                  {counter1.toLocaleString()}+
+                <div className="text-xs text-gray-500 font-semibold mb-3">
+                  Automations
                 </div>
-                <div className="text-xs md:text-sm text-muted-foreground font-medium">
-                  UMKM Terdaftar
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between bg-gray-50 px-4 py-3 rounded-xl">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center">
+                        <div className="w-4 h-4 bg-white rounded-full"></div>
+                      </div>
+                      <span className="font-semibold">Renewal Reminder</span>
+                    </div>
+                    <div className="w-6 h-6 bg-gray-800 rounded-full"></div>
+                  </div>
+                  <div className="flex items-center justify-between bg-gray-50 px-4 py-3 rounded-xl">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-brown-accent rounded-lg flex items-center justify-center">
+                        <div className="w-4 h-4 bg-white rounded-full"></div>
+                      </div>
+                      <span className="font-semibold">Onboarding Flow</span>
+                    </div>
+                    <div className="w-6 h-6 bg-gray-800 rounded-full"></div>
+                  </div>
                 </div>
-              </div>
-              <div className="text-center lg:text-left">
-                <div className="text-2xl md:text-3xl lg:text-4xl font-black text-primary mb-1">
-                  {counter2}+
-                </div>
-                <div className="text-xs md:text-sm text-muted-foreground font-medium">
-                  Kota
-                </div>
-              </div>
-              <div className="text-center lg:text-left">
-                <div className="text-2xl md:text-3xl lg:text-4xl font-black text-primary mb-1">
-                  {counter3}K+
-                </div>
-                <div className="text-xs md:text-sm text-muted-foreground font-medium">
-                  Pengguna
-                </div>
-              </div>
+              </motion.div>
             </motion.div>
           </div>
+        </div>
+      </motion.div>
 
-          {/* Right Content - Interactive Cards */}
-          <motion.div
-            variants={itemVariants}
-            className="relative h-[600px] lg:h-[600px] order-2 lg:order-2"
-          >
-            {/* Main Feature Card */}
-            <motion.div
-              initial={{ opacity: 0, x: 50, rotateY: -20 }}
-              animate={{ opacity: 1, x: 0, rotateY: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="absolute top-0 right-0 w-full sm:w-[85%] h-[55%] sm:h-[65%]"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              <Card className="w-full h-full rounded-2xl md:rounded-3xl shadow-2xl border-2 border-border overflow-hidden">
-                <CardContent className="p-0 h-full">
-                  {/* Image */}
-                  <div className="relative h-[55%] sm:h-[60%] overflow-hidden">
-                    <motion.img
-                      animate={{ scale: isHovered ? 1.1 : 1 }}
-                      transition={{ duration: 0.6 }}
-                      src="https://images.unsplash.com/photo-1556740758-90de374c12ad?w=600&h=400&fit=crop"
-                      alt="UMKM Local"
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
-
-                    {/* Location Badge */}
-                    <motion.div
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1 }}
-                      className="absolute top-2 left-2 md:top-4 md:left-4"
-                    >
-                      <Badge
-                        variant="secondary"
-                        className="gap-1 md:gap-2 px-2 py-1 md:px-4 md:py-2 bg-background/95 backdrop-blur-sm shadow-lg"
-                      >
-                        <MapPin className="w-3 h-3 md:w-4 md:h-4 text-primary" />
-                        <span className="text-xs md:text-sm font-semibold text-foreground">
-                          500m dari kamu
-                        </span>
-                      </Badge>
-                    </motion.div>
-
-                    {/* Rating Badge */}
-                    <motion.div
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1.2 }}
-                      className="absolute top-2 right-2 md:top-4 md:right-4"
-                    >
-                      <Badge className="gap-1 px-2 py-1 md:px-3 md:py-2 bg-primary shadow-lg">
-                        <Star className="w-3 h-3 md:w-4 md:h-4 text-primary-foreground fill-primary-foreground" />
-                        <span className="text-xs md:text-sm font-bold text-primary-foreground">
-                          4.8
-                        </span>
-                      </Badge>
-                    </motion.div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-3 md:p-6 space-y-2 md:space-y-3">
-                    <h3 className="text-base md:text-xl font-bold text-foreground">
-                      Warung Kopi Kenangan
-                    </h3>
-                    <p className="text-xs md:text-sm text-muted-foreground">
-                      Kafe & Minuman • Buka hingga 22:00
-                    </p>
-
-                    {/* Chat Button */}
-                    <Button className="w-full py-2 md:py-3 bg-accent text-accent-foreground hover:bg-accent/90 rounded-xl font-semibold text-xs md:text-sm">
-                      <MessageCircle className="w-4 h-4 md:w-5 md:h-5" />
-                      Chat dengan Penjual
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Chat Notification Card */}
-            <motion.div
-              initial={{ opacity: 0, x: -50, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="absolute bottom-0  left-0 w-full sm:w-[80%] md:w-[70%]"
-            >
-              <Card className="rounded-xl md:rounded-2xl shadow-xl border-2 border-border">
-                <CardContent className="p-3 md:p-5">
-                  <div className="flex items-start gap-3 md:gap-4">
-                    <motion.div
-                      animate={{ scale: [1, 1.1, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-full flex items-center justify-center shrink-0"
-                    >
-                      <MessageCircle className="w-5 h-5 md:w-6 md:h-6 text-primary-foreground" />
-                    </motion.div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1 md:mb-2">
-                        <span className="font-bold text-foreground text-sm md:text-base">
-                          Chat Real-time
-                        </span>
-                        <motion.span
-                          animate={{ opacity: [1, 0.5, 1] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                          className="text-xs text-accent font-semibold"
-                        >
-                          • Online
-                        </motion.span>
-                      </div>
-                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                        {` "Apakah ada promo untuk hari ini? Saya tertarik dengan menu..." `}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Typing Indicator */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.5 }}
-                    className="flex items-center gap-2 mt-2 md:mt-3 ml-13 md:ml-16"
-                  >
-                    <div className="flex gap-1">
-                      {[0, 1, 2].map((i) => (
-                        <motion.div
-                          key={i}
-                          animate={{ y: [0, -5, 0] }}
-                          transition={{
-                            duration: 0.6,
-                            repeat: Infinity,
-                            delay: i * 0.1,
-                          }}
-                          className="w-1.5 h-1.5 md:w-2 md:h-2 bg-accent rounded-full"
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs text-muted-foreground">
-                      Penjual sedang mengetik...
-                    </span>
-                  </motion.div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Floating Badge - Review Count - Hidden on mobile */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1.3, type: "spring" }}
-              className="hidden sm:block absolute top-[30%] md:top-[35%] -right-[5%] md:-right-[15%]"
-            >
-              <Card className="px-3 py-2 md:px-4 md:py-3 rounded-xl md:rounded-2xl shadow-xl border-2 border-border">
-                <CardContent className="p-0">
-                  <div className="flex items-center gap-2">
-                    <div className="text-xl md:text-2xl">💬</div>
-                    <div>
-                      <div className="text-base md:text-lg font-black text-primary">
-                        1.2K+
-                      </div>
-                      <div className="text-[10px] md:text-xs text-muted-foreground font-medium whitespace-nowrap">
-                        Chat Hari Ini
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </motion.div>
-        </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-          className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-muted-foreground"
-        >
-          <span className="text-xs font-medium uppercase tracking-wider">
-            Scroll untuk lanjut
-          </span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ChevronDown className="w-5 h-5" />
-          </motion.div>
-        </motion.div>
+      {/* Bottom Ticker */}
+      <div className="absolute bottom-0 left-0 right-0 bg-gray-900/50 backdrop-blur-sm py-6 overflow-hidden z-10">
+        <div className="flex space-x-12 animate-scroll whitespace-nowrap">
+          {[...Array(3)].map((_, index) => (
+            <div key={index} className="flex space-x-12">
+              <span className="text-gray-500 uppercase tracking-wider text-sm font-bold">
+                LEARNING COMMUNITY
+              </span>
+              <span className="text-gray-500 uppercase tracking-wider text-sm font-bold">
+                ONLINE FORUMS
+              </span>
+              <span className="text-gray-500 uppercase tracking-wider text-sm font-bold">
+                ONLINE CHAT
+              </span>
+              <span className="text-gray-500 uppercase tracking-wider text-sm font-bold">
+                AUTOMATION
+              </span>
+              <span className="text-gray-500 uppercase tracking-wider text-sm font-bold">
+                TEACHING
+              </span>
+              <span className="text-gray-500 uppercase tracking-wider text-sm font-bold">
+                LEARNING MANAGEMENT PLATFORMS
+              </span>
+              <span className="text-gray-500 uppercase tracking-wider text-sm font-bold">
+                COMMUNITY
+              </span>
+              <span className="text-gray-500 uppercase tracking-wider text-sm font-bold">
+                PUBLIC SOCIAL
+              </span>
+              <span className="text-gray-500 uppercase tracking-wider text-sm font-bold">
+                COURSES
+              </span>
+              <span className="text-gray-500 uppercase tracking-wider text-sm font-bold">
+                EMAIL MARKETING
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
+
+      <style>{`
+        @keyframes scroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-33.333%);
+          }
+        }
+        .animate-scroll {
+          animation: scroll 30s linear infinite;
+        }
+      `}</style>
     </section>
   );
 };

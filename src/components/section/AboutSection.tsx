@@ -1,598 +1,480 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React from "react";
+import { motion } from "framer-motion";
 import {
-  motion,
-  useScroll,
-  useTransform,
-  useSpring,
-  useInView,
-} from "framer-motion";
-import { MapPin, Heart, Sparkles, TrendingUp, ChevronDown } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+  MessageCircle,
+  Store,
+  MapPin,
+  TrendingUp,
+  Users,
+  Check,
+  Send,
+  Clock,
+} from "lucide-react";
 
-// Types
-interface StorySection {
-  id: number;
-  title: string;
-  description: string;
-  highlight: string;
-  image: string;
-  icon: React.ReactNode;
-  color: string;
-}
+// Definisikan Variabel Gradien (menggunakan variabel CSS dari globals.css)
+// Ini adalah gradien cokelat gelap ke sedang/aksen
+const gradientPrimary =
+  "linear-gradient(to bottom right, var(--color-brown-accent), var(--color-brown-dark))";
+// Ini adalah gradien cokelat terang ke sedang/aksen
+const gradientLight =
+  "linear-gradient(to bottom right, var(--color-brown-light), var(--color-brown-accent))";
 
-interface AboutSectionProps {
-  className?: string;
-}
+// --- VARIAN FRAMER MOTION ---
 
-const AboutSection: React.FC<AboutSectionProps> = ({ className = "" }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const [activeSection, setActiveSection] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isInView, setIsInView] = useState(false);
-
-  // Scroll progress hanya untuk section ini
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-
-  // Track jika section dalam viewport
-  const inView = useInView(sectionRef, {
-    margin: "-50% 0px -50% 0px", // Trigger ketika 50% section terlihat
-  });
-
-  useEffect(() => {
-    setIsInView(inView);
-  }, [inView]);
-
-  // Check mobile screen
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  // Smooth spring animation for progress
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  // Story sections data
-  const storySections: StorySection[] = [
-    {
-      id: 0,
-      title: "Berawal dari Mimpi Sederhana",
-      description:
-        "MapinAja lahir dari keresahan melihat UMKM lokal yang sulit ditemukan oleh masyarakat. Padahal, mereka punya produk berkualitas dan cerita inspiratif di baliknya. Kami percaya, teknologi harus menjembatani jarak antara produk lokal dan konsumen yang peduli.",
-      highlight: "Teknologi untuk UMKM",
-      image:
-        "https://images.unsplash.com/photo-1556740758-90de374c12ad?w=800&h=600&fit=crop",
-      icon: <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />,
-      color: "var(--color-accent)",
+// Varian untuk seluruh section/blok (digunakan pada grid container)
+const sectionContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
     },
-    {
-      id: 1,
-      title: "Menghubungkan Komunitas Lokal",
-      description:
-        "Setiap UMKM punya cerita unik. Ada Ibu Siti yang mulai jualan kue dari rumah, Pak Budi dengan warung kopinya yang jadi tempat ngumpul warga, atau Mbak Dina dengan kerajinan tangannya. MapinAja hadir untuk memastikan cerita mereka terdengar.",
-      highlight: "Cerita di Balik UMKM",
-      image:
-        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop",
-      icon: <Heart className="w-5 h-5 sm:w-6 sm:h-6" />,
-      color: "var(--color-primary)",
-    },
-    {
-      id: 2,
-      title: "Membangun Ekonomi Indonesia",
-      description:
-        "Setiap rupiah yang kamu belanjakan di UMKM lokal adalah investasi untuk ekonomi Indonesia. Uang itu berputar di komunitas, menciptakan lapangan kerja, dan membangun kemandirian ekonomi. MapinAja bukan sekadar platform, tapi gerakan untuk Indonesia yang lebih kuat.",
-      highlight: "Dampak Nyata",
-      image:
-        "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=600&fit=crop",
-      icon: <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />,
-      color: "var(--color-accent)",
-    },
-    {
-      id: 3,
-      title: "Masa Depan Bersama",
-      description:
-        "Kami bermimpi suatu hari nanti, setiap orang di Indonesia bisa dengan mudah menemukan dan mendukung UMKM di sekitar mereka. Platform ini terus berkembang dengan fitur-fitur baru, selalu mendengarkan kebutuhan UMKM dan pelanggan. Bersama, kita bangun Indonesia dari yang dekat.",
-      highlight: "Visi Kami",
-      image:
-        "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop",
-      icon: <MapPin className="w-5 h-5 sm:w-6 sm:h-6" />,
-      color: "var(--color-primary)",
-    },
-  ];
+  },
+};
 
-  // Update active section based on scroll - HANYA ketika section dalam viewport
-  useEffect(() => {
-    const unsubscribe = smoothProgress.on("change", (latest) => {
-      if (isInView) {
-        const sectionIndex = Math.min(
-          Math.floor(latest * storySections.length),
-          storySections.length - 1
-        );
-        setActiveSection(sectionIndex);
-      }
-    });
+// Varian untuk elemen teks (slide dan fade dari samping KIRI)
+const textVariant = {
+  hidden: { x: -50, opacity: 0 },
+  visible: { x: 0, opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
+};
 
-    return () => unsubscribe();
-  }, [smoothProgress, storySections.length, isInView]);
+// Varian untuk kartu (slide dan fade dari samping KANAN)
+const cardVariant = {
+  hidden: { x: 50, opacity: 0 },
+  visible: { x: 0, opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
+};
 
-  // Mobile variant - simpler animation
-  const mobileContainerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
+// Varian untuk kartu kecil/konten di tengah (fade-in dan scale up)
+const itemContent = {
+  hidden: { opacity: 0, scale: 0.95, y: 10 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
 
-  const mobileItemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-      },
-    },
-  };
+// Varian untuk kartu utama di tengah (muncul dari bawah)
+const cardCenterVariant = {
+  hidden: { y: 50, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
+};
+
+const FeaturesSection = () => {
+  // Komponen untuk membungkus section dengan animasi scroll
+  const AnimatedSection = ({ children, className }) => (
+    <motion.section
+      className={className}
+      variants={sectionContainer}
+      initial="hidden"
+      // whileInView akan memicu animasi saat section terlihat di viewport
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+    >
+      {children}
+    </motion.section>
+  );
 
   return (
-    <>
-      {/* Desktop Progress Indicator - HANYA muncul ketika section dalam viewport */}
-      {!isMobile && isInView && (
-        <motion.div
-          className="fixed left-8 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-4"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-        >
-          {storySections.map((section, index) => (
-            <motion.div
-              key={section.id}
-              className="relative cursor-pointer"
-              whileHover={{ scale: 1.2 }}
-              onClick={() => {
-                const sectionHeight = window.innerHeight;
-                window.scrollTo({
-                  top: sectionRef.current!.offsetTop + index * sectionHeight,
-                  behavior: "smooth",
-                });
-              }}
-            >
-              <div
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  activeSection === index ? "bg-primary scale-150" : "bg-border"
-                }`}
-              />
-              {activeSection === index && (
-                <motion.div
-                  layoutId="activeIndicator"
-                  className="absolute left-6 top-1/2 -translate-y-1/2 whitespace-nowrap text-sm font-medium text-primary bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full border border-border shadow-sm"
-                >
-                  {section.highlight}
-                </motion.div>
-              )}
-            </motion.div>
-          ))}
-        </motion.div>
-      )}
+    <div>
+      {/* Feature 1: Chat & Communication */}
+      {/* BACKGROUND: Hitam -> Putih */}
+      <AnimatedSection className="py-16 sm:py-24 bg-white text-brown-dark relative overflow-hidden">
+        {/* Decorative circles (Mengganti warna border: white -> brown-accent, opacity diperkuat) */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-64 h-64 border-4 border-brown-accent rounded-full"></div>
+          <div className="absolute bottom-10 right-10 w-96 h-96 border-4 border-brown-accent rounded-full"></div>
+        </div>
 
-      {/* Main Section */}
-      <section
-        ref={sectionRef}
-        id="tentang"
-        className={`relative bg-background ${className}`}
-        style={{
-          height: isMobile ? "auto" : `${storySections.length * 100}vh`,
-          minHeight: isMobile ? "100vh" : "auto",
-        }}
-      >
-        {/* Scroll Container untuk progress tracking */}
-        <div ref={containerRef} className="h-full">
-          {/* Mobile Layout */}
-          {isMobile ? (
-            <div className="py-16 px-4 sm:px-6 lg:px-8">
-              <motion.div
-                variants={mobileContainerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
-                className="max-w-3xl mx-auto space-y-12"
-              >
-                {/* Section Header */}
-                <motion.div
-                  variants={mobileItemVariants}
-                  className="text-center space-y-4"
-                >
-                  <Badge
-                    variant="secondary"
-                    className="px-4 py-2 text-primary border-primary/20"
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left: Text Content */}
+            <motion.div variants={textVariant}>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight mb-6">
+                {/* Teks: brown-light, white -> brown-dark */}
+                <span className="text-brown-accent">Terhubung</span> dengan{" "}
+                <span className="text-brown-accent">pelanggan</span>{" "}
+                <span className="relative inline-block">
+                  <span className="text-brown-accent">Anda</span>
+                  <div
+                    className="absolute -top-3 -right-3 w-12 h-12 rounded-full flex items-center justify-center"
+                    style={{ background: gradientPrimary }}
                   >
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Tentang MapinAja
-                  </Badge>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-                    Cerita Kami
-                  </h2>
-                  <p className="text-lg text-muted-foreground">
-                    Perjalanan MapinAja dalam mendukung UMKM Indonesia
-                  </p>
-                </motion.div>
-
-                {/* Mobile Story Cards */}
-                {storySections.map((section, index) => (
-                  <motion.div
-                    key={section.id}
-                    variants={mobileItemVariants}
-                    className="relative"
-                  >
-                    <Card className="rounded-2xl shadow-lg border-border overflow-hidden">
-                      <CardContent className="p-0">
-                        {/* Image */}
-                        <div className="relative h-48 sm:h-56 overflow-hidden">
-                          <img
-                            src={section.image}
-                            alt={section.title}
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-
-                          {/* Badge */}
-                          <div className="absolute top-4 left-4">
-                            <Badge
-                              className="flex items-center gap-2 px-3 py-2 text-white border-0"
-                              style={{ backgroundColor: section.color }}
-                            >
-                              {section.icon}
-                              <span className="text-sm font-semibold">
-                                {section.highlight}
-                              </span>
-                            </Badge>
-                          </div>
-
-                          {/* Chapter Number */}
-                          <div className="absolute top-4 right-4">
-                            <div
-                              className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
-                              style={{ backgroundColor: section.color }}
-                            >
-                              {index + 1}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Content */}
-                        <div className="p-6 space-y-4">
-                          <h3 className="text-xl font-bold text-foreground">
-                            {section.title}
-                          </h3>
-                          <p className="text-muted-foreground leading-relaxed">
-                            {section.description}
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
-
-                {/* Progress Indicator for Mobile */}
-                <motion.div
-                  variants={mobileItemVariants}
-                  className="text-center space-y-4"
-                >
-                  <div className="flex justify-center items-center gap-4 text-sm text-muted-foreground">
-                    <span>Progress Cerita</span>
-                    <span className="font-semibold text-primary">
-                      {activeSection + 1} / {storySections.length}
-                    </span>
+                    <MessageCircle className="w-6 h-6 text-white" />
                   </div>
-                  <Progress
-                    value={((activeSection + 1) / storySections.length) * 100}
-                    className="h-2 bg-border"
-                  />
-                </motion.div>
+                </span>{" "}
+                <span className="text-brown-accent">sambil kami yang</span>{" "}
+                <span className="relative inline-block">
+                  <span className="text-brown-accent">sibuk</span>
+                  <div
+                    className="absolute -bottom-2 -right-2 w-12 h-12 rounded-full flex items-center justify-center"
+                    style={{ background: gradientPrimary }}
+                  >
+                    <Store className="w-6 h-6 text-white" />
+                  </div>
+                </span>{" "}
+                <span className="text-brown-accent">di belakang layar.</span>
+              </h2>
+            </motion.div>
+
+            {/* Right: Feature Cards */}
+            <motion.div variants={cardVariant} className="space-y-6">
+              {/* Card 1: Chat Feature */}
+              <motion.div
+                variants={cardCenterVariant}
+                className="bg-brown-light/50 text-gray-900 rounded-3xl p-8 shadow-xl border border-brown-light"
+              >
+                <h3 className="text-2xl font-bold mb-4">
+                  Chat real-time dengan pembeli.
+                </h3>
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  Mulai diskusi langsung dengan pelanggan Anda melalui chat,
+                  email, atau platform favorit mereka—baik terjadwal maupun
+                  real-time.
+                </p>
+                <button className="flex items-center space-x-2 font-bold text-brown-dark hover:text-brown-accent transition group">
+                  <span>Pelajari Lebih Lanjut</span>
+                  <span className="text-2xl group-hover:translate-x-1 transition-transform">
+                    👀
+                  </span>
+                </button>
               </motion.div>
-            </div>
-          ) : (
-            /* Desktop Layout */
-            <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-                  {/* Left Side - Text Content */}
-                  <div className="space-y-6 lg:space-y-8 order-2 lg:order-2">
-                    {/* Section Badge */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                    >
-                      <Badge
-                        variant="secondary"
-                        className="px-4 py-2 bg-accent/20 text-primary border-0"
-                      >
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "linear",
-                          }}
-                        >
-                          {storySections[activeSection].icon}
-                        </motion.div>
-                        <span className="ml-2">Tentang MapinAja</span>
-                      </Badge>
-                    </motion.div>
 
-                    {/* Animated Title */}
-                    <div className="relative h-[120px] sm:h-[150px] overflow-hidden">
-                      {storySections.map((section, index) => (
-                        <motion.h2
-                          key={section.id}
-                          initial={{ opacity: 0, y: 100 }}
-                          animate={{
-                            opacity: activeSection === index ? 1 : 0,
-                            y:
-                              activeSection === index
-                                ? 0
-                                : activeSection > index
-                                ? -100
-                                : 100,
-                          }}
-                          transition={{ duration: 0.5, ease: "easeInOut" }}
-                          className="absolute inset-0 text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight"
-                        >
-                          {section.title}
-                        </motion.h2>
-                      ))}
+              {/* Card 2: Mini Chat Preview */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Mini Card Kiri - MENGGUNAKAN itemContent */}
+                <motion.div
+                  variants={itemContent}
+                  className="bg-white rounded-3xl p-6 shadow-lg border-4 border-brown-light"
+                >
+                  <div className="flex items-center space-x-3 mb-4">
+                    <img
+                      src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah"
+                      alt="User"
+                      className="w-16 h-16 rounded-2xl"
+                    />
+                    <div>
+                      <div className="font-bold text-gray-900">Ibu Sarah</div>
+                      <div className="text-xs text-gray-500">
+                        Warung Nasi Padang
+                      </div>
                     </div>
-
-                    {/* Animated Description */}
-                    <div className="relative min-h-[180px] sm:min-h-[200px]">
-                      {storySections.map((section, index) => (
-                        <motion.p
-                          key={section.id}
-                          initial={{ opacity: 0, y: 50 }}
-                          animate={{
-                            opacity: activeSection === index ? 1 : 0,
-                            y:
-                              activeSection === index
-                                ? 0
-                                : activeSection > index
-                                ? -50
-                                : 50,
-                          }}
-                          transition={{
-                            duration: 0.5,
-                            ease: "easeInOut",
-                            delay: 0.1,
-                          }}
-                          className="absolute inset-0 text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed"
-                        >
-                          {section.description}
-                        </motion.p>
-                      ))}
+                  </div>
+                  <div className="text-sm text-gray-600 mb-2">
+                    45,580 members
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="flex -space-x-2">
+                      <div className="w-8 h-8 bg-brown-accent rounded-full border-2 border-white"></div>
+                      <div className="w-8 h-8 bg-brown-dark rounded-full border-2 border-white"></div>
+                      <div className="w-8 h-8 bg-brown-light rounded-full border-2 border-white"></div>
                     </div>
+                  </div>
+                </motion.div>
 
-                    {/* Progress Bar */}
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center text-sm text-muted-foreground">
-                        <span>Progress</span>
-                        <span>
-                          {activeSection + 1} / {storySections.length}
+                {/* Mini Card Kanan - MENGGUNAKAN itemContent */}
+                <motion.div
+                  variants={itemContent}
+                  className="bg-white rounded-3xl p-6 shadow-lg space-y-3"
+                >
+                  {/* Item 1: DM */}
+                  <div className="bg-brown-light/50 rounded-2xl p-4 border-2 border-brown-light">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-8 h-8 bg-brown-dark rounded-xl flex items-center justify-center">
+                          <span className="text-white text-xs font-bold">
+                            C
+                          </span>
+                        </div>
+                        <span className="text-sm font-semibold text-brown-dark">
+                          DM @ibu_sarah
                         </span>
                       </div>
-                      <div className="h-2 bg-border rounded-full overflow-hidden">
-                        <motion.div
-                          className="h-full bg-primary rounded-full"
-                          style={{
-                            scaleX: useTransform(
-                              smoothProgress,
-                              [0, 1],
-                              [0, 1]
-                            ),
-                            transformOrigin: "left",
-                          }}
-                        />
-                      </div>
+                      <Check className="w-5 h-5 text-brown-accent" />
                     </div>
-
-                    {/* Highlight Badge */}
-                    <motion.div
-                      key={activeSection}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <Badge
-                        className="px-6 py-3 rounded-2xl font-semibold text-white border-0 shadow-lg flex items-center gap-2"
-                        style={{
-                          backgroundColor: storySections[activeSection].color,
-                        }}
-                      >
-                        <Sparkles className="w-5 h-5" />
-                        {storySections[activeSection].highlight}
-                      </Badge>
-                    </motion.div>
                   </div>
 
-                  {/* Right Side - Sticky Image Gallery */}
-                  <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] order-1 lg:order-1">
-                    {/* Background Decorations */}
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{
-                        duration: 30,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                      className="absolute -top-10 -right-10 w-32 h-32 bg-accent/20 rounded-full blur-2xl"
-                    />
-                    <motion.div
-                      animate={{ rotate: -360 }}
-                      transition={{
-                        duration: 40,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                      className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-2xl"
-                    />
-
-                    {/* Image Stack */}
-                    <div className="relative w-full h-full">
-                      {storySections.map((section, index) => {
-                        const isActive = activeSection === index;
-                        const isPast = activeSection > index;
-
-                        return (
-                          <motion.div
-                            key={section.id}
-                            className="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl"
-                            initial={{ opacity: 0, scale: 0.8, rotateY: -90 }}
-                            animate={{
-                              opacity: isActive ? 1 : isPast ? 0 : 0.3,
-                              scale: isActive ? 1 : isPast ? 0.8 : 0.9,
-                              rotateY: isActive ? 0 : isPast ? 90 : -45,
-                              zIndex: isActive
-                                ? 10
-                                : isPast
-                                ? index
-                                : storySections.length - index,
-                              x: isActive ? 0 : isPast ? 100 : -50,
-                            }}
-                            transition={{
-                              duration: 0.6,
-                              ease: "easeInOut",
-                              opacity: { duration: 0.3 },
-                            }}
-                            style={{
-                              transformStyle: "preserve-3d",
-                              perspective: 1000,
-                            }}
-                          >
-                            {/* Image */}
-                            <img
-                              src={section.image}
-                              alt={section.title}
-                              className="w-full h-full object-cover"
-                            />
-
-                            {/* Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-                            {/* Image Label */}
-                            <motion.div
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{
-                                opacity: isActive ? 1 : 0,
-                                y: isActive ? 0 : 20,
-                              }}
-                              transition={{ delay: 0.3 }}
-                              className="absolute bottom-6 left-6 right-6"
-                            >
-                              <div className="flex items-center gap-3">
-                                <div
-                                  className="w-12 h-12 rounded-full flex items-center justify-center text-white"
-                                  style={{ backgroundColor: section.color }}
-                                >
-                                  {section.icon}
-                                </div>
-                                <div>
-                                  <div className="text-white font-semibold text-lg">
-                                    {section.highlight}
-                                  </div>
-                                  <div className="text-white/80 text-sm">
-                                    Chapter {index + 1}
-                                  </div>
-                                </div>
-                              </div>
-                            </motion.div>
-
-                            {/* Border Glow */}
-                            {isActive && (
-                              <motion.div
-                                className="absolute inset-0 border-4 rounded-3xl pointer-events-none"
-                                style={{ borderColor: section.color }}
-                                animate={{ opacity: [0.5, 1, 0.5] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                              />
-                            )}
-                          </motion.div>
-                        );
-                      })}
+                  {/* Item 2: Group */}
+                  <div className="bg-brown-accent/30 rounded-2xl p-4 border-2 border-brown-accent/50">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-8 h-8 bg-brown-accent rounded-xl flex items-center justify-center">
+                          <MessageCircle className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="text-sm font-semibold text-brown-dark">
+                          #orders-group
+                        </span>
+                      </div>
+                      <Check className="w-5 h-5 text-brown-accent" />
                     </div>
+                  </div>
 
-                    {/* Counter Badge */}
-                    <motion.div
-                      className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-20"
-                      animate={{ y: [0, -10, 0] }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    >
-                      <Card className="px-6 py-3 rounded-full shadow-xl border-border">
-                        <CardContent className="p-0">
-                          <div className="flex items-center gap-3">
-                            <div className="text-2xl font-bold text-primary">
-                              {String(activeSection + 1).padStart(2, "0")}
-                            </div>
-                            <div className="h-8 w-px bg-border" />
-                            <div className="text-sm text-muted-foreground">
-                              of {String(storySections.length).padStart(2, "0")}
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
+                  <div className="flex items-center justify-around pt-2">
+                    <Clock className="w-6 h-6 text-gray-400" />
+                    <Send className="w-6 h-6 text-gray-400" />
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </AnimatedSection>
+
+      {/* Feature 2: Auto Settlement & Analytics */}
+      {/* BACKGROUND: Putih */}
+      <AnimatedSection className="py-16 sm:py-24 bg-white text-gray-900 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left: Visual Cards */}
+            <motion.div variants={textVariant} className="space-y-6">
+              {/* Community Card - MENGGUNAKAN cardCenterVariant */}
+              <motion.div
+                variants={cardCenterVariant}
+                className="bg-white rounded-3xl p-6 border-4 border-brown-light shadow-xl"
+              >
+                <div className="flex items-center space-x-3 mb-4">
+                  <img
+                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=Mifta"
+                    alt="Community"
+                    className="w-16 h-16 rounded-2xl"
+                  />
+                  <div>
+                    <div className="font-bold text-gray-900">
+                      Warung Makan Mifta
+                    </div>
+                    <div className="text-xs text-gray-500 flex items-center space-x-1">
+                      <MapPin className="w-3 h-3" />
+                      <span>Tangerang Selatan</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Scroll Hint - Only show on first section */}
-              {activeSection === 0 && (
+                <div className="space-y-3">
+                  {/* Item 1: Menu Tersedia */}
+                  <div className="flex items-center justify-between bg-brown-light/50 p-3 rounded-xl">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-brown-accent rounded-lg flex items-center justify-center">
+                        <Check className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-sm font-semibold text-brown-dark">
+                        Menu Tersedia
+                      </span>
+                    </div>
+                    <Check className="w-5 h-5 text-brown-accent" />
+                  </div>
+
+                  {/* Item 2: Chat Aktif */}
+                  <div className="flex items-center justify-between bg-brown-light/50 p-3 rounded-xl">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-brown-dark rounded-lg flex items-center justify-center">
+                        <MessageCircle className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-sm font-semibold text-brown-dark">
+                        Chat Aktif
+                      </span>
+                    </div>
+                    <Check className="w-5 h-5 text-brown-accent" />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Stats Cards */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* MENGGUNAKAN itemContent */}
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground"
+                  variants={itemContent}
+                  className="bg-white rounded-3xl p-6 shadow-xl border-2 border-gray-100"
                 >
-                  <span className="text-sm font-medium">
-                    Scroll untuk lanjut
-                  </span>
-                  <motion.div
-                    animate={{ y: [0, 8, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  >
-                    <ChevronDown className="w-5 h-5" />
-                  </motion.div>
+                  <div className="text-sm text-gray-500 mb-2">
+                    Pelanggan Baru
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="text-4xl font-black">550</div>
+                    <TrendingUp className="w-6 h-6 text-brown-accent" />
+                  </div>
+                  <div className="flex -space-x-2 mt-3">
+                    <div className="w-8 h-8 bg-brown-accent rounded-full border-2 border-white"></div>
+                    <div className="w-8 h-8 bg-brown-dark rounded-full border-2 border-white"></div>
+                    <div className="w-8 h-8 bg-brown-light rounded-full border-2 border-white"></div>
+                    <div className="w-8 h-8 bg-black rounded-full border-2 border-white"></div>
+                  </div>
                 </motion.div>
-              )}
-            </div>
-          )}
+
+                {/* MENGGUNAKAN itemContent */}
+                <motion.div
+                  variants={itemContent}
+                  className="rounded-3xl p-6 shadow-xl text-white"
+                  style={{ background: gradientPrimary }}
+                >
+                  <div className="text-sm mb-2 opacity-90">Pesan Baru</div>
+                  <div className="text-4xl font-black mb-3">+8,173</div>
+                  <div className="flex items-center space-x-2 bg-black/20 px-3 py-2 rounded-full backdrop-blur-sm">
+                    <div className="w-6 h-6 bg-white/30 rounded-lg"></div>
+                    <span className="text-xs font-semibold">Live Updates</span>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Right: Text Content */}
+            <motion.div variants={cardVariant}>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight mb-6 text-brown-dark">
+                Biarkan kami yang mengatur semuanya.
+              </h2>
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                Otomatis tambahkan member ke komunitas UMKM atau berikan mereka
+                akses ke konten, menu, dan promo—tanpa perlu repot.
+              </p>
+              <button className="flex items-center space-x-2 font-bold text-brown-dark hover:text-brown-accent transition group">
+                <span>Pelajari Lebih Lanjut</span>
+                <span className="text-2xl group-hover:translate-x-1 transition-transform">
+                  👀
+                </span>
+              </button>
+            </motion.div>
+          </div>
         </div>
-      </section>
-    </>
+      </AnimatedSection>
+
+      {/* Feature 3: Analytics & Insights */}
+      {/* BACKGROUND: Krem muda (brown-light/50) -> Putih */}
+      <AnimatedSection className="py-16 sm:py-24 bg-linear-to-b from-white to-brown-light text-gray-900 relative overflow-hidden">
+        {/* Decorative dots at top (Warna tetap brown-dark) */}
+        <div className="absolute top-0 left-0 right-0 flex justify-center space-x-3 pt-8">
+          {[...Array(20)].map((_, i) => (
+            <div key={i} className="w-4 h-4 bg-brown-dark rounded-full"></div>
+          ))}
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left: Text Content */}
+            <motion.div variants={textVariant}>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight mb-6 text-brown-dark">
+                Intip statistik bisnis Anda.
+              </h2>
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                Lihat insight dari aktivitas komunitas, menu online, dan
+                interaksi pelanggan untuk benar-benar memahami cara
+                mendapatkan—dan mempertahankan—pelanggan tetap engaged.
+              </p>
+              <button className="flex items-center space-x-2 font-bold text-brown-dark hover:text-brown-accent transition group">
+                <span>Pelajari Lebih Lanjut</span>
+                <span className="text-2xl group-hover:translate-x-1 transition-transform">
+                  👀
+                </span>
+              </button>
+            </motion.div>
+
+            {/* Right: Analytics Cards with flowing line */}
+            <motion.div variants={cardVariant} className="relative">
+              {/* Flowing Line SVG */}
+              <svg
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                viewBox="0 0 400 600"
+              >
+                <motion.path
+                  d="M 50 100 Q 200 150 180 250 T 100 400 Q 150 500 300 450"
+                  stroke="var(--color-brown-dark)"
+                  strokeWidth="8"
+                  fill="none"
+                  strokeLinecap="round"
+                  // Animasi Garis (Draw/Stroke)
+                  initial={{ pathLength: 0 }}
+                  whileInView={{ pathLength: 1 }}
+                  transition={{ duration: 2, ease: "easeInOut" }}
+                  viewport={{ once: true, amount: 0.5 }}
+                />
+              </svg>
+
+              {/* Stats Cards positioned along the line */}
+              <div className="space-y-6 relative z-10">
+                {/* Card 1 - MENGGUNAKAN itemContent */}
+                <motion.div
+                  variants={itemContent}
+                  className="bg-white rounded-3xl p-6 shadow-xl border-4 border-brown-light max-w-sm ml-auto"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm text-gray-500 font-semibold">
+                      Member Baru
+                    </span>
+                    <div className="w-10 h-10 bg-brown-dark rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold text-lg">#</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-10 h-10 bg-brown-accent rounded-lg flex items-center justify-center">
+                      <MessageCircle className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">New members</div>
+                      <div className="text-2xl font-black">+291</div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Card 2 - MENGGUNAKAN itemContent */}
+                <motion.div
+                  variants={itemContent}
+                  className="bg-white rounded-3xl p-6 shadow-xl border-4 border-brown-light max-w-xs"
+                >
+                  <div className="flex items-center space-x-2 mb-3">
+                    <div className="w-10 h-10 bg-brown-accent rounded-lg flex items-center justify-center">
+                      <span className="text-white font-bold">t</span>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">
+                        Pendaftaran baru
+                      </div>
+                      <div className="text-2xl font-black">305</div>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <div className="text-sm text-gray-500 mb-1">On track</div>
+                    <div className="text-2xl font-black">1.2K</div>
+                  </div>
+                </motion.div>
+
+                {/* Card 3 - MENGGUNAKAN itemContent */}
+                <motion.div
+                  variants={itemContent}
+                  className="bg-white rounded-3xl p-6 shadow-xl border-4 border-brown-light max-w-sm ml-auto"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div
+                      className="w-24 h-24 rounded-full overflow-hidden"
+                      style={{ background: gradientLight }}
+                    >
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Store className="w-12 h-12 text-brown-dark" />
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm text-gray-500 mb-1">
+                        Pesan Baru
+                      </div>
+                      <div className="text-2xl font-black">+8,173</div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Decorative elements */}
+                <div className="absolute top-20 -right-8 w-12 h-12 bg-brown-dark rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">#</span>
+                </div>
+                <div className="absolute bottom-20 -left-8 w-12 h-12 bg-brown-dark rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">#</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </AnimatedSection>
+    </div>
   );
 };
 
-export default AboutSection;
+export default FeaturesSection;
