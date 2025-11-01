@@ -27,7 +27,6 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
 
-  // Form state
   const [formData, setFormData] = useState({
     full_name: "",
     phone: "",
@@ -137,63 +136,73 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/10 flex items-center justify-center">
+      <div className="min-h-screen bg-brown-light flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Memuat profil...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brown-dark mx-auto"></div>
+          <p className="mt-4 text-brown-dark">Memuat profil...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/10">
+    <div className="min-h-screen bg-brown-light text-brown-dark">
       <div className="container mx-auto p-6 max-w-4xl">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-3xl font-bold text-brown-dark mb-2">
             Profil Saya
           </h1>
-          <p className="text-muted-foreground">Kelola informasi profil Anda</p>
+          <p className="text-brown-accent">Kelola informasi profil Anda</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Profile Info Card */}
-          <Card className="lg:col-span-2 bg-background/50 backdrop-blur border-0 shadow-soft">
-            <CardHeader>
+          <Card className="lg:col-span-2 bg-white/70 border border-brown-accent/30 shadow-md">
+            <CardHeader className="border-b border-brown-accent/20">
               <div className="flex justify-between items-center">
-                <CardTitle>Informasi Profil</CardTitle>
+                <CardTitle className="text-brown-dark">
+                  Informasi Profil
+                </CardTitle>
                 {!isEditing && (
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setIsEditing(true)}
+                    className="border-brown-accent text-brown-dark hover:bg-brown-accent hover:text-white"
                   >
                     <Edit className="h-4 w-4 mr-2" />
                     Edit
                   </Button>
                 )}
               </div>
-              <CardDescription>
+              <CardDescription className="text-brown-accent">
                 Informasi pribadi dan kontak Anda
               </CardDescription>
             </CardHeader>
+
             <CardContent>
               <form onSubmit={handleSaveProfile} className="space-y-6">
                 <div className="space-y-4">
+                  {/* Email */}
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <div className="flex items-center gap-2 p-2 border rounded-md bg-muted/50">
-                      <Mail className="h-4 w-4 text-muted-foreground" />
+                    <Label htmlFor="email" className="text-brown-dark">
+                      Email
+                    </Label>
+                    <div className="flex items-center gap-2 p-2 border rounded-md bg-brown-light/40 border-brown-accent/20">
+                      <Mail className="h-4 w-4 text-brown-accent" />
                       <span className="text-sm">{user?.email}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-brown-accent">
                       Email tidak dapat diubah
                     </p>
                   </div>
 
+                  {/* Nama Lengkap */}
                   <div className="space-y-2">
-                    <Label htmlFor="full_name">Nama Lengkap</Label>
+                    <Label htmlFor="full_name" className="text-brown-dark">
+                      Nama Lengkap
+                    </Label>
                     {isEditing ? (
                       <Input
                         id="full_name"
@@ -205,10 +214,11 @@ export default function ProfilePage() {
                           })
                         }
                         placeholder="Masukkan nama lengkap Anda"
+                        className="border-brown-accent/40 focus:border-brown-accent"
                       />
                     ) : (
-                      <div className="flex items-center gap-2 p-2 border rounded-md bg-muted/50">
-                        <User className="h-4 w-4 text-muted-foreground" />
+                      <div className="flex items-center gap-2 p-2 border rounded-md bg-brown-light/40 border-brown-accent/20">
+                        <User className="h-4 w-4 text-brown-accent" />
                         <span className="text-sm">
                           {profile?.full_name || "Belum diisi"}
                         </span>
@@ -216,8 +226,11 @@ export default function ProfilePage() {
                     )}
                   </div>
 
+                  {/* Nomor Telepon */}
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Nomor Telepon</Label>
+                    <Label htmlFor="phone" className="text-brown-dark">
+                      Nomor Telepon
+                    </Label>
                     {isEditing ? (
                       <Input
                         id="phone"
@@ -226,10 +239,11 @@ export default function ProfilePage() {
                           setFormData({ ...formData, phone: e.target.value })
                         }
                         placeholder="Masukkan nomor telepon Anda"
+                        className="border-brown-accent/40 focus:border-brown-accent"
                       />
                     ) : (
-                      <div className="flex items-center gap-2 p-2 border rounded-md bg-muted/50">
-                        <Phone className="h-4 w-4 text-muted-foreground" />
+                      <div className="flex items-center gap-2 p-2 border rounded-md bg-brown-light/40 border-brown-accent/20">
+                        <Phone className="h-4 w-4 text-brown-accent" />
                         <span className="text-sm">
                           {profile?.phone || "Belum diisi"}
                         </span>
@@ -237,8 +251,11 @@ export default function ProfilePage() {
                     )}
                   </div>
 
+                  {/* URL Foto Profil */}
                   <div className="space-y-2">
-                    <Label htmlFor="avatar_url">URL Foto Profil</Label>
+                    <Label htmlFor="avatar_url" className="text-brown-dark">
+                      URL Foto Profil
+                    </Label>
                     {isEditing ? (
                       <Input
                         id="avatar_url"
@@ -250,9 +267,10 @@ export default function ProfilePage() {
                           })
                         }
                         placeholder="https://example.com/avatar.jpg"
+                        className="border-brown-accent/40 focus:border-brown-accent"
                       />
                     ) : (
-                      <div className="text-sm text-muted-foreground p-2">
+                      <div className="text-sm text-brown-accent p-2 bg-brown-light/40 border border-brown-accent/20 rounded-md">
                         {profile?.avatar_url || "Belum ada foto profil"}
                       </div>
                     )}
@@ -264,7 +282,7 @@ export default function ProfilePage() {
                     <Button
                       type="submit"
                       disabled={saving}
-                      className="linear-warm text-white"
+                      className="bg-brown-accent hover:bg-brown-dark text-white"
                     >
                       <Save className="h-4 w-4 mr-2" />
                       {saving ? "Menyimpan..." : "Simpan Perubahan"}
@@ -273,6 +291,7 @@ export default function ProfilePage() {
                       type="button"
                       variant="outline"
                       onClick={handleCancelEdit}
+                      className="border-brown-accent text-brown-dark hover:bg-brown-accent hover:text-white"
                     >
                       Batal
                     </Button>
@@ -282,24 +301,26 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          {/* Account Info Sidebar */}
+          {/* Sidebar */}
           <div className="space-y-6">
-            <Card className="bg-background/50 backdrop-blur border-0 shadow-soft">
+            <Card className="bg-white/70 border border-brown-accent/30 shadow-md">
               <CardHeader>
-                <CardTitle className="text-lg">Info Akun</CardTitle>
+                <CardTitle className="text-lg text-brown-dark">
+                  Info Akun
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 text-brown-dark">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">
+                  <p className="text-sm font-medium text-brown-accent">
                     Status Akun
                   </p>
-                  <p className="text-foreground font-semibold">Aktif</p>
+                  <p className="font-semibold">Aktif</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">
+                  <p className="text-sm font-medium text-brown-accent">
                     Bergabung
                   </p>
-                  <p className="text-foreground">
+                  <p>
                     {profile
                       ? new Date(profile.created_at).toLocaleDateString(
                           "id-ID",
@@ -314,10 +335,10 @@ export default function ProfilePage() {
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">
+                  <p className="text-sm font-medium text-brown-accent">
                     Terakhir Diupdate
                   </p>
-                  <p className="text-foreground">
+                  <p>
                     {profile
                       ? new Date(profile.updated_at).toLocaleDateString("id-ID")
                       : "-"}
@@ -327,21 +348,23 @@ export default function ProfilePage() {
             </Card>
 
             {/* Quick Actions */}
-            <Card className="bg-background/50 backdrop-blur border-0 shadow-soft">
+            <Card className="bg-white/70 border border-brown-accent/30 shadow-md">
               <CardHeader>
-                <CardTitle className="text-lg">Aksi Cepat</CardTitle>
+                <CardTitle className="text-lg text-brown-dark">
+                  Aksi Cepat
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button
                   variant="outline"
-                  className="w-full justify-start"
+                  className="w-full justify-start border-brown-accent text-brown-dark hover:bg-brown-accent hover:text-white"
                   asChild
                 >
                   <Link href="/umkm">Lihat UMKM Lain</Link>
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full justify-start"
+                  className="w-full justify-start border-brown-accent text-brown-dark hover:bg-brown-accent hover:text-white"
                   asChild
                 >
                   <Link href="/">Kembali ke Beranda</Link>

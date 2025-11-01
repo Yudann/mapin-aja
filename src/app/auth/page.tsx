@@ -197,7 +197,10 @@ function AuthContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-pink-200 p-4 ">
+    <div
+      className="min-h-screen flex items-center justify-center p-4"
+      style={{ backgroundColor: "var(--color-brown-light)" }}
+    >
       <AnimatePresence>
         {toast && (
           <ToastNotification toast={toast} onClose={() => setToast(null)} />
@@ -207,11 +210,15 @@ function AuthContent() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-7xl p-6 bg-white h-[90%] rounded-4xl shadow-2xl overflow-hidden"
+        className="w-full max-w-7xl p-6 h-[90%] rounded-4xl shadow-2xl overflow-hidden"
+        style={{ backgroundColor: "var(--color-base-light)" }}
       >
         <div className="flex flex-col lg:flex-row">
           {/* Left Side - Visual */}
-          <div className="hidden h-[90%] lg:block lg:w-1/2 bg-black rounded-[3rem] p-8 lg:p-12 relative overflow-hidden">
+          <div
+            className="hidden h-[90%] lg:block lg:w-1/2 rounded-[3rem] p-8 lg:p-12 relative overflow-hidden"
+            style={{ backgroundColor: "var(--color-brown-dark)" }}
+          >
             {/* Animated 3D Shapes Background */}
             <div className="absolute inset-0 overflow-hidden">
               <motion.div
@@ -224,7 +231,11 @@ function AuthContent() {
                   repeat: Infinity,
                   ease: "linear",
                 }}
-                className="absolute -top-20 -right-20 w-64 h-64 bg-linear-to-br from-green-400/20 to-cyan-400/20 rounded-full blur-3xl"
+                className="absolute -top-20 -right-20 w-64 h-64 rounded-full blur-3xl"
+                style={{
+                  background:
+                    "linear-gradient(to bottom right, rgba(185, 148, 112, 0.2), rgba(185, 148, 112, 0.3))",
+                }}
               />
               <motion.div
                 animate={{
@@ -236,17 +247,32 @@ function AuthContent() {
                   repeat: Infinity,
                   ease: "linear",
                 }}
-                className="absolute -bottom-32 -left-32 w-80 h-80 bg-linear-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"
+                className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full blur-3xl"
+                style={{
+                  background:
+                    "linear-gradient(to bottom right, rgba(185, 148, 112, 0.15), rgba(185, 148, 112, 0.25))",
+                }}
               />
             </div>
 
             <div className="relative z-10 h-full flex flex-col justify-between">
               {/* Logo */}
               <div className="flex items-center space-x-3 mb-8">
-                <div className="w-10 h-10 bg-green-400 rounded-xl flex items-center justify-center">
-                  <MapPin className="w-6 h-6 text-white" />
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{ backgroundColor: "var(--color-brown-accent)" }}
+                >
+                  <MapPin
+                    className="w-6 h-6"
+                    style={{ color: "var(--color-base-light)" }}
+                  />
                 </div>
-                <span className="text-2xl font-black text-white">MapinAja</span>
+                <span
+                  className="text-2xl font-black"
+                  style={{ color: "var(--color-base-light)" }}
+                >
+                  MapinAja
+                </span>
               </div>
 
               {/* Stacked Cards with 3D Effect */}
@@ -256,7 +282,6 @@ function AuthContent() {
                   initial={{ opacity: 0, y: 20, rotateX: -10 }}
                   animate={{
                     opacity: 1,
-                    // y: 0,
                     rotateX: 0,
                     x: [0, -3, 0],
                     y: [0, -5, 0],
@@ -267,21 +292,37 @@ function AuthContent() {
                     x: { duration: 4, repeat: Infinity, ease: "easeInOut" },
                     y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
                   }}
-                  className="absolute top-4 left-4 w-64 bg-linear-to-br from-blue-500 to-cyan-500 rounded-2xl p-4 shadow-2xl transform -rotate-6 z-20"
-                  style={{ transformStyle: "preserve-3d" }}
+                  className="absolute top-4 left-4 w-64 rounded-2xl p-4 shadow-2xl transform -rotate-6 z-20"
+                  style={{
+                    background:
+                      "linear-gradient(to bottom right, var(--color-brown-accent), #8B6F47)",
+                    transformStyle: "preserve-3d",
+                  }}
                 >
-                  <div className="text-white/90 text-xs font-bold mb-2 flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
+                  <div
+                    className="text-xs font-bold mb-2 flex items-center space-x-2"
+                    style={{ color: "var(--color-brown-light)" }}
+                  >
+                    <div
+                      className="w-2 h-2 rounded-full animate-pulse"
+                      style={{ backgroundColor: "var(--color-brown-light)" }}
+                    />
                     <span>💬 Chat dengan Seller</span>
                   </div>
                   <div className="space-y-2 mb-2">
                     <div className="bg-white/20 backdrop-blur-sm rounded-xl rounded-tl-sm p-2">
-                      <p className="text-white text-xs">
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--color-base-light)" }}
+                      >
                         Halo! Ada yang bisa saya bantu? 😊
                       </p>
                     </div>
                     <div className="bg-white/90 rounded-xl rounded-tr-sm p-2 ml-6">
-                      <p className="text-gray-800 text-xs">
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--color-brown-dark)" }}
+                      >
                         Apakah masih buka hari ini?
                       </p>
                     </div>
@@ -334,7 +375,6 @@ function AuthContent() {
                   initial={{ opacity: 0, y: 20, rotateX: -10 }}
                   animate={{
                     opacity: 1,
-                    // y: 0,
                     rotateX: 0,
                     x: [0, 5, 0],
                     y: [0, -4, 0],
@@ -355,33 +395,63 @@ function AuthContent() {
                       delay: 0.5,
                     },
                   }}
-                  className="absolute top-16 right-8 w-56 bg-white rounded-2xl p-4 shadow-2xl transform rotate-[8deg] z-10"
-                  style={{ transformStyle: "preserve-3d" }}
+                  className="absolute top-16 right-8 w-56 rounded-2xl p-4 shadow-2xl transform rotate-[8deg] z-10"
+                  style={{
+                    backgroundColor: "var(--color-base-light)",
+                    transformStyle: "preserve-3d",
+                  }}
                 >
-                  <div className="text-gray-600 text-xs font-bold mb-2">
+                  <div
+                    className="text-xs font-bold mb-2"
+                    style={{ color: "var(--color-brown-dark)" }}
+                  >
                     💰 Total Revenue
                   </div>
-                  <div className="text-3xl font-black text-gray-900 mb-3">
+                  <div
+                    className="text-3xl font-black mb-3"
+                    style={{ color: "var(--color-brown-dark)" }}
+                  >
                     Rp 850K
                   </div>
-                  <div className="bg-green-50 rounded-xl p-2 mb-2">
+                  <div
+                    className="rounded-xl p-2 mb-2"
+                    style={{ backgroundColor: "var(--color-brown-light)" }}
+                  >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs text-gray-600">Transaksi</span>
-                      <span className="text-xs font-bold text-green-600">
+                      <span
+                        className="text-xs"
+                        style={{ color: "var(--color-brown-dark)" }}
+                      >
+                        Transaksi
+                      </span>
+                      <span
+                        className="text-xs font-bold"
+                        style={{ color: "var(--color-brown-accent)" }}
+                      >
                         +24
                       </span>
                     </div>
-                    <div className="w-full bg-green-200 rounded-full h-1.5">
+                    <div
+                      className="w-full rounded-full h-1.5"
+                      style={{ backgroundColor: "#D4B896" }}
+                    >
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: "75%" }}
                         transition={{ duration: 1, delay: 1 }}
-                        className="bg-green-500 h-1.5 rounded-full"
+                        className="h-1.5 rounded-full"
+                        style={{ backgroundColor: "var(--color-brown-accent)" }}
                       />
                     </div>
                   </div>
-                  <div className="flex items-center space-x-1 text-xs text-gray-500">
-                    <div className="w-1.5 h-1.5 bg-green-400 rounded-full" />
+                  <div
+                    className="flex items-center space-x-1 text-xs"
+                    style={{ color: "var(--color-brown-dark)" }}
+                  >
+                    <div
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ backgroundColor: "var(--color-brown-accent)" }}
+                    />
                     <span>↗ +32% bulan ini</span>
                   </div>
                 </motion.div>
@@ -391,7 +461,6 @@ function AuthContent() {
                   initial={{ opacity: 0, y: 20, rotateX: -10 }}
                   animate={{
                     opacity: 1,
-                    // y: 0,
                     rotateX: 0,
                     x: [0, 2, 0],
                     y: [0, -3, 0],
@@ -412,22 +481,38 @@ function AuthContent() {
                       delay: 1,
                     },
                   }}
-                  className="absolute bottom-12 left-16 w-72 bg-linear-to-br from-pink-500 to-orange-500 rounded-2xl p-4 shadow-2xl transform rotate-[-4deg] z-30"
-                  style={{ transformStyle: "preserve-3d" }}
+                  className="absolute bottom-12 left-16 w-72 rounded-2xl p-4 shadow-2xl transform rotate-[-4deg] z-30"
+                  style={{
+                    background:
+                      "linear-gradient(to bottom right, #8B6F47, var(--color-brown-accent))",
+                    transformStyle: "preserve-3d",
+                  }}
                 >
                   <div className="relative z-10">
-                    <div className="text-white/90 text-xs font-bold mb-2">
+                    <div
+                      className="text-xs font-bold mb-2"
+                      style={{ color: "var(--color-brown-light)" }}
+                    >
                       🔥 Featured UMKM
                     </div>
                     <div className="flex items-center space-x-2 mb-3">
                       <div className="w-12 h-12 bg-white/30 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                        <Store className="w-6 h-6 text-white" />
+                        <Store
+                          className="w-6 h-6"
+                          style={{ color: "var(--color-base-light)" }}
+                        />
                       </div>
                       <div>
-                        <div className="text-white font-black text-base">
+                        <div
+                          className="font-black text-base"
+                          style={{ color: "var(--color-base-light)" }}
+                        >
                           Warung Kopi Asik
                         </div>
-                        <div className="text-white/90 text-xs flex items-center space-x-1">
+                        <div
+                          className="text-xs flex items-center space-x-1"
+                          style={{ color: "var(--color-brown-light)" }}
+                        >
                           <span>⭐ 4.9</span>
                           <span>•</span>
                           <span>📍 0.5 km</span>
@@ -435,7 +520,10 @@ function AuthContent() {
                       </div>
                     </div>
                     <div className="bg-white/25 backdrop-blur-md rounded-xl p-2 mb-2">
-                      <p className="text-white text-xs font-medium">
+                      <p
+                        className="text-xs font-medium"
+                        style={{ color: "var(--color-base-light)" }}
+                      >
                         💡 Kopi terbaik! Promo 30% pelanggan baru
                       </p>
                     </div>
@@ -444,14 +532,18 @@ function AuthContent() {
                         {["😊", "🎉", "⭐"].map((emoji, i) => (
                           <div
                             key={i}
-                            className="w-6 h-6 bg-white/30 rounded-full border-2 border-white flex items-center justify-center text-xs"
+                            className="w-6 h-6 bg-white/30 rounded-full border-2 flex items-center justify-center text-xs"
+                            style={{ borderColor: "var(--color-base-light)" }}
                           >
                             {emoji}
                           </div>
                         ))}
                       </div>
                       <div className="bg-white/30 backdrop-blur-sm rounded-full px-2 py-1">
-                        <span className="text-white font-bold text-xs">
+                        <span
+                          className="font-bold text-xs"
+                          style={{ color: "var(--color-base-light)" }}
+                        >
                           Buka ✓
                         </span>
                       </div>
@@ -485,20 +577,36 @@ function AuthContent() {
                       delay: 1.5,
                     },
                   }}
-                  className="absolute bottom-24 right-6 bg-linear-to-br from-purple-500 to-indigo-500 rounded-xl p-3 shadow-xl z-20"
+                  className="absolute bottom-24 right-6 rounded-xl p-3 shadow-xl z-20"
+                  style={{
+                    background:
+                      "linear-gradient(to bottom right, var(--color-brown-accent), #8B6F47)",
+                  }}
                 >
-                  <div className="text-white font-black text-xl mb-0.5">
+                  <div
+                    className="font-black text-xl mb-0.5"
+                    style={{ color: "var(--color-base-light)" }}
+                  >
                     1000+
                   </div>
-                  <div className="text-white/80 text-xs font-semibold">
+                  <div
+                    className="text-xs font-semibold"
+                    style={{ color: "var(--color-brown-light)" }}
+                  >
                     UMKM Aktif
                   </div>
                 </motion.div>
               </div>
 
               {/* Bottom Text */}
-              <div className="text-white/60 text-sm mt-8">
-                <div className="font-bold text-white mb-2">
+              <div
+                className="text-sm mt-8"
+                style={{ color: "rgba(250, 243, 224, 0.6)" }}
+              >
+                <div
+                  className="font-bold mb-2"
+                  style={{ color: "var(--color-base-light)" }}
+                >
                   TEMUKAN UMKM LOKAL
                 </div>
                 Platform direktori UMKM terpercaya di Indonesia
@@ -511,13 +619,27 @@ function AuthContent() {
             <div className="w-full mx-auto">
               {/* Header */}
               <div className="mb-8">
-                <div className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">
+                <div
+                  className="text-sm font-bold uppercase tracking-wider mb-2"
+                  style={{ color: "var(--color-brown-accent)" }}
+                >
                   MapinAja
                 </div>
-                <h1 className="text-4xl font-black text-gray-900 mb-2">
+                <h1
+                  className="text-4xl font-black mb-2"
+                  style={{ color: "var(--color-brown-dark)" }}
+                >
                   {mode === "login" ? "WELCOME TO" : "CREATE ACCOUNT"}
                   <br />
-                  <span className="bg-green-400 bg-clip-text text-transparent">
+                  <span
+                    style={{
+                      background:
+                        "linear-gradient(to right, var(--color-brown-accent), #8B6F47)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
                     MAPINAJA
                   </span>
                 </h1>
@@ -525,7 +647,10 @@ function AuthContent() {
 
               {/* User Type Selection */}
               <div className="mb-6">
-                <label className="text-sm font-bold text-gray-700 mb-3 block">
+                <label
+                  className="text-sm font-bold block mb-3"
+                  style={{ color: "var(--color-brown-dark)" }}
+                >
                   Bergabung sebagai:
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -546,9 +671,21 @@ function AuthContent() {
                       onClick={() => setUserType(type.id)}
                       className={`p-3 rounded-xl border-2 transition-all flex items-center justify-center space-x-2 ${
                         userType === type.id
-                          ? "border-green-400 bg-green-400/5 text-green-400"
-                          : "border-gray-200 text-gray-600 hover:border-gray-300"
+                          ? "text-gray-600 hover:border-gray-300"
+                          : ""
                       }`}
+                      style={
+                        userType === type.id
+                          ? {
+                              borderColor: "var(--color-brown-accent)",
+                              backgroundColor: "rgba(185, 148, 112, 0.05)",
+                              color: "var(--color-brown-accent)",
+                            }
+                          : {
+                              borderColor: "#E5E7EB",
+                              color: "#6B7280",
+                            }
+                      }
                     >
                       <type.icon className="w-5 h-5" />
                       <span className="font-semibold text-sm">
@@ -568,7 +705,10 @@ function AuthContent() {
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                     >
-                      <label className="text-sm font-bold text-gray-700 block mb-2">
+                      <label
+                        className="text-sm font-bold block mb-2"
+                        style={{ color: "var(--color-brown-dark)" }}
+                      >
                         Full Name
                       </label>
                       <input
@@ -581,14 +721,23 @@ function AuthContent() {
                             fullName: e.target.value,
                           }))
                         }
-                        className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:outline-none transition-colors"
+                        className="w-full px-4 py-2.5 border-2 rounded-xl focus:outline-none transition-colors"
+                        style={{ borderColor: "#E5E7EB" }}
+                        onFocus={(e) =>
+                          (e.target.style.borderColor =
+                            "var(--color-brown-accent)")
+                        }
+                        onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
                       />
                     </motion.div>
                   )}
                 </AnimatePresence>
 
                 <div>
-                  <label className="text-sm font-bold text-gray-700 block mb-2">
+                  <label
+                    className="text-sm font-bold block mb-2"
+                    style={{ color: "var(--color-brown-dark)" }}
+                  >
                     Email
                   </label>
                   <input
@@ -601,12 +750,20 @@ function AuthContent() {
                         email: e.target.value,
                       }))
                     }
-                    className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:outline-none transition-colors"
+                    className="w-full px-4 py-2.5 border-2 rounded-xl focus:outline-none transition-colors"
+                    style={{ borderColor: "#E5E7EB" }}
+                    onFocus={(e) =>
+                      (e.target.style.borderColor = "var(--color-brown-accent)")
+                    }
+                    onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-bold text-gray-700 block mb-2">
+                  <label
+                    className="text-sm font-bold block mb-2"
+                    style={{ color: "var(--color-brown-dark)" }}
+                  >
                     Password
                   </label>
                   <div className="relative">
@@ -620,7 +777,13 @@ function AuthContent() {
                           password: e.target.value,
                         }))
                       }
-                      className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:outline-none transition-colors pr-12"
+                      className="w-full px-4 py-2.5 border-2 rounded-xl focus:outline-none transition-colors pr-12"
+                      style={{ borderColor: "#E5E7EB" }}
+                      onFocus={(e) =>
+                        (e.target.style.borderColor =
+                          "var(--color-brown-accent)")
+                      }
+                      onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
                     />
                     <button
                       type="button"
@@ -643,7 +806,10 @@ function AuthContent() {
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                     >
-                      <label className="text-sm font-bold text-gray-700 block mb-2">
+                      <label
+                        className="text-sm font-bold block mb-2"
+                        style={{ color: "var(--color-brown-dark)" }}
+                      >
                         Confirm Password
                       </label>
                       <input
@@ -656,7 +822,13 @@ function AuthContent() {
                             confirmPassword: e.target.value,
                           }))
                         }
-                        className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:outline-none transition-colors"
+                        className="w-full px-4 py-2.5 border-2 rounded-xl focus:outline-none transition-colors"
+                        style={{ borderColor: "#E5E7EB" }}
+                        onFocus={(e) =>
+                          (e.target.style.borderColor =
+                            "var(--color-brown-accent)")
+                        }
+                        onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
                       />
                     </motion.div>
                   )}
@@ -665,7 +837,11 @@ function AuthContent() {
                 <button
                   onClick={mode === "login" ? handleLogin : handleRegister}
                   disabled={loading}
-                  className="w-full py-4 bg-green-400 text-white font-bold rounded-xl hover:shadow-xl transition-all disabled:opacity-50 flex items-center justify-center"
+                  className="w-full py-4 font-bold rounded-xl hover:shadow-xl transition-all disabled:opacity-50 flex items-center justify-center"
+                  style={{
+                    backgroundColor: "var(--color-brown-accent)",
+                    color: "var(--color-base-light)",
+                  }}
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -679,7 +855,7 @@ function AuthContent() {
 
               {/* Switch Mode */}
               <div className="text-center mt-4">
-                <span className="text-gray-600 text-sm">
+                <span className="text-sm" style={{ color: "#6B7280" }}>
                   {mode === "login"
                     ? "Don't have an account? "
                     : "Already have an account? "}
@@ -694,7 +870,8 @@ function AuthContent() {
                       confirmPassword: "",
                     }));
                   }}
-                  className="text-green-400 font-bold text-sm hover:underline"
+                  className="font-bold text-sm hover:underline"
+                  style={{ color: "var(--color-brown-accent)" }}
                 >
                   {mode === "login" ? "Sign Up" : "Login"}
                 </button>
@@ -711,12 +888,24 @@ export default function AuthPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex justify-center items-center h-screen bg-gray-50">
+        <div
+          className="flex justify-center items-center h-screen"
+          style={{ backgroundColor: "var(--color-brown-light)" }}
+        >
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-16 h-16 bg-green-400 rounded-2xl animate-pulse flex items-center justify-center">
-              <MapPin className="w-8 h-8 text-white" />
+            <div
+              className="w-16 h-16 rounded-2xl animate-pulse flex items-center justify-center"
+              style={{ backgroundColor: "var(--color-brown-accent)" }}
+            >
+              <MapPin
+                className="w-8 h-8"
+                style={{ color: "var(--color-base-light)" }}
+              />
             </div>
-            <span className="text-lg font-semibold text-gray-700">
+            <span
+              className="text-lg font-semibold"
+              style={{ color: "var(--color-brown-dark)" }}
+            >
               Loading...
             </span>
           </div>

@@ -221,62 +221,71 @@ export default function DashboardSeller() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/10 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-brown-light/50 via-base-light to-brown-light/80 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Memuat dashboard...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brown-accent mx-auto"></div>
+          <p className="mt-4 text-brown-dark/70">Memuat dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/10">
+    <div className="min-h-screen bg-gradient-to-br from-brown-light/50 via-base-light to-brown-light/80">
       <div className="container mx-auto p-6">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-3xl font-bold text-brown-dark mb-2">
             Dashboard Seller
           </h1>
-          <p className="text-muted-foreground">Kelola UMKM Anda di sini</p>
+          <p className="text-brown-dark/70">Kelola UMKM Anda di sini</p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-background/50 backdrop-blur border-0 shadow-soft">
+          <Card className="bg-base-light/70 backdrop-blur border border-brown-accent/50 shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total UMKM</CardTitle>
-              <Store className="h-4 w-4 text-primary" />
+              <CardTitle className="text-sm font-medium text-brown-dark">
+                Total UMKM
+              </CardTitle>
+              {/* Icon: brown-accent */}
+              <Store className="h-4 w-4 text-brown-accent" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">
+              <div className="text-2xl font-bold text-brown-dark">
                 {umkms.length}
               </div>
-              <p className="text-xs text-muted-foreground">UMKM terdaftar</p>
+              <p className="text-xs text-brown-dark/70">UMKM terdaftar</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-background/50 backdrop-blur border-0 shadow-soft">
+          <Card className="bg-base-light/70 backdrop-blur border border-brown-accent/50 shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Aktif</CardTitle>
-              <MessageCircle className="h-4 w-4 text-secondary" />
+              <CardTitle className="text-sm font-medium text-brown-dark">
+                Aktif
+              </CardTitle>
+              {/* Icon: brown-dark */}
+              <MessageCircle className="h-4 w-4 text-brown-dark" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">
+              <div className="text-2xl font-bold text-brown-dark">
                 {umkms.length}
               </div>
-              <p className="text-xs text-muted-foreground">Semua aktif</p>
+              <p className="text-xs text-brown-dark/70">Semua aktif</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-background/50 backdrop-blur border-0 shadow-soft">
+          <Card className="bg-base-light/70 backdrop-blur border border-brown-accent/50 shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pesan</CardTitle>
-              <MessageCircle className="h-4 w-4 text-accent" />
+              <CardTitle className="text-sm font-medium text-brown-dark">
+                Pesan
+              </CardTitle>
+              {/* Icon: brown-light (untuk kontras yang berbeda) */}
+              <MessageCircle className="h-4 w-4 text-brown-light" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">0</div>
-              <p className="text-xs text-muted-foreground">Pesan baru</p>
+              <div className="text-2xl font-bold text-brown-dark">0</div>
+              <p className="text-xs text-brown-dark/70">Pesan baru</p>
             </CardContent>
           </Card>
         </div>
@@ -289,7 +298,8 @@ export default function DashboardSeller() {
               setEditingUmkm(null);
               resetForm();
             }}
-            className="linear-warm text-white"
+            // Button utama: bg-brown-accent, text-white
+            className="bg-brown-accent hover:bg-brown-accent/90 text-white"
           >
             <Plus className="h-4 w-4 mr-2" />
             {showForm ? "Batal Tambah UMKM" : "Tambah UMKM Baru"}
@@ -298,12 +308,13 @@ export default function DashboardSeller() {
 
         {/* UMKM Form */}
         {showForm && (
-          <Card className="mb-8 bg-background/50 backdrop-blur border-0 shadow-soft">
+          // Card: bg-base-light/70, border brown-accent/50, shadow-md
+          <Card className="mb-8 bg-base-light/70 backdrop-blur border border-brown-accent/50 shadow-md">
             <CardHeader>
-              <CardTitle>
+              <CardTitle className="text-brown-dark">
                 {editingUmkm ? "Edit UMKM" : "Tambah UMKM Baru"}
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-brown-dark/70">
                 Isi informasi UMKM Anda dengan lengkap
               </CardDescription>
             </CardHeader>
@@ -311,7 +322,11 @@ export default function DashboardSeller() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Nama UMKM</Label>
+                    {/* Label: brown-dark */}
+                    <Label htmlFor="name" className="text-brown-dark">
+                      Nama UMKM
+                    </Label>
+                    {/* Input (Diasumsikan komponen Input sudah disesuaikan) */}
                     <Input
                       id="name"
                       value={formData.name}
@@ -323,7 +338,10 @@ export default function DashboardSeller() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="category">Kategori</Label>
+                    {/* Label: brown-dark */}
+                    <Label htmlFor="category" className="text-brown-dark">
+                      Kategori
+                    </Label>
                     <Input
                       id="category"
                       value={formData.category}
@@ -337,7 +355,11 @@ export default function DashboardSeller() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Deskripsi</Label>
+                  {/* Label: brown-dark */}
+                  <Label htmlFor="description" className="text-brown-dark">
+                    Deskripsi
+                  </Label>
+                  {/* Textarea (Diasumsikan komponen Textarea sudah disesuaikan) */}
                   <Textarea
                     id="description"
                     value={formData.description}
@@ -350,7 +372,10 @@ export default function DashboardSeller() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="address">Alamat</Label>
+                  {/* Label: brown-dark */}
+                  <Label htmlFor="address" className="text-brown-dark">
+                    Alamat
+                  </Label>
                   <Input
                     id="address"
                     value={formData.address}
@@ -363,7 +388,10 @@ export default function DashboardSeller() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Telepon</Label>
+                    {/* Label: brown-dark */}
+                    <Label htmlFor="phone" className="text-brown-dark">
+                      Telepon
+                    </Label>
                     <Input
                       id="phone"
                       value={formData.phone}
@@ -374,7 +402,10 @@ export default function DashboardSeller() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="latitude">Latitude</Label>
+                    {/* Label: brown-dark */}
+                    <Label htmlFor="latitude" className="text-brown-dark">
+                      Latitude
+                    </Label>
                     <Input
                       id="latitude"
                       type="number"
@@ -387,7 +418,10 @@ export default function DashboardSeller() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="longitude">Longitude</Label>
+                    {/* Label: brown-dark */}
+                    <Label htmlFor="longitude" className="text-brown-dark">
+                      Longitude
+                    </Label>
                     <Input
                       id="longitude"
                       type="number"
@@ -402,7 +436,10 @@ export default function DashboardSeller() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="image_url">URL Gambar</Label>
+                  {/* Label: brown-dark */}
+                  <Label htmlFor="image_url" className="text-brown-dark">
+                    URL Gambar
+                  </Label>
                   <Input
                     id="image_url"
                     value={formData.image_url}
@@ -417,7 +454,8 @@ export default function DashboardSeller() {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="linear-warm text-white"
+                    // Button utama: bg-brown-accent, text-white
+                    className="bg-brown-accent hover:bg-brown-accent/90 text-white"
                   >
                     {loading
                       ? "Menyimpan..."
@@ -425,6 +463,7 @@ export default function DashboardSeller() {
                       ? "Update UMKM"
                       : "Tambah UMKM"}
                   </Button>
+                  {/* Button Outline (sudah diubah di komponen Button) */}
                   <Button
                     type="button"
                     variant="outline"
@@ -445,20 +484,25 @@ export default function DashboardSeller() {
         {/* UMKM List */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {umkms.map((umkm) => (
+            // Card: bg-base-light/70, border brown-accent/50, shadow-md
             <Card
               key={umkm.id}
-              className="bg-background/50 backdrop-blur border-0 shadow-soft hover:shadow-medium transition-shadow"
+              className="bg-base-light/70 backdrop-blur border border-brown-accent/50 shadow-md hover:shadow-lg transition-shadow"
             >
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="text-lg">{umkm.name}</CardTitle>
-                    <CardDescription className="flex items-center gap-1 mt-1">
+                    <CardTitle className="text-lg text-brown-dark">
+                      {umkm.name}
+                    </CardTitle>
+                    {/* Card Description: brown-dark/70 */}
+                    <CardDescription className="flex items-center gap-1 mt-1 text-brown-dark/70">
                       <Store className="h-3 w-3" />
                       {umkm.category}
                     </CardDescription>
                   </div>
                   <div className="flex gap-1">
+                    {/* Button Outline Edit */}
                     <Button
                       variant="outline"
                       size="sm"
@@ -466,6 +510,7 @@ export default function DashboardSeller() {
                     >
                       <Edit className="h-3 w-3" />
                     </Button>
+                    {/* Button Outline Delete */}
                     <Button
                       variant="outline"
                       size="sm"
@@ -478,24 +523,31 @@ export default function DashboardSeller() {
               </CardHeader>
               <CardContent className="space-y-3">
                 {umkm.description && (
-                  <p className="text-sm text-muted-foreground">
+                  // Text: brown-dark/70
+                  <p className="text-sm text-brown-dark/70">
                     {umkm.description}
                   </p>
                 )}
                 {umkm.address && (
                   <div className="flex items-start gap-2 text-sm">
-                    <MapPin className="h-4 w-4 text-primary mt-0.5" />
-                    <span className="text-foreground">{umkm.address}</span>
+                    {/* Icon: brown-accent */}
+                    <MapPin className="h-4 w-4 text-brown-accent mt-0.5" />
+                    {/* Text: brown-dark */}
+                    <span className="text-brown-dark">{umkm.address}</span>
                   </div>
                 )}
                 {umkm.phone && (
                   <div className="flex items-center gap-2 text-sm">
-                    <Phone className="h-4 w-4 text-secondary" />
-                    <span className="text-foreground">{umkm.phone}</span>
+                    {/* Icon: brown-dark */}
+                    <Phone className="h-4 w-4 text-brown-dark" />
+                    {/* Text: brown-dark */}
+                    <span className="text-brown-dark">{umkm.phone}</span>
                   </div>
                 )}
-                <div className="pt-2 border-t border-border">
-                  <p className="text-xs text-muted-foreground">
+                {/* Separator: border brown-accent/30 */}
+                <div className="pt-2 border-t border-brown-accent/30">
+                  {/* Text: brown-dark/70 */}
+                  <p className="text-xs text-brown-dark/70">
                     Dibuat:{" "}
                     {new Date(umkm.created_at).toLocaleDateString("id-ID")}
                   </p>
@@ -505,19 +557,25 @@ export default function DashboardSeller() {
           ))}
         </div>
 
+        {/* Empty State */}
         {umkms.length === 0 && !showForm && (
-          <Card className="bg-background/50 backdrop-blur border-0 shadow-soft text-center py-12">
+          // Card: bg-base-light/70, border brown-accent/50, shadow-md
+          <Card className="bg-base-light/70 backdrop-blur border border-brown-accent/50 shadow-md text-center py-12">
             <CardContent>
-              <Store className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">
+              {/* Icon: brown-dark/70 */}
+              <Store className="h-12 w-12 text-brown-dark/70 mx-auto mb-4" />
+              {/* Text: brown-dark */}
+              <h3 className="text-lg font-semibold text-brown-dark mb-2">
                 Belum ada UMKM
               </h3>
-              <p className="text-muted-foreground mb-4">
+              {/* Text: brown-dark/70 */}
+              <p className="text-brown-dark/70 mb-4">
                 Mulai dengan menambahkan UMKM pertama Anda
               </p>
+              {/* Button utama: bg-brown-accent, text-white */}
               <Button
                 onClick={() => setShowForm(true)}
-                className="linear-warm text-white"
+                className="bg-brown-accent hover:bg-brown-accent/90 text-white"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Tambah UMKM Pertama

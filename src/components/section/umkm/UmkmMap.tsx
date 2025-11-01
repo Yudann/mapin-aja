@@ -204,11 +204,12 @@ const UmkmMap: React.FC<UmkmMapProps> = ({
       markersRef.current = [];
 
       // Create custom icon
+      // MENGGANTI WARNA MARKER UMKM
       const customIcon = L.divIcon({
         className: "custom-marker",
         html: `
           <div style="
-            background-color: #8B5E3C;
+            background-color: #4A90E2; /* brown-accent */
             width: 40px;
             height: 40px;
             border-radius: 50% 50% 50% 0;
@@ -263,10 +264,10 @@ const UmkmMap: React.FC<UmkmMapProps> = ({
             });
 
           // Add popup
+          // MENGGANTI WARNA TEKS POPUP
           marker.bindPopup(`
             <div style="padding: 8px; min-width: 200px;">
-              <h3 style="margin: 0 0 8px 0; font-weight: bold; color: #3E2C23;">${umkm.name}</h3>
-              <p style="margin: 0 0 8px 0; color: #666; font-size: 12px;">${umkm.category}</p>
+              <h3 style="margin: 0 0 8px 0; font-weight: bold; color: #3E2C23;">${umkm.name}</h3> <p style="margin: 0 0 8px 0; color: #666; font-size: 12px;">${umkm.category}</p>
               <p style="margin: 0; color: #888; font-size: 11px;">${umkm.address}</p>
             </div>
           `);
@@ -317,6 +318,7 @@ const UmkmMap: React.FC<UmkmMapProps> = ({
               }
 
               // Add user location marker
+              // WARNA MARKER LOKASI USER DI PERTAHANKAN (BIRU)
               const userIcon = L.divIcon({
                 className: "user-location-marker",
                 html: `
@@ -416,20 +418,23 @@ const UmkmMap: React.FC<UmkmMapProps> = ({
       {/* Map Container */}
       <div
         ref={mapRef}
-        className="w-full h-full rounded-2xl overflow-hidden shadow-2xl bg-gray-200"
+        // Mengganti bg-gray-200 dengan bg-brown-light/50
+        className="w-full h-full rounded-2xl overflow-hidden shadow-2xl bg-brown-light/50"
       />
 
-      {/* Controls */}
+      {/* Controls: Lokasi Saya Button */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={getUserLocation}
         disabled={isLoadingLocation || !map}
-        className="absolute top-4 right-4 z-[1000] bg-white hover:bg-gray-50 text-[#8B5E3C] p-3 rounded-full shadow-lg border-2 border-[#DCC1A0] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        // Mengganti warna teks, hover, dan border dengan brown-accent/brown-light
+        className="absolute top-4 right-4 z-[1000] bg-white hover:bg-brown-light text-brown-accent p-3 rounded-full shadow-lg border-2 border-brown-accent/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         title="Cari lokasi saya"
       >
         {isLoadingLocation ? (
-          <div className="w-6 h-6 border-2 border-[#8B5E3C] border-t-transparent rounded-full animate-spin" />
+          // Mengganti warna border loader dengan brown-accent
+          <div className="w-6 h-6 border-2 border-brown-accent border-t-transparent rounded-full animate-spin" />
         ) : (
           <Navigation className="w-6 h-6" />
         )}
@@ -440,23 +445,28 @@ const UmkmMap: React.FC<UmkmMapProps> = ({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="absolute bottom-4 left-4 z-[1000] bg-white/95 backdrop-blur-sm p-4 rounded-xl shadow-lg border-2 border-[#DCC1A0]"
+        // Mengganti warna border dengan brown-accent/50
+        className="absolute bottom-4 left-4 z-[1000] bg-white/95 backdrop-blur-sm p-4 rounded-xl shadow-lg border-2 border-brown-accent/50"
       >
         <div className="flex items-center gap-3 mb-2">
           <div
-            className="w-6 h-6 bg-[#8B5E3C] rounded-full border-2 border-white shadow-md"
+            // Mengganti warna marker Legend dengan brown-accent
+            className="w-6 h-6 bg-brown-accent rounded-full border-2 border-white shadow-md"
             style={{
               transform: "rotate(45deg)",
               borderRadius: "50% 50% 50% 0",
             }}
           />
-          <span className="text-sm font-semibold text-[#3E2C23]">
+          {/* Mengganti warna teks dengan brown-dark */}
+          <span className="text-sm font-semibold text-brown-dark">
             Lokasi UMKM
           </span>
         </div>
         <div className="flex items-center gap-3">
+          {/* Warna Lokasi Anda (Biru) dipertahankan */}
           <div className="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md" />
-          <span className="text-sm font-semibold text-[#3E2C23]">
+          {/* Mengganti warna teks dengan brown-dark */}
+          <span className="text-sm font-semibold text-brown-dark">
             Lokasi Anda
           </span>
         </div>
@@ -470,14 +480,16 @@ const UmkmMap: React.FC<UmkmMapProps> = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 300 }}
             transition={{ type: "spring", damping: 25 }}
-            className="absolute top-4 left-4 z-[1000] w-80 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border-2 border-[#DCC1A0] overflow-hidden"
+            // Mengganti warna border dengan brown-accent/50
+            className="absolute top-4 left-4 z-[1000] w-80 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border-2 border-brown-accent/50 overflow-hidden"
           >
             {/* Close Button */}
             <button
               onClick={() => setSelectedUmkm(null)}
               className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition-all"
             >
-              <X className="w-5 h-5 text-[#3E2C23]" />
+              {/* Mengganti warna ikon dengan brown-dark */}
+              <X className="w-5 h-5 text-brown-dark" />
             </button>
 
             {/* Image */}
@@ -491,8 +503,10 @@ const UmkmMap: React.FC<UmkmMapProps> = ({
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
               </div>
             ) : (
-              <div className="h-40 bg-gradient-to-br from-[#8B5E3C]/20 to-[#A3B18A]/20 flex items-center justify-center">
-                <MapPin className="w-16 h-16 text-[#8B5E3C]/40" />
+              // Mengganti warna fallback image dengan brown-accent/brown-light
+              <div className="h-40 bg-gradient-to-br from-brown-accent/20 to-brown-light/50 flex items-center justify-center">
+                {/* Mengganti warna ikon dengan brown-accent/40 */}
+                <MapPin className="w-16 h-16 text-brown-accent/40" />
               </div>
             )}
 
@@ -500,25 +514,30 @@ const UmkmMap: React.FC<UmkmMapProps> = ({
             <div className="p-5 space-y-4">
               {/* Title & Category */}
               <div>
-                <h3 className="text-xl font-bold text-[#3E2C23] mb-2">
+                {/* Mengganti warna judul dengan brown-dark */}
+                <h3 className="text-xl font-bold text-brown-dark mb-2">
                   {selectedUmkm.name}
                 </h3>
-                <span className="inline-block px-3 py-1 bg-[#A3B18A]/20 text-[#8B5E3C] rounded-full text-xs font-semibold">
+                {/* Mengganti warna badge dengan brown-accent */}
+                <span className="inline-block px-3 py-1 bg-brown-accent/20 text-brown-accent rounded-full text-xs font-semibold">
                   {selectedUmkm.category}
                 </span>
               </div>
 
               {/* Description */}
               {selectedUmkm.description && (
-                <p className="text-sm text-[#3E2C23]/70">
+                // Mengganti warna teks dengan brown-dark/70
+                <p className="text-sm text-brown-dark/70">
                   {selectedUmkm.description}
                 </p>
               )}
 
               {/* Address */}
               <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-[#8B5E3C] flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-[#3E2C23]/80">
+                {/* Mengganti warna ikon dengan brown-accent */}
+                <MapPin className="w-5 h-5 text-brown-accent flex-shrink-0 mt-0.5" />
+                {/* Mengganti warna teks dengan brown-dark/80 */}
+                <span className="text-sm text-brown-dark/80">
                   {selectedUmkm.address}
                 </span>
               </div>
@@ -526,8 +545,10 @@ const UmkmMap: React.FC<UmkmMapProps> = ({
               {/* Phone */}
               {selectedUmkm.phone && (
                 <div className="flex items-center gap-3">
-                  <Phone className="w-5 h-5 text-[#8B5E3C]" />
-                  <span className="text-sm text-[#3E2C23]/80">
+                  {/* Mengganti warna ikon dengan brown-accent */}
+                  <Phone className="w-5 h-5 text-brown-accent" />
+                  {/* Mengganti warna teks dengan brown-dark/80 */}
+                  <span className="text-sm text-brown-dark/80">
                     {selectedUmkm.phone}
                   </span>
                 </div>
@@ -538,14 +559,16 @@ const UmkmMap: React.FC<UmkmMapProps> = ({
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="flex-1 bg-[#8B5E3C] hover:bg-[#6d4a2e] text-white py-2.5 px-4 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
+                  // Mengganti warna tombol dengan brown-accent/brown-dark
+                  className="flex-1 bg-brown-accent hover:bg-brown-dark text-white py-2.5 px-4 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
                 >
                   <MessageCircle className="w-4 h-4" />
                   Chat
                 </motion.button>
                 <Link
                   href={`/umkm/${selectedUmkm.id}`}
-                  className="flex-1 bg-white hover:bg-gray-50 border-2 border-[#8B5E3C] text-[#8B5E3C] py-2.5 px-4 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
+                  // Mengganti warna border dan teks dengan brown-accent
+                  className="flex-1 bg-white hover:bg-brown-light border-2 border-brown-accent text-brown-accent py-2.5 px-4 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
                 >
                   <ExternalLink className="w-4 h-4" />
                   Detail
@@ -558,38 +581,47 @@ const UmkmMap: React.FC<UmkmMapProps> = ({
 
       {/* Loading Overlay */}
       {isLoadingMap && !mapError && (
-        <div className="absolute inset-0 bg-[#FAF3E0] flex flex-col items-center justify-center z-[1001] rounded-2xl">
+        // Mengganti bg dengan brown-light
+        <div className="absolute inset-0 bg-brown-light flex flex-col items-center justify-center z-[1001] rounded-2xl">
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-12 h-12 border-4 border-[#8B5E3C] border-t-transparent rounded-full mb-4"
+            // Mengganti warna loader dengan brown-accent
+            className="w-12 h-12 border-4 border-brown-accent border-t-transparent rounded-full mb-4"
           />
-          <p className="text-[#3E2C23] font-semibold">Memuat peta...</p>
+          {/* Mengganti warna teks dengan brown-dark */}
+          <p className="text-brown-dark font-semibold">Memuat peta...</p>
         </div>
       )}
 
       {/* Error Overlay */}
       {mapError && (
-        <div className="absolute inset-0 bg-[#FAF3E0] flex flex-col items-center justify-center z-[1001] rounded-2xl p-6">
+        // Mengganti bg dengan brown-light
+        <div className="absolute inset-0 bg-brown-light flex flex-col items-center justify-center z-[1001] rounded-2xl p-6">
           <div className="text-center max-w-md">
+            {/* Warna error (Merah) dipertahankan */}
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <X className="w-8 h-8 text-red-600" />
             </div>
-            <h3 className="text-lg font-bold text-[#3E2C23] mb-2">
+            {/* Mengganti warna teks dengan brown-dark */}
+            <h3 className="text-lg font-bold text-brown-dark mb-2">
               Gagal Memuat Peta
             </h3>
-            <p className="text-[#3E2C23]/70 mb-4">{mapError}</p>
+            {/* Mengganti warna teks dengan brown-dark/70 */}
+            <p className="text-brown-dark/70 mb-4">{mapError}</p>
             <div className="flex gap-3">
               <button
                 onClick={retryLoadMap}
-                className="bg-[#8B5E3C] hover:bg-[#6d4a2e] text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
+                // Mengganti warna tombol dengan brown-accent/brown-dark
+                className="bg-brown-accent hover:bg-brown-dark text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
               >
                 <RefreshCw className="w-4 h-4" />
                 Coba Lagi
               </button>
               <button
                 onClick={() => window.location.reload()}
-                className="bg-white hover:bg-gray-50 border-2 border-[#8B5E3C] text-[#8B5E3C] px-4 py-2 rounded-lg font-semibold transition-colors"
+                // Mengganti warna border dan teks dengan brown-accent
+                className="bg-white hover:bg-brown-light border-2 border-brown-accent text-brown-accent px-4 py-2 rounded-lg font-semibold transition-colors"
               >
                 Refresh Halaman
               </button>
@@ -604,12 +636,16 @@ const UmkmMap: React.FC<UmkmMapProps> = ({
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-white/95 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg border-2 border-[#DCC1A0]"
+          // Mengganti warna border dengan brown-accent/50
+          className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-white/95 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg border-2 border-brown-accent/50"
         >
           <div className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-[#8B5E3C]" />
-            <span className="font-bold text-[#3E2C23]">{umkms.length}</span>
-            <span className="text-sm text-[#3E2C23]/70">UMKM di peta</span>
+            {/* Mengganti warna ikon dengan brown-accent */}
+            <MapPin className="w-5 h-5 text-brown-accent" />
+            {/* Mengganti warna teks dengan brown-dark */}
+            <span className="font-bold text-brown-dark">{umkms.length}</span>
+            {/* Mengganti warna teks dengan brown-dark/70 */}
+            <span className="text-sm text-brown-dark/70">UMKM di peta</span>
           </div>
         </motion.div>
       )}

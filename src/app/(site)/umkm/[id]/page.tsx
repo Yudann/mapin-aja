@@ -32,11 +32,12 @@ import { createConversation } from "@/hooks/use-chat";
 import dynamic from "next/dynamic";
 
 // Dynamically import the map component to avoid SSR issues
-const DynamicMap = dynamic(() => import("@/components/UmkmMap"), {
+const DynamicMap = dynamic(() => import("@/components/section/umkm/UmkmMap"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full bg-muted/50 rounded-lg flex items-center justify-center">
       <div className="text-center">
+        {/* Default Tailwind primary untuk loading spin */}
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
         <p className="text-muted-foreground">Memuat peta...</p>
       </div>
@@ -44,12 +45,23 @@ const DynamicMap = dynamic(() => import("@/components/UmkmMap"), {
   ),
 });
 
+interface UmkmDetailResponse {
+  data: UMKM & {
+    owner_profile?: {
+      full_name: string | null;
+      avatar_url: string | null;
+      phone: string | null;
+    };
+  };
+  error?: string;
+}
+
 export default function UmkmDetail() {
   const params = useParams();
   const router = useRouter();
   const [umkm, setUmkm] = useState<UMKM | null>(null);
-  const [loading, setLoading] = useState(true);
   const [ownerProfile, setOwnerProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [startingChat, setStartingChat] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -63,23 +75,21 @@ export default function UmkmDetail() {
     try {
       setLoading(true);
 
-      const { data: umkmData, error } = await supabase
-        .from("umkm")
-        .select("*")
-        .eq("id", umkmId)
-        .single();
+      const response = await fetch(`/api/umkm/${umkmId}`);
 
-      if (error) throw error;
-      setUmkm(umkmData);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-      if (umkmData) {
-        const { data: profileData } = await supabase
-          .from("profiles")
-          .select("full_name, avatar_url")
-          .eq("id", umkmData.owner_id)
-          .single();
+      const result: UmkmDetailResponse = await response.json();
 
-        setOwnerProfile(profileData);
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      if (result.data) {
+        setUmkm(result.data);
+        setOwnerProfile(result.data.owner_profile || null);
       }
     } catch (error) {
       console.error("Error fetching UMKM detail:", error);
@@ -136,14 +146,17 @@ export default function UmkmDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FAF3E0] via-background to-[#A3B18A]/10">
+      // BG: brown-light dengan gradient
+      <div className="min-h-screen bg-linear-to-br from-brown-light via-white to-brown-light/50">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#8B5E3C] border-t-transparent mx-auto mb-4"></div>
-            <p className="text-lg text-[#3E2C23] font-semibold">
+            {/* Loading spin menggunakan brown-accent */}
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-brown-accent border-t-transparent mx-auto mb-4"></div>
+            {/* Text menggunakan brown-dark */}
+            <p className="text-lg text-brown-dark font-semibold">
               Memuat detail UMKM...
             </p>
-            <p className="text-[#3E2C23]/60 mt-2">Mohon tunggu sebentar</p>
+            <p className="text-brown-dark/60 mt-2">Mohon tunggu sebentar</p>
           </div>
         </div>
       </div>
@@ -152,20 +165,25 @@ export default function UmkmDetail() {
 
   if (!umkm) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FAF3E0] via-background to-[#A3B18A]/10">
+      // BG: brown-light dengan gradient
+      <div className="min-h-screen bg-linear-to-br from-brown-light via-white to-brown-light/50">
         <div className="container mx-auto px-4 py-8">
-          <Card className="text-center py-16 bg-white/80 backdrop-blur border-2 border-[#DCC1A0] shadow-soft max-w-md mx-auto">
+          {/* Card: bg-base-light/80, border brown-accent */}
+          <Card className="text-center py-16 bg-white/80 backdrop-blur border-2 border-brown-accent/50 shadow-md max-w-md mx-auto">
             <CardContent>
-              <Store className="h-20 w-20 text-[#8B5E3C] mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-[#3E2C23] mb-3">
+              {/* Icon menggunakan brown-accent */}
+              <Store className="h-20 w-20 text-brown-accent mx-auto mb-4" />
+              {/* Text menggunakan brown-dark */}
+              <h3 className="text-2xl font-bold text-brown-dark mb-3">
                 UMKM tidak ditemukan
               </h3>
-              <p className="text-[#3E2C23]/70 mb-6 text-lg">
+              <p className="text-brown-dark/70 mb-6 text-lg">
                 UMKM yang Anda cari tidak ditemukan atau mungkin telah dihapus.
               </p>
               <Button
                 asChild
-                className="bg-[#8B5E3C] hover:bg-[#6d4a2e] text-white"
+                // Button: bg-brown-accent, hover:bg-brown-dark
+                className="bg-brown-accent hover:bg-brown-dark text-white"
               >
                 <Link href="/umkm">
                   <ArrowLeft className="h-4 w-4 mr-2" />
@@ -183,14 +201,16 @@ export default function UmkmDetail() {
   const mapUmkms = umkm.latitude && umkm.longitude ? [umkm] : [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FAF3E0] via-background to-[#A3B18A]/10">
+    // BG: brown-light dengan gradient
+    <div className="min-h-screen bg-linear-to-br from-brown-light via-white to-brown-light/50">
       <div className="container mx-auto px-4 py-8">
         {/* Header with Back Button */}
         <div className="flex items-center justify-between mb-8">
           <Button
             asChild
             variant="outline"
-            className="border-2 border-[#DCC1A0] bg-white/80 hover:bg-white"
+            // Button Outline: border brown-accent/50, bg-white/80
+            className="border-2 border-brown-accent/50 bg-white/80 hover:bg-white hover:text-brown-dark text-brown-dark"
           >
             <Link href="/umkm" className="flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
@@ -203,11 +223,13 @@ export default function UmkmDetail() {
               variant="outline"
               size="icon"
               onClick={toggleFavorite}
-              className="border-2 border-[#DCC1A0] bg-white/80 hover:bg-white"
+              // Button Outline: border brown-accent/50, bg-white/80
+              className="border-2 border-brown-accent/50 bg-white/80 hover:bg-white"
             >
               <Heart
                 className={`h-4 w-4 ${
-                  isFavorite ? "fill-red-500 text-red-500" : "text-[#8B5E3C]"
+                  // Heart filled menggunakan default red-500
+                  isFavorite ? "fill-red-500 text-red-500" : "text-brown-accent"
                 }`}
               />
             </Button>
@@ -216,9 +238,10 @@ export default function UmkmDetail() {
               variant="outline"
               size="icon"
               onClick={handleShare}
-              className="border-2 border-[#DCC1A0] bg-white/80 hover:bg-white"
+              // Button Outline: border brown-accent/50, bg-white/80
+              className="border-2 border-brown-accent/50 bg-white/80 hover:bg-white"
             >
-              <Share2 className="h-4 w-4 text-[#8B5E3C]" />
+              <Share2 className="h-4 w-4 text-brown-accent" />
             </Button>
           </div>
         </div>
@@ -227,7 +250,8 @@ export default function UmkmDetail() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Hero Section */}
-            <Card className="bg-white/80 backdrop-blur border-2 border-[#DCC1A0] shadow-soft overflow-hidden">
+            {/* Card: bg-base-light/80, border brown-accent/50 */}
+            <Card className="bg-white/80 backdrop-blur border-2 border-brown-accent/50 shadow-md overflow-hidden">
               {umkm.image_url ? (
                 <div className="aspect-video overflow-hidden relative">
                   <img
@@ -236,29 +260,33 @@ export default function UmkmDetail() {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-4 right-4 flex gap-2">
-                    <span className="inline-flex items-center px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-sm font-semibold text-[#8B5E3C] border border-[#DCC1A0]">
+                    <span className="inline-flex items-center px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-sm font-semibold text-brown-accent border border-brown-accent/50">
                       <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
                       4.8
                     </span>
                   </div>
                 </div>
               ) : (
-                <div className="aspect-video bg-gradient-to-br from-[#8B5E3C]/10 to-[#A3B18A]/10 flex items-center justify-center">
-                  <Store className="h-20 w-20 text-[#8B5E3C]/40" />
+                // Placeholder image
+                <div className="aspect-video bg-linear-to-br from-brown-accent/10 to-brown-accent/10 flex items-center justify-center">
+                  <Store className="h-20 w-20 text-brown-accent/40" />
                 </div>
               )}
 
               <CardHeader className="pb-4">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <CardTitle className="text-3xl md:text-4xl font-bold text-[#3E2C23] mb-3">
+                    {/* Judul menggunakan brown-dark */}
+                    <CardTitle className="text-3xl md:text-4xl font-bold text-brown-dark mb-3">
                       {umkm.name}
                     </CardTitle>
                     <div className="flex flex-wrap gap-2 mb-4">
-                      <span className="inline-flex items-center px-4 py-2 bg-[#8B5E3C] text-white rounded-full text-sm font-semibold">
+                      {/* Badge Kategori menggunakan brown-accent */}
+                      <span className="inline-flex items-center px-4 py-2 bg-brown-accent text-white rounded-full text-sm font-semibold">
                         {umkm.category}
                       </span>
-                      <span className="inline-flex items-center px-4 py-2 bg-[#A3B18A] text-white rounded-full text-sm font-semibold">
+                      {/* Badge Jam Buka menggunakan brown-accent dengan opacity lebih rendah */}
+                      <span className="inline-flex items-center px-4 py-2 bg-brown-accent/70 text-white rounded-full text-sm font-semibold">
                         <Clock className="h-3 w-3 mr-1" />
                         Buka 08:00 - 22:00
                       </span>
@@ -267,7 +295,8 @@ export default function UmkmDetail() {
                 </div>
 
                 {umkm.description && (
-                  <CardDescription className="text-lg text-[#3E2C23]/80 leading-relaxed">
+                  // Deskripsi menggunakan brown-dark
+                  <CardDescription className="text-lg text-brown-dark/80 leading-relaxed">
                     {umkm.description}
                   </CardDescription>
                 )}
@@ -277,15 +306,17 @@ export default function UmkmDetail() {
                 {/* Contact Info Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   {umkm.address && (
-                    <div className="flex items-start gap-4 p-4 bg-white/50 rounded-xl border border-[#DCC1A0]">
-                      <div className="w-12 h-12 bg-[#8B5E3C]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <MapPin className="h-6 w-6 text-[#8B5E3C]" />
+                    // Info Alamat
+                    <div className="flex items-start gap-4 p-4 bg-white/50 rounded-xl border border-brown-accent/50">
+                      {/* Background Icon brown-accent/10, Icon brown-accent */}
+                      <div className="w-12 h-12 bg-brown-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <MapPin className="h-6 w-6 text-brown-accent" />
                       </div>
                       <div>
-                        <p className="font-semibold text-[#3E2C23] mb-1">
+                        <p className="font-semibold text-brown-dark mb-1">
                           Alamat
                         </p>
-                        <p className="text-[#3E2C23]/80 leading-relaxed">
+                        <p className="text-brown-dark/80 leading-relaxed">
                           {umkm.address}
                         </p>
                       </div>
@@ -293,15 +324,17 @@ export default function UmkmDetail() {
                   )}
 
                   {umkm.phone && (
-                    <div className="flex items-start gap-4 p-4 bg-white/50 rounded-xl border border-[#DCC1A0]">
-                      <div className="w-12 h-12 bg-[#A3B18A]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Phone className="h-6 w-6 text-[#A3B18A]" />
+                    // Info Telepon
+                    <div className="flex items-start gap-4 p-4 bg-white/50 rounded-xl border border-brown-accent/50">
+                      {/* Background Icon brown-accent/10, Icon brown-accent */}
+                      <div className="w-12 h-12 bg-brown-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Phone className="h-6 w-6 text-brown-accent" />
                       </div>
                       <div>
-                        <p className="font-semibold text-[#3E2C23] mb-1">
+                        <p className="font-semibold text-brown-dark mb-1">
                           Telepon
                         </p>
-                        <p className="text-[#3E2C23]/80 text-lg font-medium">
+                        <p className="text-brown-dark/80 text-lg font-medium">
                           {umkm.phone}
                         </p>
                       </div>
@@ -311,11 +344,12 @@ export default function UmkmDetail() {
 
                 {/* Interactive Map */}
                 <div className="mb-8">
-                  <h4 className="font-bold text-xl text-[#3E2C23] mb-4 flex items-center gap-2">
-                    <Navigation className="h-5 w-5 text-[#8B5E3C]" />
+                  <h4 className="font-bold text-xl text-brown-dark mb-4 flex items-center gap-2">
+                    <Navigation className="h-5 w-5 text-brown-accent" />
                     Lokasi di Peta
                   </h4>
-                  <div className="h-80 rounded-2xl overflow-hidden border-2 border-[#DCC1A0] shadow-soft">
+                  {/* Border brown-accent/50 */}
+                  <div className="h-80 rounded-2xl overflow-hidden border-2 border-brown-accent/50 shadow-md">
                     <DynamicMap
                       umkms={mapUmkms}
                       onMarkerClick={(selectedUmkm) => {
@@ -325,12 +359,10 @@ export default function UmkmDetail() {
                       className="w-full h-full"
                     />
                   </div>
-                  {(!umkm.latitude || !umkm.longitude) && (
-                    <p className="text-center text-[#3E2C23]/60 mt-2 text-sm">
-                      *Lokasi koordinat tidak tersedia, menampilkan lokasi
-                      perkiraan
-                    </p>
-                  )}
+                  <p className="text-center text-brown-dark/60 mt-2 text-sm">
+                    *Lokasi koordinat tidak tersedia, menampilkan lokasi
+                    perkiraan
+                  </p>
                 </div>
 
                 {/* Action Buttons */}
@@ -338,7 +370,8 @@ export default function UmkmDetail() {
                   <Button
                     onClick={handleStartChat}
                     disabled={startingChat}
-                    className="flex-1 bg-[#8B5E3C] hover:bg-[#6d4a2e] text-white py-3 text-lg font-semibold h-auto"
+                    // Button Chat: bg-brown-accent, hover:bg-brown-dark
+                    className="flex-1 bg-brown-accent hover:bg-brown-dark text-white py-3 text-lg font-semibold h-auto"
                   >
                     {startingChat ? (
                       <div className="flex items-center gap-2">
@@ -357,7 +390,8 @@ export default function UmkmDetail() {
                     <Button
                       asChild
                       variant="outline"
-                      className="border-2 border-[#8B5E3C] text-[#8B5E3C] hover:bg-[#8B5E3C] hover:text-white py-3 text-lg font-semibold h-auto"
+                      // Button Telepon: border brown-accent, text brown-accent, hover:bg-brown-accent
+                      className="border-2 border-brown-accent text-brown-accent hover:bg-brown-accent hover:text-white py-3 text-lg font-semibold h-auto"
                     >
                       <Link
                         href={`tel:${umkm.phone}`}
@@ -376,26 +410,27 @@ export default function UmkmDetail() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Owner Info */}
-            <Card className="bg-white/80 backdrop-blur border-2 border-[#DCC1A0] shadow-soft">
+            <Card className="bg-white/80 backdrop-blur border-2 border-brown-accent/50 shadow-md">
               <CardHeader className="pb-4">
-                <CardTitle className="text-xl text-[#3E2C23] flex items-center gap-2">
-                  <Users className="h-5 w-5 text-[#8B5E3C]" />
+                <CardTitle className="text-xl text-brown-dark flex items-center gap-2">
+                  <Users className="h-5 w-5 text-brown-accent" />
                   Informasi Pemilik
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center gap-4 p-4 bg-white/50 rounded-xl border border-[#DCC1A0]">
-                  <div className="w-16 h-16 bg-gradient-to-br from-[#8B5E3C] to-[#A3B18A] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                <div className="flex items-center gap-4 p-4 bg-white/50 rounded-xl border border-brown-accent/50">
+                  {/* Avatar Placeholder: bg-linear-to-br dari brown-accent ke brown-accent/70 */}
+                  <div className="w-16 h-16 bg-linear-to-br from-brown-accent to-brown-accent/70 rounded-full flex items-center justify-center text-white font-bold text-lg">
                     {ownerProfile?.full_name?.charAt(0) || "P"}
                   </div>
                   <div>
-                    <p className="font-bold text-lg text-[#3E2C23]">
+                    <p className="font-bold text-lg text-brown-dark">
                       {ownerProfile?.full_name || "Pemilik UMKM"}
                     </p>
-                    <p className="text-[#3E2C23]/70">Pemilik Bisnis</p>
+                    <p className="text-brown-dark/70">Pemilik Bisnis</p>
                     <div className="flex items-center gap-1 mt-1">
                       <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-medium text-[#3E2C23]">
+                      <span className="text-sm font-medium text-brown-dark">
                         4.8 • 120 reviews
                       </span>
                     </div>
@@ -404,7 +439,8 @@ export default function UmkmDetail() {
 
                 <Button
                   variant="outline"
-                  className="w-full border-2 border-[#A3B18A] text-[#A3B18A] hover:bg-[#A3B18A] hover:text-white"
+                  // Button outline: border brown-accent, text brown-accent, hover:bg-brown-accent
+                  className="w-full border-2 border-brown-accent text-brown-accent hover:bg-brown-accent hover:text-white"
                 >
                   <MessageCircle className="h-4 w-4 mr-2" />
                   Lihat Profil Lengkap
@@ -413,52 +449,57 @@ export default function UmkmDetail() {
             </Card>
 
             {/* Business Stats */}
-            <Card className="bg-white/80 backdrop-blur border-2 border-[#DCC1A0] shadow-soft">
+            <Card className="bg-white/80 backdrop-blur border-2 border-brown-accent/50 shadow-md">
               <CardHeader className="pb-4">
-                <CardTitle className="text-xl text-[#3E2C23] flex items-center gap-2">
-                  <Store className="h-5 w-5 text-[#8B5E3C]" />
+                <CardTitle className="text-xl text-brown-dark flex items-center gap-2">
+                  <Store className="h-5 w-5 text-brown-accent" />
                   Statistik Bisnis
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-3 bg-white/50 rounded-lg border border-[#DCC1A0]">
-                    <div className="text-2xl font-bold text-[#8B5E3C]">
+                  <div className="text-center p-3 bg-white/50 rounded-lg border border-brown-accent/50">
+                    {/* Text brown-accent */}
+                    <div className="text-2xl font-bold text-brown-accent">
                       120+
                     </div>
-                    <div className="text-sm text-[#3E2C23]/70">Pengunjung</div>
+                    <div className="text-sm text-brown-dark/70">Pengunjung</div>
                   </div>
-                  <div className="text-center p-3 bg-white/50 rounded-lg border border-[#DCC1A0]">
-                    <div className="text-2xl font-bold text-[#A3B18A]">4.8</div>
-                    <div className="text-sm text-[#3E2C23]/70">Rating</div>
+                  <div className="text-center p-3 bg-white/50 rounded-lg border border-brown-accent/50">
+                    {/* Text brown-accent */}
+                    <div className="text-2xl font-bold text-brown-accent">
+                      4.8
+                    </div>
+                    <div className="text-sm text-brown-dark/70">Rating</div>
                   </div>
                 </div>
 
-                <div className="p-3 bg-[#FAF3E0] rounded-lg border border-[#DCC1A0]">
-                  <div className="flex items-center gap-2 text-sm text-[#3E2C23]">
+                {/* Status Online menggunakan bg-brown-light */}
+                <div className="p-3 bg-brown-light rounded-lg border border-brown-accent/50">
+                  <div className="flex items-center gap-2 text-sm text-brown-dark">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <span className="font-semibold">Online</span>
-                    <span className="text-[#3E2C23]/60">• Membalas cepat</span>
+                    <span className="text-brown-dark/60">• Membalas cepat</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Business Timeline */}
-            <Card className="bg-white/80 backdrop-blur border-2 border-[#DCC1A0] shadow-soft">
+            <Card className="bg-white/80 backdrop-blur border-2 border-brown-accent/50 shadow-md">
               <CardHeader className="pb-4">
-                <CardTitle className="text-xl text-[#3E2C23] flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-[#8B5E3C]" />
+                <CardTitle className="text-xl text-brown-dark flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-brown-accent" />
                   Timeline Bisnis
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm font-medium text-[#3E2C23]/60">
+                    <p className="text-sm font-medium text-brown-dark/60">
                       Bergabung
                     </p>
-                    <p className="text-[#3E2C23] font-semibold">
+                    <p className="text-brown-dark font-semibold">
                       {new Date(umkm.created_at).toLocaleDateString("id-ID", {
                         weekday: "long",
                         year: "numeric",
@@ -468,10 +509,10 @@ export default function UmkmDetail() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-[#3E2C23]/60">
+                    <p className="text-sm font-medium text-brown-dark/60">
                       Terakhir Diupdate
                     </p>
-                    <p className="text-[#3E2C23] font-semibold">
+                    <p className="text-brown-dark font-semibold">
                       {new Date(umkm.updated_at).toLocaleDateString("id-ID", {
                         day: "numeric",
                         month: "long",
@@ -484,16 +525,17 @@ export default function UmkmDetail() {
             </Card>
 
             {/* Quick Actions */}
-            <Card className="bg-white/80 backdrop-blur border-2 border-[#DCC1A0] shadow-soft">
+            <Card className="bg-white/80 backdrop-blur border-2 border-brown-accent/50 shadow-md">
               <CardHeader className="pb-4">
-                <CardTitle className="text-xl text-[#3E2C23]">
+                <CardTitle className="text-xl text-brown-dark">
                   Aksi Cepat
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button
                   variant="outline"
-                  className="w-full justify-start h-12 text-[#3E2C23] hover:bg-[#8B5E3C] hover:text-white border-2 border-[#DCC1A0]"
+                  // Tombol aksi cepat: text brown-dark, hover:bg brown-accent
+                  className="w-full justify-start h-12 text-brown-dark hover:bg-brown-accent hover:text-white border-2 border-brown-accent/50"
                   asChild
                 >
                   <Link href="/umkm">
@@ -503,7 +545,8 @@ export default function UmkmDetail() {
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full justify-start h-12 text-[#3E2C23] hover:bg-[#A3B18A] hover:text-white border-2 border-[#DCC1A0]"
+                  // Tombol aksi cepat: text brown-dark, hover:bg brown-accent/70
+                  className="w-full justify-start h-12 text-brown-dark hover:bg-brown-accent/70 hover:text-white border-2 border-brown-accent/50"
                   asChild
                 >
                   <Link href="/">
