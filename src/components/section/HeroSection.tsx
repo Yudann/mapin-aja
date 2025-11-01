@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { MapPin, Store, TrendingUp, MessageCircle, Users } from "lucide-react";
-import Particles from "../HeroBg";
+import Particles from "../layout/HeroBg";
 
 const gradientPrimary =
   "linear-gradient(to bottom right, var(--color-brown-accent), var(--color-brown-dark))";
