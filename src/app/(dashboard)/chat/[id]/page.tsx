@@ -76,7 +76,7 @@ export default function ChatDetailPage() {
   if (loading) {
     return (
       // BG: brown-light dengan gradient
-      <div className="min-h-screen bg-gradient-to-br from-brown-light/50 via-base-light to-brown-light/80">
+      <div className="min-h-screen bg-linear-to-br from-brown-light/50 via-base-light to-brown-light/80">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             {/* Loading spin menggunakan brown-accent */}
@@ -91,7 +91,7 @@ export default function ChatDetailPage() {
 
   return (
     // BG: brown-light dengan gradient
-    <div className="min-h-screen bg-gradient-to-br from-brown-light/50 via-base-light to-brown-light/80">
+    <div className="min-h-screen bg-linear-to-br from-brown-light/50 via-base-light to-brown-light/80">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">

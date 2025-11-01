@@ -1,14 +1,20 @@
 import HeroSection from "@/components/section/HeroSection";
-import AboutSection from "@/components/section/AboutSection";
 import FeaturesSection from "@/components/section/FeatureSection";
 import RegisterSection from "@/components/section/RegisterSection";
+import ProblemSection from "@/components/section/ProblemSection";
+import SolutionSection from "@/components/section/SolutionSection";
+import HowItWorksSection from "@/components/section/HowItWorks";
+import ValueSection from "@/components/section/ValueSection";
 
 export default function LandingPage() {
   return (
     <div>
       <HeroSection />
-      <AboutSection />
+      <ProblemSection />
+      <SolutionSection />
       <FeaturesSection />
+      <HowItWorksSection />
+      <ValueSection />
       <RegisterSection />
     </div>
   );

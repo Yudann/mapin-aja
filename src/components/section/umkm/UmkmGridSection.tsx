@@ -9,16 +9,18 @@ import {
   X,
   Loader2,
   Phone,
-  Mail,
   Store,
   Grid,
   Map as MapIcon,
   RefreshCw,
+  Navigation,
+  TrendingUp,
+  ArrowRight,
+  Heart,
 } from "lucide-react";
 import Link from "next/link";
 import UmkmMap from "@/components/section/umkm/UmkmMap";
 
-// Sesuaikan interface dengan data dari API
 interface UMKM {
   id: string;
   owner_id: string;
@@ -32,20 +34,23 @@ interface UMKM {
   image_url: string | null;
   created_at: string;
   updated_at: string;
-  rating?: number | null; // Opsional karena tidak ada di data API
-  email?: string | null; // Opsional karena tidak ada di data API
+  rating?: number | null;
+  email?: string | null;
 }
 
 const UmkmGridSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [locationFilter, setLocationFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("popular");
   const [umkms, setUmkms] = useState<UMKM[]>([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<string[]>([]);
   const [locations, setLocations] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
   const [selectedUmkm, setSelectedUmkm] = useState<UMKM | null>(null);
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetchUmkms();
@@ -54,8 +59,6 @@ const UmkmGridSection = () => {
   const fetchUmkms = async () => {
     try {
       setLoading(true);
-      console.log("Fetching UMKM data...");
-
       const response = await fetch("/api/umkm");
 
       if (!response.ok) {
@@ -63,24 +66,19 @@ const UmkmGridSection = () => {
       }
 
       const data = await response.json();
-      console.log("Data received:", data);
 
-      // Pastikan data adalah array
       if (Array.isArray(data)) {
         setUmkms(data);
 
-        // Extract unique categories
         const uniqueCategories = Array.from(
           new Set(data.map((umkm: UMKM) => umkm.category).filter(Boolean))
         ) as string[];
 
-        // Extract unique locations (ambil bagian awal dari address untuk menyederhanakan)
         const uniqueLocations = Array.from(
           new Set(
             data
               .map((umkm: UMKM) => {
                 if (!umkm.address) return null;
-                // Ambil kota/kecamatan dari address (sederhana)
                 const parts = umkm.address.split(",");
                 return parts[parts.length - 1]?.trim() || umkm.address;
               })
@@ -90,11 +88,7 @@ const UmkmGridSection = () => {
 
         setCategories(uniqueCategories);
         setLocations(uniqueLocations);
-
-        console.log("Categories:", uniqueCategories);
-        console.log("Locations:", uniqueLocations);
       } else {
-        console.error("Data is not an array:", data);
         setUmkms([]);
       }
     } catch (error) {
@@ -105,7 +99,6 @@ const UmkmGridSection = () => {
     }
   };
 
-  // Filter UMKM based on search and filters
   const filteredUmkms = umkms.filter((umkm) => {
     const matchesSearch =
       umkm.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -122,10 +115,38 @@ const UmkmGridSection = () => {
     return matchesSearch && matchesCategory && matchesLocation;
   });
 
+  const sortedUmkms = [...filteredUmkms].sort((a, b) => {
+    switch (sortBy) {
+      case "popular":
+        return (b.rating || 0) - (a.rating || 0);
+      case "newest":
+        return (
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+      case "name":
+        return a.name.localeCompare(b.name);
+      default:
+        return 0;
+    }
+  });
+
   const resetFilters = () => {
     setCategoryFilter("all");
     setLocationFilter("all");
     setSearchQuery("");
+    setSortBy("popular");
+  };
+
+  const toggleFavorite = (id: string) => {
+    setFavorites((prev) => {
+      const newFavorites = new Set(prev);
+      if (newFavorites.has(id)) {
+        newFavorites.delete(id);
+      } else {
+        newFavorites.add(id);
+      }
+      return newFavorites;
+    });
   };
 
   const handleMarkerClick = (umkm: UMKM) => {
@@ -133,150 +154,181 @@ const UmkmGridSection = () => {
   };
 
   return (
-    // Mengganti gray-50 dengan brown-light
-    <section className="py-16 sm:py-24 bg-linear-to-b from-white to-brown-light/50">
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 sm:py-20 bg-linear-to-b from-base-light via-brown-light/20 to-base-light">
+      <div className="container max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          {/* Mengganti warna teks dengan brown-dark */}
-          <h1 className="text-4xl md:text-5xl font-bold text-brown-dark mb-4">
-            Jelajahi UMKM Lokal
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-brown-accent/10 border-2 border-brown-accent/30 rounded-full mb-6">
+            <Store className="w-4 h-4 text-brown-accent" />
+            <span className="text-sm font-bold text-brown-accent tracking-wide">
+              DIREKTORI LENGKAP
+            </span>
+          </div>
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-brown-dark mb-6 leading-tight">
+            Eksplorasi UMKM
+            <br />
+            <span className="bg-linear-to-r from-brown-accent via-brown-dark to-brown-accent bg-clip-text text-transparent">
+              Tanpa Batas
+            </span>
           </h1>
-          {/* Mengganti gray-600 dengan brown-dark/80 */}
-          <p className="text-xl text-brown-dark/80 max-w-2xl mx-auto">
-            Temukan bisnis lokal terbaik di sekitar Anda dan dukung perekonomian
-            daerah
+          <p className="text-xl text-brown-dark/70 max-w-2xl mx-auto leading-relaxed">
+            Temukan bisnis lokal terbaik di sekitar Anda dengan mudah
           </p>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {/* Mengganti gray-200 dengan brown-accent/20 */}
-          <div className="bg-white/80 backdrop-blur border-2 border-brown-accent/20 rounded-3xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-            {/* Mengganti warna ikon dengan brown-accent */}
-            <Store className="h-8 w-8 text-brown-accent mx-auto mb-2" />
-            {/* Mengganti gray-900 dengan brown-dark */}
-            <div className="text-3xl font-bold text-brown-dark">
+        {/* Stats Cards - More Compact */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div className="bg-base-light/80 backdrop-blur border-2 border-brown-accent/20 rounded-2xl shadow-soft p-5 text-center hover:shadow-lg hover:-translate-y-1 transition-all">
+            <div className="w-12 h-12 bg-linear-to-br from-brown-accent to-brown-dark rounded-xl flex items-center justify-center mx-auto mb-3 shadow-md">
+              <Store className="h-6 w-6 text-base-light" />
+            </div>
+            <div className="text-3xl font-black text-brown-dark mb-1">
               {umkms.length}
             </div>
-            {/* Mengganti gray-600 dengan brown-dark/70 */}
-            <p className="text-brown-dark/70 text-sm">Total UMKM</p>
+            <p className="text-brown-dark/60 text-sm font-semibold">
+              Total UMKM
+            </p>
           </div>
-          {/* Stat 2: Lokasi (Dipertahankan warna Hijau untuk kontras) */}
-          <div className="bg-white/80 backdrop-blur border-2 border-brown-accent/20 rounded-3xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-            <MapPin className="h-8 w-8 text-green-600 mx-auto mb-2" />
-            <div className="text-3xl font-bold text-brown-dark">
+
+          <div className="bg-base-light/80 backdrop-blur border-2 border-brown-accent/20 rounded-2xl shadow-soft p-5 text-center hover:shadow-lg hover:-translate-y-1 transition-all">
+            <div className="w-12 h-12 bg-linear-to-br from-green-600 to-emerald-700 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-md">
+              <MapPin className="h-6 w-6 text-base-light" />
+            </div>
+            <div className="text-3xl font-black text-brown-dark mb-1">
               {locations.length}
             </div>
-            <p className="text-brown-dark/70 text-sm">Lokasi</p>
+            <p className="text-brown-dark/60 text-sm font-semibold">Lokasi</p>
           </div>
-          {/* Stat 3: Kategori (Dipertahankan warna Amber untuk kontras/ikonik) */}
-          <div className="bg-white/80 backdrop-blur border-2 border-brown-accent/20 rounded-3xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-            <Star className="h-8 w-8 text-amber-500 mx-auto mb-2" />
-            <div className="text-3xl font-bold text-brown-dark">
+
+          <div className="bg-base-light/80 backdrop-blur border-2 border-brown-accent/20 rounded-2xl shadow-soft p-5 text-center hover:shadow-lg hover:-translate-y-1 transition-all">
+            <div className="w-12 h-12 bg-linear-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-md">
+              <TrendingUp className="h-6 w-6 text-base-light" />
+            </div>
+            <div className="text-3xl font-black text-brown-dark mb-1">
               {categories.length}
             </div>
-            <p className="text-brown-dark/70 text-sm">Kategori</p>
+            <p className="text-brown-dark/60 text-sm font-semibold">Kategori</p>
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="bg-white/80 backdrop-blur border-2 border-brown-accent/20 rounded-3xl shadow-lg p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            {/* Mengganti gray-900 dengan brown-dark */}
-            <h2 className="text-lg font-semibold text-brown-dark">
-              Filter UMKM
-            </h2>
-            <button
-              onClick={resetFilters}
-              // Mengganti gray-600 dengan brown-dark/70, hover dengan brown-accent
-              className="flex items-center gap-2 px-3 py-1 text-sm text-brown-dark/70 hover:text-brown-accent transition-colors"
-            >
-              <RefreshCw className="h-4 w-4" />
-              Reset Filter
-            </button>
-          </div>
+        {/* Sticky Filter Bar - More Compact */}
+        <div className="sticky top-3 z-9999 mb-10">
+          <div className="bg-base-light/80 backdrop-blur-sm border-b-2 border-brown-accent/20 rounded-2xl shadow-md p-4">
+            {/* Mobile Filter Toggle */}
+            <div className="flex items-center justify-between mb-3 md:hidden">
+              <h2 className="text-base font-bold text-brown-dark">Filter</h2>
+              <button
+                onClick={() => setIsFilterVisible(!isFilterVisible)}
+                className="p-2 bg-brown-accent/10 rounded-xl text-brown-accent hover:bg-brown-accent/20 transition-colors"
+              >
+                <Filter className="h-4 w-4" />
+              </button>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* Search Input */}
-            <div className="md:col-span-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-brown-accent/50" />
-                <input
-                  placeholder="Cari nama UMKM atau deskripsi..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  // Mengganti gray-50, gray-200, gray-900 dengan brown-light, brown-accent/20, brown-dark
-                  className="w-full pl-11 pr-4 py-3 bg-brown-light/50 border-2 border-brown-accent/20 rounded-2xl focus:border-brown-accent focus:outline-none text-brown-dark transition-colors"
-                />
+            {/* Filter Content */}
+            <div className={`${isFilterVisible || "hidden md:block"}`}>
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+                {/* Search Input - Compact */}
+                <div className="md:col-span-5">
+                  <div className="relative group">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brown-accent/50 group-focus-within:text-brown-accent transition-colors" />
+                    <input
+                      placeholder="Cari UMKM..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-10 pr-3 py-2.5 bg-brown-light/50 border border-brown-accent/20 rounded-xl focus:border-brown-accent focus:outline-none focus:ring-2 focus:ring-brown-accent/10 text-brown-dark transition-all text-sm font-medium"
+                    />
+                  </div>
+                </div>
+
+                {/* Compact Selects */}
+                <div className="md:col-span-3">
+                  <select
+                    value={categoryFilter}
+                    onChange={(e) => setCategoryFilter(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-brown-light/50 border border-brown-accent/20 rounded-xl focus:border-brown-accent focus:outline-none text-brown-dark cursor-pointer transition-all text-sm font-medium"
+                  >
+                    <option value="all">🏷️ Kategori</option>
+                    {categories.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="md:col-span-2">
+                  <select
+                    value={locationFilter}
+                    onChange={(e) => setLocationFilter(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-brown-light/50 border border-brown-accent/20 rounded-xl focus:border-brown-accent focus:outline-none text-brown-dark cursor-pointer transition-all text-sm font-medium"
+                  >
+                    <option value="all">📍 Lokasi</option>
+                    {locations.map((location) => (
+                      <option key={location} value={location}>
+                        {location}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="md:col-span-2">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-brown-light/50 border border-brown-accent/20 rounded-xl focus:border-brown-accent focus:outline-none text-brown-dark cursor-pointer transition-all text-sm font-medium"
+                  >
+                    <option value="popular">⭐ Populer</option>
+                    <option value="newest">🆕 Terbaru</option>
+                    <option value="name">🔤 A-Z</option>
+                  </select>
+                </div>
               </div>
-            </div>
 
-            {/* Category Select */}
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              // Mengganti gray-50, gray-200, gray-900 dengan brown-light, brown-accent/20, brown-dark
-              className="px-4 py-3 bg-brown-light/50 border-2 border-brown-accent/20 rounded-2xl focus:border-brown-accent focus:outline-none text-brown-dark cursor-pointer transition-colors"
-            >
-              <option value="all">Semua Kategori</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
+              {/* Result Count + View Mode - Compact */}
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-brown-accent/10">
+                <div className="text-xs text-brown-dark/70 font-semibold">
+                  <span className="text-brown-accent font-black text-base">
+                    {sortedUmkms.length}
+                  </span>{" "}
+                  hasil
+                </div>
 
-            {/* Location Select */}
-            <select
-              value={locationFilter}
-              onChange={(e) => setLocationFilter(e.target.value)}
-              // Mengganti gray-50, gray-200, gray-900 dengan brown-light, brown-accent/20, brown-dark
-              className="px-4 py-3 bg-brown-light/50 border-2 border-brown-accent/20 rounded-2xl focus:border-brown-accent focus:outline-none text-brown-dark cursor-pointer transition-colors"
-            >
-              <option value="all">Semua Lokasi</option>
-              {locations.map((location) => (
-                <option key={location} value={location}>
-                  {location}
-                </option>
-              ))}
-            </select>
-          </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={resetFilters}
+                    className="text-xs px-3 py-1.5 text-brown-dark/70 hover:text-brown-accent hover:bg-brown-accent/10 rounded-lg transition-all font-semibold flex items-center gap-1"
+                  >
+                    <RefreshCw className="h-3 w-3" />
+                    Reset
+                  </button>
 
-          <div className="flex items-center justify-between mt-4">
-            {/* Mengganti gray-600 dengan brown-dark/70, warna angka dengan brown-accent */}
-            <div className="text-sm text-brown-dark/70">
-              Menampilkan{" "}
-              <span className="font-bold text-brown-accent">
-                {filteredUmkms.length}
-              </span>{" "}
-              dari {umkms.length} UMKM
-            </div>
-
-            {/* View Mode Buttons */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all flex items-center ${
-                  viewMode === "grid"
-                    ? "bg-linear-to-r from-brown-dark to-brown-accent text-white shadow-md"
-                    : "bg-brown-light text-brown-dark/80 hover:bg-brown-accent/20"
-                }`}
-              >
-                <Grid className="h-4 w-4 inline mr-2" />
-                Grid
-              </button>
-              <button
-                onClick={() => setViewMode("map")}
-                className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all flex items-center ${
-                  viewMode === "map"
-                    ? "bg-linear-to-r from-brown-dark to-brown-accent text-white shadow-md"
-                    : "bg-brown-light text-brown-dark/80 hover:bg-brown-accent/20"
-                }`}
-              >
-                <MapIcon className="h-4 w-4 inline mr-2" />
-                Peta
-              </button>
+                  <div className="flex gap-1.5">
+                    <button
+                      onClick={() => setViewMode("grid")}
+                      className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-all flex items-center gap-1 ${
+                        viewMode === "grid"
+                          ? "bg-linear-to-r from-brown-dark to-brown-accent text-base-light"
+                          : "bg-brown-light/50 text-brown-dark/80 hover:bg-brown-accent/10"
+                      }`}
+                    >
+                      <Grid className="h-3 w-3" />
+                      Grid
+                    </button>
+                    <button
+                      onClick={() => setViewMode("map")}
+                      className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-all flex items-center gap-1 ${
+                        viewMode === "map"
+                          ? "bg-linear-to-r from-brown-dark to-brown-accent text-base-light"
+                          : "bg-brown-light/50 text-brown-dark/80 hover:bg-brown-accent/10"
+                      }`}
+                    >
+                      <MapIcon className="h-3 w-3" />
+                      Peta
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -284,126 +336,132 @@ const UmkmGridSection = () => {
         {/* Loading State */}
         {loading && (
           <div className="flex flex-col items-center justify-center py-20">
-            {/* Mengganti warna loader dengan brown-accent */}
             <Loader2 className="w-12 h-12 text-brown-accent animate-spin mb-4" />
-            {/* Mengganti gray-600 dengan brown-dark/70 */}
-            <p className="text-brown-dark/70 font-semibold">
+            <p className="text-brown-dark/70 font-semibold text-lg">
               Memuat data UMKM...
             </p>
           </div>
         )}
 
-        {/* Content - Grid View */}
+        {/* Premium Grid View */}
         {!loading && viewMode === "grid" && (
           <>
-            {filteredUmkms.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {filteredUmkms.map((umkm, index) => (
+            {sortedUmkms.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {sortedUmkms.map((umkm, index) => (
                   <div
                     key={umkm.id}
-                    // Mengganti gray-200 dengan brown-accent/20
-                    className="group bg-white/80 backdrop-blur border-2 border-brown-accent/20 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+                    className="group relative bg-base-light rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
                     style={{
-                      animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`,
+                      animation: `fadeInUp 0.6s ease-out ${index * 0.08}s both`,
                     }}
                   >
-                    {/* Mengganti amber/orange dengan brown-light/brown-accent/10 */}
-                    <div className="aspect-video overflow-hidden bg-linear-to-br from-brown-light to-brown-accent/10">
+                    {/* Image Section - 60% height with overlay */}
+                    <div className="relative h-72 overflow-hidden">
                       {umkm.image_url ? (
-                        <img
-                          src={umkm.image_url}
-                          alt={umkm.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                          onError={(e) => {
-                            // Fallback jika gambar error
-                            e.currentTarget.style.display = "none";
-                          }}
-                        />
+                        <>
+                          <img
+                            src={umkm.image_url}
+                            alt={umkm.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                            }}
+                          />
+                          {/* Gradient Overlay */}
+                          <div className="absolute inset-0 bg-linear-to-t from-brown-dark/90 via-brown-dark/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                        </>
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          {/* Mengganti warna fallback ikon dengan brown-accent/30 */}
-                          <Store className="h-16 w-16 text-brown-accent/30" />
+                        <div className="w-full h-full bg-linear-to-br from-brown-light to-brown-accent/10 flex items-center justify-center">
+                          <Store className="h-20 w-20 text-brown-accent/30" />
                         </div>
                       )}
+
+                      {/* Top Right Badge - Small & Transparent */}
+                      <div className="absolute top-4 right-4 bg-base-light/80 backdrop-blur-sm px-2.5 py-1 rounded-full flex items-center gap-1 shadow-md">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <span className="text-xs font-black text-brown-dark">
+                          {umkm.rating || "4.8"}
+                        </span>
+                      </div>
+
+                      {/* Favorite Button */}
+                      <button
+                        onClick={() => toggleFavorite(umkm.id)}
+                        className="absolute top-4 left-4 w-9 h-9 bg-base-light/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-base-light transition-all opacity-0 group-hover:opacity-100"
+                      >
+                        <Heart
+                          className={`h-4 w-4 transition-all ${
+                            favorites.has(umkm.id)
+                              ? "fill-red-500 text-red-500"
+                              : "text-brown-dark/70"
+                          }`}
+                        />
+                      </button>
+
+                      {/* Category Badge - Bottom Left */}
+                      <div className="absolute bottom-4 left-4">
+                        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-base-light/90 backdrop-blur-sm text-brown-dark border border-brown-accent/20 shadow-md">
+                          {umkm.category || "Kategori"}
+                        </span>
+                      </div>
+
+                      {/* Floating CTA - Appears on Hover */}
+                      <Link href={`/umkm/${umkm.id}`}>
+                        <div className="absolute inset-x-4 bottom-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                          <button className="w-full py-3 bg-linear-to-r from-brown-dark to-brown-accent text-base-light rounded-2xl font-bold text-sm shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-2">
+                            <span>Lihat Detail</span>
+                            <ArrowRight className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </Link>
                     </div>
 
+                    {/* Content Section - 40% */}
                     <div className="p-5">
-                      <h3
-                        // Mengganti warna teks dengan brown-dark, hover dengan brown-accent
-                        className="font-bold text-lg mb-2 line-clamp-1 group-hover:text-brown-accent transition-colors text-brown-dark"
-                      >
+                      <h3 className="font-black text-xl mb-2 line-clamp-1 text-brown-dark group-hover:text-brown-accent transition-colors">
                         {umkm.name}
                       </h3>
 
-                      {/* Mengganti gray-600 dengan brown-dark/70 */}
-                      <div className="flex items-center gap-2 text-sm text-brown-dark/70 mb-2">
-                        <MapPin className="h-4 w-4 shrink-0" />
-                        <span className="line-clamp-1">
+                      <div className="flex items-start gap-2 text-sm text-brown-dark/70 mb-2">
+                        <MapPin className="h-4 w-4 shrink-0 text-brown-accent mt-0.5" />
+                        <span className="line-clamp-2 font-medium leading-snug">
                           {umkm.address || "Lokasi tidak tersedia"}
                         </span>
                       </div>
 
                       {umkm.phone && (
-                        // Mengganti gray-600 dengan brown-dark/70
                         <div className="flex items-center gap-2 text-sm text-brown-dark/70 mb-3">
-                          <Phone className="h-4 w-4 shrink-0" />
-                          <span>{umkm.phone}</span>
+                          <Phone className="h-4 w-4 shrink-0 text-brown-accent" />
+                          <span className="font-medium">{umkm.phone}</span>
                         </div>
                       )}
 
                       {umkm.description && (
-                        // Mengganti gray-600 dengan brown-dark/70
-                        <p className="text-sm text-brown-dark/70 mb-3 line-clamp-2">
+                        <p className="text-sm text-brown-dark/60 line-clamp-2 leading-relaxed">
                           {umkm.description}
                         </p>
                       )}
-
-                      <div className="flex items-center justify-between mb-4">
-                        {/* Mengganti warna badge dengan brown-accent */}
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-brown-accent/10 text-brown-accent border border-brown-accent/20">
-                          {umkm.category || "Tidak ada kategori"}
-                        </span>
-                        <div className="flex items-center gap-1">
-                          {/* Dipertahankan warna Kuning untuk rating */}
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <span className="text-sm font-medium text-brown-dark">
-                            {umkm.rating || "-"}
-                          </span>
-                        </div>
-                      </div>
-
-                      <Link href={`/umkm/${umkm.id}`}>
-                        <button
-                          // Mengganti warna tombol dengan gradient brown-dark ke brown-accent
-                          className="w-full py-3 bg-linear-to-r from-brown-dark to-brown-accent text-white rounded-2xl font-semibbold opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:shadow-lg"
-                        >
-                          Lihat Detail
-                        </button>
-                      </Link>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="text-center py-20">
-                {/* Mengganti gray-100 dengan brown-light, gray-400 dengan brown-accent/50 */}
-                <div className="w-24 h-24 mx-auto mb-4 bg-brown-light rounded-full flex items-center justify-center">
+                <div className="w-24 h-24 mx-auto mb-6 bg-brown-light rounded-full flex items-center justify-center">
                   <Search className="w-12 h-12 text-brown-accent/50" />
                 </div>
-                {/* Mengganti gray-900 dengan brown-dark */}
-                <h3 className="text-xl font-bold text-brown-dark mb-2">
+                <h3 className="text-2xl font-black text-brown-dark mb-3">
                   Tidak ada UMKM ditemukan
                 </h3>
-                {/* Mengganti gray-600 dengan brown-dark/70 */}
-                <p className="text-brown-dark/70 mb-6">
+                <p className="text-brown-dark/70 mb-6 text-lg">
                   {umkms.length === 0
                     ? "Belum ada data UMKM yang tersedia."
-                    : "Coba ubah filter pencarian Anda atau reset filter untuk melihat semua UMKM"}
+                    : "Coba ubah filter pencarian Anda"}
                 </p>
                 <button
                   onClick={resetFilters}
-                  // Mengganti warna tombol dengan gradient brown-dark ke brown-accent
-                  className="px-6 py-3 bg-linear-to-r from-brown-dark to-brown-accent text-white rounded-2xl font-semibold hover:shadow-lg transition-all"
+                  className="px-6 py-3 bg-linear-to-r from-brown-dark to-brown-accent text-base-light rounded-2xl font-bold hover:shadow-lg transition-all transform hover:scale-105"
                 >
                   Reset Filter
                 </button>
@@ -414,33 +472,25 @@ const UmkmGridSection = () => {
 
         {/* Map View */}
         {!loading && viewMode === "map" && (
-          // Mengganti gray-200 dengan brown-accent/20
-          <div className="bg-white/80 backdrop-blur border-2 border-brown-accent/20 rounded-3xl overflow-hidden shadow-lg">
+          <div className="bg-base-light/90 backdrop-blur border-2 border-brown-accent/30 rounded-3xl overflow-hidden shadow-lg">
             <div className="h-[600px]">
-              <UmkmMap
-                umkms={filteredUmkms}
-                onMarkerClick={handleMarkerClick}
-              />
+              <UmkmMap umkms={sortedUmkms} onMarkerClick={handleMarkerClick} />
             </div>
 
-            <div className="p-4 bg-white/80 border-t-2 border-brown-accent/20">
+            <div className="p-6 bg-base-light/80 border-t-2 border-brown-accent/20">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                {/* Mengganti gray-600 dengan brown-dark/70, warna angka dengan brown-accent */}
-                <div className="text-sm text-brown-dark/70">
-                  <span className="font-bold text-brown-accent">
-                    {filteredUmkms.length}
+                <div className="text-sm text-brown-dark/70 font-semibold">
+                  <span className="font-black text-brown-accent text-lg">
+                    {sortedUmkms.length}
                   </span>{" "}
-                  UMKM ditampilkan di peta
+                  UMKM di peta
                 </div>
-                {/* Mengganti gray-500 dengan brown-dark/70 */}
-                <div className="flex items-center gap-2 text-sm text-brown-dark/70">
-                  <div className="flex items-center gap-1">
-                    {/* Mengganti warna marker UMKM dengan brown-accent */}
+                <div className="flex items-center gap-4 text-sm text-brown-dark/70 font-semibold">
+                  <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-brown-accent rounded-sm"></div>
                     <span>UMKM</span>
                   </div>
-                  {/* Dipertahankan warna Biru untuk Lokasi Anda */}
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                     <span>Lokasi Anda</span>
                   </div>
@@ -456,7 +506,7 @@ const UmkmGridSection = () => {
         @keyframes fadeInUp {
           from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px);
           }
           to {
             opacity: 1;

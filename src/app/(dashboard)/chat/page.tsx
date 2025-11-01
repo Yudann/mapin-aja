@@ -32,7 +32,7 @@ export default function ChatPage() {
   if (loading) {
     return (
       // BG: brown-light dengan gradient
-      <div className="min-h-screen bg-gradient-to-br from-brown-light/50 via-base-light to-brown-light/80">
+      <div className="min-h-screen bg-linear-to-br from-brown-light/50 via-base-light to-brown-light/80">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             {/* Loading spin menggunakan brown-accent */}
@@ -47,12 +47,12 @@ export default function ChatPage() {
 
   return (
     // BG: brown-light dengan gradient
-    <div className="min-h-screen bg-gradient-to-br from-brown-light/50 via-base-light to-brown-light/80">
+    <div className="min-h-screen bg-linear-to-br from-brown-light/50 via-base-light to-brown-light/80">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
           {/* Judul: Gradient dari brown-accent ke brown-accent/70, Teks brown-dark sebagai fallback */}
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-brown-accent to-brown-accent/70 bg-clip-text text-brown-dark mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold bg-linear-to-r from-brown-accent to-brown-accent/70 bg-clip-text text-brown-dark mb-4">
             Pesan
           </h1>
           {/* Paragraf: Text brown-dark/70 */}
@@ -98,7 +98,7 @@ export default function ChatPage() {
               <CardContent className="p-4">
                 <div className="flex items-start gap-4">
                   {/* Avatar: Gradient dari brown-accent ke brown-dark */}
-                  <div className="w-12 h-12 bg-gradient-to-br from-brown-accent to-brown-dark rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-linear-to-br from-brown-accent to-brown-dark rounded-full flex items-center justify-center flex-shrink-0">
                     <MessageCircle className="h-6 w-6 text-white" />
                   </div>
 

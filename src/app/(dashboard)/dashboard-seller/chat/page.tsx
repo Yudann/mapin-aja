@@ -48,7 +48,7 @@ export default function SellerChatPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-brown-light/50 via-base-light to-brown-light/80">
+      <div className="min-h-screen bg-linear-to-br from-brown-light/50 via-base-light to-brown-light/80">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brown-accent mx-auto"></div>
@@ -60,7 +60,7 @@ export default function SellerChatPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brown-light/50 via-base-light to-brown-light/80">
+    <div className="min-h-screen bg-linear-to-br from-brown-light/50 via-base-light to-brown-light/80">
       <div className="container mx-auto px-4 py-8">
         {/* Header dengan Back Button */}
         <div className="flex items-center gap-4 mb-8">

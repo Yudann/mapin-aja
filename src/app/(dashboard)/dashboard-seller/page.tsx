@@ -221,7 +221,7 @@ export default function DashboardSeller() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-brown-light/50 via-base-light to-brown-light/80 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-brown-light/50 via-base-light to-brown-light/80 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brown-accent mx-auto"></div>
           <p className="mt-4 text-brown-dark/70">Memuat dashboard...</p>
@@ -231,7 +231,7 @@ export default function DashboardSeller() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brown-light/50 via-base-light to-brown-light/80">
+    <div className="min-h-screen bg-linear-to-br from-brown-light/50 via-base-light to-brown-light/80">
       <div className="container mx-auto p-6">
         {/* Header */}
         <div className="mb-8">

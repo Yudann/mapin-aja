@@ -500,11 +500,11 @@ const UmkmMap: React.FC<UmkmMapProps> = ({
                   alt={selectedUmkm.name}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
               </div>
             ) : (
               // Mengganti warna fallback image dengan brown-accent/brown-light
-              <div className="h-40 bg-gradient-to-br from-brown-accent/20 to-brown-light/50 flex items-center justify-center">
+              <div className="h-40 bg-linear-to-br from-brown-accent/20 to-brown-light/50 flex items-center justify-center">
                 {/* Mengganti warna ikon dengan brown-accent/40 */}
                 <MapPin className="w-16 h-16 text-brown-accent/40" />
               </div>
