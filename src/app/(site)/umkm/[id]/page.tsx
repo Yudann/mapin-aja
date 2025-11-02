@@ -58,77 +58,37 @@ interface UMKM {
     avatar_url: string | null;
     phone: string | null;
   };
+  products?: Product[];
+  reviews?: Review[];
+  average_rating?: number;
+  total_reviews?: number;
 }
 
-interface MenuItem {
+interface Product {
   id: string;
+  umkm_id: string;
   name: string;
+  description: string | null;
   price: number;
-  description: string;
-  image: string;
-  category: string;
+  image_url: string | null;
+  is_available: boolean;
+  category: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
-// Dummy menu data
-const DUMMY_MENU: MenuItem[] = [
-  {
-    id: "1",
-    name: "Nasi Goreng Spesial",
-    price: 25000,
-    description:
-      "Nasi goreng dengan telur, ayam, dan sayuran segar. Favorit pelanggan sejak 2018",
-    image:
-      "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&h=300&fit=crop",
-    category: "Makanan",
-  },
-  {
-    id: "2",
-    name: "Kopi Susu Gula Aren",
-    price: 18000,
-    description: "Kopi pilihan dengan susu segar dan gula aren asli",
-    image:
-      "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop",
-    category: "Minuman",
-  },
-  {
-    id: "3",
-    name: "Paket Catering Harian",
-    price: 50000,
-    description:
-      "Paket lengkap untuk kebutuhan catering harian kantor atau acara",
-    image:
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop",
-    category: "Layanan",
-  },
-  {
-    id: "4",
-    name: "Jasa Laundry Express",
-    price: 10000,
-    description:
-      "Layanan cuci kilat dengan hasil bersih dan wangi. Selesai 3 jam",
-    image:
-      "https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=400&h=300&fit=crop",
-    category: "Jasa",
-  },
-  {
-    id: "5",
-    name: "Es Teh Manis Jumbo",
-    price: 8000,
-    description: "Teh manis segar ukuran jumbo untuk menemani hari Anda",
-    image:
-      "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop",
-    category: "Minuman",
-  },
-  {
-    id: "6",
-    name: "Ayam Geprek Crispy",
-    price: 22000,
-    description: "Ayam goreng crispy dengan sambal geprek level 1-10",
-    image:
-      "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=400&h=300&fit=crop",
-    category: "Makanan",
-  },
-];
+interface Review {
+  id: string;
+  user_id: string;
+  umkm_id: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+  profiles: {
+    full_name: string | null;
+    avatar_url: string | null;
+  };
+}
 
 export default function UmkmDetail() {
   const params = useParams();
@@ -159,9 +119,7 @@ export default function UmkmDetail() {
         throw new Error(result.error);
       }
 
-      if (result.data) {
-        setUmkm(result.data);
-      }
+      setUmkm(result);
     } catch (error) {
       console.error("Error fetching UMKM detail:", error);
     } finally {
@@ -184,6 +142,42 @@ export default function UmkmDetail() {
       navigator.clipboard.writeText(window.location.href);
       alert("Link berhasil disalin!");
     }
+  };
+
+  const getCategoryIcon = (category: string | null) => {
+    switch (category?.toLowerCase()) {
+      case "perawatan wajah":
+        return <Sparkles className="h-4 w-4" />;
+      case "perawatan rambut":
+        return <Users className="h-4 w-4" />;
+      case "perawatan kuku":
+        return <Sparkles className="h-4 w-4" />;
+      case "spa":
+        return <Sparkles className="h-4 w-4" />;
+      case "kerajinan kayu":
+        return <Package className="h-4 w-4" />;
+      case "kerajinan rotan":
+        return <Package className="h-4 w-4" />;
+      case "batik":
+        return <Package className="h-4 w-4" />;
+      case "kerajinan keramik":
+        return <Package className="h-4 w-4" />;
+      case "pakaian pria":
+        return <User className="h-4 w-4" />;
+      case "pakaian wanita":
+        return <User className="h-4 w-4" />;
+      default:
+        return <Package className="h-4 w-4" />;
+    }
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
   };
 
   if (loading) {
@@ -223,6 +217,10 @@ export default function UmkmDetail() {
   }
 
   const mapUmkms = umkm.latitude && umkm.longitude ? [umkm] : [];
+  const products = umkm.products || [];
+  const reviews = umkm.reviews || [];
+  const averageRating = umkm.average_rating || 4.8;
+  const totalReviews = umkm.total_reviews || reviews.length || 120;
 
   return (
     <div className="min-h-screen bg-linear-to-br from-brown-light via-base-light to-brown-light/50">
@@ -292,8 +290,8 @@ export default function UmkmDetail() {
             <div className="flex flex-wrap items-center gap-4 text-base-light/90">
               <div className="flex items-center gap-2 bg-base-light/10 backdrop-blur-sm px-4 py-2 rounded-full">
                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                <span className="font-bold">4.8</span>
-                <span className="text-sm">(120 reviews)</span>
+                <span className="font-bold">{averageRating.toFixed(1)}</span>
+                <span className="text-sm">({totalReviews} reviews)</span>
               </div>
 
               {umkm.address && (
@@ -358,57 +356,78 @@ export default function UmkmDetail() {
                     Menu & Layanan
                   </h2>
                   <span className="text-sm text-brown-dark/60 font-semibold">
-                    {DUMMY_MENU.length} item tersedia
+                    {products.length} item tersedia
                   </span>
                 </div>
 
                 {/* Menu Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {DUMMY_MENU.map((item, index) => (
-                    <div
-                      key={item.id}
-                      className="group bg-base-light rounded-3xl overflow-hidden border-2 border-brown-accent/20 shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-                      style={{
-                        animation: `fadeInUp 0.5s ease-out ${
-                          index * 0.1
-                        }s both`,
-                      }}
-                    >
-                      {/* Item Image */}
-                      <div className="relative h-48 overflow-hidden">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-linear-to-t from-brown-dark/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                {products.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {products.map((product, index) => (
+                      <div
+                        key={product.id}
+                        className="group bg-base-light rounded-3xl overflow-hidden border-2 border-brown-accent/20 shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                        style={{
+                          animation: `fadeInUp 0.5s ease-out ${
+                            index * 0.1
+                          }s both`,
+                        }}
+                      >
+                        {/* Item Image */}
+                        <div className="relative h-48 overflow-hidden">
+                          {product.image_url ? (
+                            <img
+                              src={product.image_url}
+                              alt={product.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-brown-light flex items-center justify-center">
+                              <Package className="h-12 w-12 text-brown-dark/40" />
+                            </div>
+                          )}
+                          <div className="absolute inset-0 bg-linear-to-t from-brown-dark/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                        {/* Category Badge */}
-                        <div className="absolute top-3 right-3 bg-base-light/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-brown-dark">
-                          {item.category}
+                          {/* Category Badge */}
+                          {product.category && (
+                            <div className="absolute top-3 right-3 bg-base-light/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-brown-dark flex items-center gap-1">
+                              {getCategoryIcon(product.category)}
+                              {product.category}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Item Content */}
+                        <div className="p-5">
+                          <h3 className="text-xl font-black text-brown-dark mb-2 group-hover:text-brown-accent transition-colors">
+                            {product.name}
+                          </h3>
+                          <p className="text-sm text-brown-dark/70 mb-4 line-clamp-2 leading-relaxed">
+                            {product.description || "Tidak ada deskripsi"}
+                          </p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-2xl font-black text-brown-accent">
+                              {formatPrice(product.price)}
+                            </span>
+                            <button className="px-4 py-2 bg-linear-to-r from-brown-dark to-brown-accent text-base-light rounded-xl font-bold text-sm hover:shadow-lg transition-all">
+                              Pesan
+                            </button>
+                          </div>
                         </div>
                       </div>
-
-                      {/* Item Content */}
-                      <div className="p-5">
-                        <h3 className="text-xl font-black text-brown-dark mb-2 group-hover:text-brown-accent transition-colors">
-                          {item.name}
-                        </h3>
-                        <p className="text-sm text-brown-dark/70 mb-4 line-clamp-2 leading-relaxed">
-                          {item.description}
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-2xl font-black text-brown-accent">
-                            Rp{item.price.toLocaleString("id-ID")}
-                          </span>
-                          <button className="px-4 py-2 bg-linear-to-r from-brown-dark to-brown-accent text-base-light rounded-xl font-bold text-sm hover:shadow-lg transition-all">
-                            Pesan
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Package className="h-16 w-16 text-brown-accent/50 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold text-brown-dark mb-2">
+                      Belum ada produk
+                    </h3>
+                    <p className="text-brown-dark/60">
+                      UMKM ini belum menambahkan produk atau layanan.
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 
@@ -425,6 +444,62 @@ export default function UmkmDetail() {
                     <p className="text-brown-dark/80 leading-relaxed text-lg">
                       {umkm.description}
                     </p>
+                  </div>
+                )}
+
+                {/* Reviews */}
+                {reviews.length > 0 && (
+                  <div className="bg-base-light rounded-3xl p-6 border-2 border-brown-accent/20 shadow-soft">
+                    <h3 className="text-2xl font-black text-brown-dark mb-4 flex items-center gap-3">
+                      <Star className="h-6 w-6 text-brown-accent" />
+                      Ulasan Pelanggan ({reviews.length})
+                    </h3>
+                    <div className="space-y-4">
+                      {reviews.slice(0, 5).map((review) => (
+                        <div
+                          key={review.id}
+                          className="p-4 bg-brown-light/50 rounded-2xl"
+                        >
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="w-10 h-10 bg-brown-accent rounded-full flex items-center justify-center text-base-light font-bold">
+                              {review.profiles.full_name?.charAt(0) || "U"}
+                            </div>
+                            <div>
+                              <p className="font-bold text-brown-dark">
+                                {review.profiles.full_name || "Pengguna"}
+                              </p>
+                              <div className="flex items-center gap-1">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`h-4 w-4 ${
+                                      i < review.rating
+                                        ? "fill-yellow-400 text-yellow-400"
+                                        : "text-brown-dark/30"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                          {review.comment && (
+                            <p className="text-brown-dark/80 text-sm leading-relaxed">
+                              {review.comment}
+                            </p>
+                          )}
+                          <p className="text-brown-dark/60 text-xs mt-2">
+                            {new Date(review.created_at).toLocaleDateString(
+                              "id-ID",
+                              {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                              }
+                            )}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
 
@@ -505,9 +580,17 @@ export default function UmkmDetail() {
               {umkm.owner_profile && (
                 <div className="pt-6 border-t-2 border-base-light/20">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="w-14 h-14 bg-base-light rounded-full flex items-center justify-center text-brown-dark font-black text-xl">
-                      {umkm.owner_profile.full_name?.charAt(0) || "P"}
-                    </div>
+                    {umkm.owner_profile.avatar_url ? (
+                      <img
+                        src={umkm.owner_profile.avatar_url}
+                        alt={umkm.owner_profile.full_name || "Pemilik"}
+                        className="w-14 h-14 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 bg-base-light rounded-full flex items-center justify-center text-brown-dark font-black text-xl">
+                        {umkm.owner_profile.full_name?.charAt(0) || "P"}
+                      </div>
+                    )}
                     <div>
                       <p className="font-bold text-base-light text-lg">
                         {umkm.owner_profile.full_name || "Pemilik UMKM"}
@@ -519,8 +602,12 @@ export default function UmkmDetail() {
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="font-bold">4.8</span>
-                    <span className="text-base-light/80">• 120 reviews</span>
+                    <span className="font-bold">
+                      {averageRating.toFixed(1)}
+                    </span>
+                    <span className="text-base-light/80">
+                      • {totalReviews} reviews
+                    </span>
                   </div>
                 </div>
               )}
@@ -536,7 +623,7 @@ export default function UmkmDetail() {
                 <div className="text-center p-4 bg-brown-light/50 rounded-xl">
                   <Users className="h-6 w-6 text-brown-accent mx-auto mb-2" />
                   <div className="text-2xl font-black text-brown-dark">
-                    120+
+                    {totalReviews}+
                   </div>
                   <div className="text-xs text-brown-dark/60 font-semibold">
                     Pengunjung
@@ -544,7 +631,9 @@ export default function UmkmDetail() {
                 </div>
                 <div className="text-center p-4 bg-brown-light/50 rounded-xl">
                   <Star className="h-6 w-6 text-brown-accent mx-auto mb-2" />
-                  <div className="text-2xl font-black text-brown-dark">4.8</div>
+                  <div className="text-2xl font-black text-brown-dark">
+                    {averageRating.toFixed(1)}
+                  </div>
                   <div className="text-xs text-brown-dark/60 font-semibold">
                     Rating
                   </div>
