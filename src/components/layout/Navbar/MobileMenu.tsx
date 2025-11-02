@@ -4,9 +4,8 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MapPin, LogOut, User } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { MobileMenuProps, NavigationItem } from "./navbar.type";
-import { Icon } from "@radix-ui/react-select";
 
 const MobileMenu: React.FC<MobileMenuProps> = ({
   isOpen,
@@ -18,9 +17,29 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   onNavigate,
 }) => {
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Routes where navbar should be hidden
+  const hiddenRoutes = [
+    "/umkm/",
+    "/dashboard-seller",
+    "/dashboard-seller/",
+    "/auth",
+    "/auth/",
+  ];
+
+  // Check if current route should hide navbar
+  const shouldHideNavbar = hiddenRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+
+  // Jika route termasuk dalam hiddenRoutes, return null
+  if (shouldHideNavbar) {
+    return null;
+  }
 
   const NavItemMobile: React.FC<{ item: NavigationItem }> = ({ item }) => {
-    // const IconComponent = item.icon;
+    const IconComponent = item.icon;
 
     const handleClick = () => {
       if (item.type === "scroll") {
@@ -31,7 +50,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
 
     const content = (
       <div className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:text-brown-accent hover:bg-gray-50 rounded-xl transition-colors font-medium w-full text-left">
-        <Icon className="h-5 w-5" />
+        <IconComponent className="h-5 w-5" />
         <span>{item.label}</span>
       </div>
     );
