@@ -14,11 +14,8 @@ import {
   Heart,
   Navigation,
   User,
-  Mail,
   Calendar,
   ShoppingBag,
-  Utensils,
-  Coffee,
   Package,
   Sparkles,
   TrendingUp,
@@ -51,17 +48,21 @@ interface UMKM {
   longitude: number | null;
   phone: string | null;
   image_url: string | null;
+  banner_url: string | null;
+  is_active: boolean;
+  opening_hours: any;
+  social_media: any;
   created_at: string;
   updated_at: string;
+  products?: Product[];
+  reviews?: Review[];
+  average_rating?: number;
+  total_reviews?: number;
   owner_profile?: {
     full_name: string | null;
     avatar_url: string | null;
     phone: string | null;
   };
-  products?: Product[];
-  reviews?: Review[];
-  average_rating?: number;
-  total_reviews?: number;
 }
 
 interface Product {
