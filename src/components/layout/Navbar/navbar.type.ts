@@ -25,7 +25,8 @@ export interface MobileMenuProps {
   user: User | null;
   userRole: string;
   onLogout: () => void;
-  onNavigate: (sectionId: string) => void;
+  onNavigate: (section: string) => void;
+  currentPath: string; 
 }
 
 export interface NavItemProps {

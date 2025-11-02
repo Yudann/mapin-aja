@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Menu, MapPin, Search, Sparkles, Heart, Store } from "lucide-react";
+import { Menu, MapPin, Search, Sparkles, Store } from "lucide-react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import UserDropdown from "./UserDropdown";
@@ -15,19 +15,15 @@ const Navbar: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const router = useRouter();
   const pathname = usePathname();
 
   const navigationItems: NavigationItem[] = [
     { type: "link", href: "/umkm", label: "Jelajahi UMKM", icon: Search },
-    { type: "scroll", section: "features", label: "Fitur", icon: Sparkles },
-    {
-      type: "scroll",
-      section: "testimonials",
-      label: "Testimoni",
-      icon: Heart,
-    },
-    { type: "scroll", section: "pricing", label: "Pricing", icon: Store },
+    { type: "link", href: "#", label: "Tentang", icon: Store },
+    { type: "link", href: "#", label: "Blog", icon: Sparkles },
   ];
 
   // Routes where navbar should be hidden
@@ -44,15 +40,44 @@ const Navbar: React.FC = () => {
     pathname.startsWith(route)
   );
 
+  // Scroll behavior untuk hide/show navbar
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Set scrolled state untuk background change
+      setScrolled(currentScrollY > 20);
+
+      // Logic untuk hide/show navbar berdasarkan scroll direction
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scroll ke bawah - hide navbar
+        setIsVisible(false);
+      } else {
+        // Scroll ke atas - show navbar
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   useEffect(() => {
     setLoading(false);
   }, []);
+
+  // Check if a navigation item is active
+  const isActiveItem = (item: NavigationItem): boolean => {
+    if (item.type === "link" && item.href) {
+      if (item.href === "/umkm" && pathname.startsWith("/umkm")) {
+        return true;
+      }
+      return pathname === item.href;
+    }
+    return false;
+  };
 
   const handleLogout = async () => {
     try {
@@ -76,6 +101,7 @@ const Navbar: React.FC = () => {
 
   const NavItemDesktop: React.FC<{ item: NavigationItem }> = ({ item }) => {
     const IconComponent = item.icon;
+    const isActive = isActiveItem(item);
 
     const handleClick = () => {
       if (item.type === "scroll") {
@@ -84,7 +110,13 @@ const Navbar: React.FC = () => {
     };
 
     const content = (
-      <div className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-brown-accent hover:bg-gray-50/80 rounded-full transition-colors font-medium text-sm">
+      <div
+        className={`flex items-center gap-3 px-5 py-2.5 rounded-full transition-colors font-medium text-sm ${
+          isActive
+            ? "bg-brown-dark text-brown-light"
+            : "text-gray-700 hover:bg-brown-dark hover:text-brown-light"
+        }`}
+      >
         <IconComponent className="h-4 w-4" />
         <span>{item.label}</span>
       </div>
@@ -140,17 +172,29 @@ const Navbar: React.FC = () => {
   return (
     <>
       <motion.nav
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+        initial={{ y: -100 }}
+        animate={{
+          y: isVisible ? 0 : -100,
+          opacity: isVisible ? 1 : 1,
+        }}
+        transition={{
+          duration: 0.3,
+          ease: "easeInOut",
+        }}
         className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-7xl px-4 transition-all duration-300"
+        style={{
+          transform: `translate(-50%, ${isVisible ? "0" : "-100%"})`,
+          opacity: isVisible ? 1 : 1,
+        }}
       >
         <div
-          className={`bg-white/95 backdrop-blur-xl border border-gray-200 rounded-full shadow-md hover:shadow-xl transition-all ${
-            scrolled ? "shadow-xl border-gray-300" : ""
+          className={`border border-gray-200 bg-white/50 rounded-full transition-all ${
+            scrolled
+              ? "shadow-xl border-gray-300 bg-white/80 backdrop-blur-md"
+              : ""
           }`}
         >
-          <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-3.5">
+          <div className="flex items-center justify-between px-4 md:px-6 py-1.5">
             <Link href="/" className="flex items-center gap-2 group">
               <motion.div
                 whileHover={{ rotate: 10 }}
@@ -165,7 +209,7 @@ const Navbar: React.FC = () => {
               </span>
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-1 bg-white rounded-full p-2 shadow">
               {navigationItems.map((item, index) => (
                 <NavItemDesktop key={index} item={item} />
               ))}
@@ -231,6 +275,7 @@ const Navbar: React.FC = () => {
         userRole={userRole}
         onLogout={handleLogout}
         onNavigate={scrollToSection}
+        currentPath={pathname}
       />
     </>
   );

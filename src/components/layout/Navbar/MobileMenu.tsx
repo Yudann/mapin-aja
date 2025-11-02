@@ -4,7 +4,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MapPin, LogOut, User } from "lucide-react";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { MobileMenuProps, NavigationItem } from "./navbar.type";
 
 const MobileMenu: React.FC<MobileMenuProps> = ({
@@ -15,9 +15,9 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   userRole,
   onLogout,
   onNavigate,
+  currentPath, // Gunakan prop yang diterima
 }) => {
   const router = useRouter();
-  const pathname = usePathname();
 
   // Routes where navbar should be hidden
   const hiddenRoutes = [
@@ -30,11 +30,11 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
 
   // Check if current route should hide navbar
   const shouldHideNavbar = hiddenRoutes.some((route) =>
-    pathname.startsWith(route)
+    currentPath.startsWith(route)
   );
 
-  // Jika route termasuk dalam hiddenRoutes, return null
-  if (shouldHideNavbar) {
+  // Jika route termasuk dalam hiddenRoutes, return null HANYA JIKA mobile menu tidak terbuka
+  if (shouldHideNavbar && !isOpen) {
     return null;
   }
 
