@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Menu, MapPin, Search, Sparkles, Heart, Store } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import UserDropdown from "./UserDropdown";
 import MobileMenu from "./MobileMenu";
 import { NavigationItem, User } from "./navbar.type";
@@ -16,6 +16,7 @@ const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   const navigationItems: NavigationItem[] = [
     { type: "link", href: "/umkm", label: "Jelajahi UMKM", icon: Search },
@@ -28,6 +29,20 @@ const Navbar: React.FC = () => {
     },
     { type: "scroll", section: "pricing", label: "Pricing", icon: Store },
   ];
+
+  // Routes where navbar should be hidden
+  const hiddenRoutes = [
+    "/umkm/", // Semua route di bawah /umkm
+    "/dashboard-seller",
+    "/dashboard-seller/",
+    "/auth",
+    "/auth/",
+  ];
+
+  // Check if current route should hide navbar
+  const shouldHideNavbar = hiddenRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -100,6 +115,11 @@ const Navbar: React.FC = () => {
       </Link>
     );
   };
+
+  // Jika route termasuk dalam hiddenRoutes, return null (navbar disembunyikan)
+  if (shouldHideNavbar) {
+    return null;
+  }
 
   if (loading) {
     return (
