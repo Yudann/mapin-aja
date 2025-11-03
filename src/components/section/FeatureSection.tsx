@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ChatInput from "@/app/(dashboard)/dashboard/seller/chat/components/ChatInput";
+import SectionWrapper, { SectionHeader } from "../layout/SectionWrapper";
 
 const sectionContainer = {
   hidden: { opacity: 0 },
@@ -261,89 +262,66 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <motion.section
-      className="relative py-24 sm:py-32 bg-white overflow-hidden"
-      variants={sectionContainer}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.1 }}
-    >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(139,94,60,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(139,94,60,0.02)_1px,transparent_1px)] bg-size-[4rem_4rem]" />
+    <SectionWrapper>
+      <SectionHeader
+        badge={{ icon: BarChart3, text: "Fitur Unggulan" }}
+        title="Platform Lengkap untuk UMKM Modern"
+        highlightText="UMKM Modern"
+      />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <motion.div variants={itemVariant} className="text-center mb-20">
-          <div className="inline-flex items-center justify-center space-x-2 mb-6 bg-brown-accent/10 border border-brown-accent/30 rounded-full px-6 py-3">
-            <BarChart3 className="w-5 h-5 text-brown-accent" />
-            <span className="text-sm font-bold text-brown-dark uppercase tracking-wider">
-              Fitur Unggulan
-            </span>
-          </div>
-
-          <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black text-gray-900 leading-none mb-6">
-            Platform Lengkap
-            <br />
-            <span className="bg-linear-to-r from-brown-accent to-brown-dark bg-clip-text text-transparent">
-              untuk UMKM Modern
-            </span>
-          </h2>
-        </motion.div>
-
-        {/* Features List */}
-        <div className="space-y-32">
-          {features.map((feature, index) => (
+      {/* Features List */}
+      <div className="space-y-32">
+        {features.map((feature, index) => (
+          <motion.div
+            key={feature.id}
+            variants={sectionContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            className={`grid lg:grid-cols-2 gap-12 items-center ${
+              index % 2 === 1 ? "lg:flex-row-reverse" : ""
+            }`}
+          >
+            {/* Text Content */}
             <motion.div
-              key={feature.id}
-              variants={sectionContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-              className={`grid lg:grid-cols-2 gap-12 items-center ${
-                index % 2 === 1 ? "lg:flex-row-reverse" : ""
-              }`}
+              variants={itemVariant}
+              className={`${index % 2 === 1 ? "lg:order-2" : ""}`}
             >
-              {/* Text Content */}
-              <motion.div
-                variants={itemVariant}
-                className={`${index % 2 === 1 ? "lg:order-2" : ""}`}
+              <div className="inline-flex  bg-brown-accent/20 border-brown-accent/50 items-center space-x-2  border  rounded-full px-4 py-2 mb-6">
+                <feature.icon className="w-4 h-4 text-brown-accent" />
+                <span className="text-sm font-bold text-gray-900">
+                  {feature.tag}
+                </span>
+              </div>
+
+              <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 leading-tight mb-6">
+                {feature.title}
+              </h3>
+
+              <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                {feature.description}
+              </p>
+
+              <Button
+                size="lg"
+                className="bg-brown-accent hover:bg-brown-accent/90 text-white font-bold text-base px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
-                <div className="inline-flex  bg-brown-accent/20 border-brown-accent/50 items-center space-x-2  border  rounded-full px-4 py-2 mb-6">
-                  <feature.icon className="w-4 h-4 text-brown-accent" />
-                  <span className="text-sm font-bold text-gray-900">
-                    {feature.tag}
-                  </span>
-                </div>
-
-                <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 leading-tight mb-6">
-                  {feature.title}
-                </h3>
-
-                <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                  {feature.description}
-                </p>
-
-                <Button
-                  size="lg"
-                  className="bg-brown-accent hover:bg-brown-accent/90 text-white font-bold text-base px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                >
-                  {feature.cta}
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </motion.div>
-
-              {/* Mockup */}
-              <motion.div
-                variants={mockupVariant}
-                className={`${index % 2 === 1 ? "lg:order-1" : ""}`}
-              >
-                {feature.mockup}
-              </motion.div>
+                {feature.cta}
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
             </motion.div>
-          ))}
-        </div>
+
+            {/* Mockup */}
+            <motion.div
+              variants={mockupVariant}
+              className={`${index % 2 === 1 ? "lg:order-1" : ""}`}
+            >
+              {feature.mockup}
+            </motion.div>
+          </motion.div>
+        ))}
       </div>
-    </motion.section>
+    </SectionWrapper>
   );
 };
 
