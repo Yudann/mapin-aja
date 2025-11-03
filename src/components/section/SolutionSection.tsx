@@ -40,7 +40,7 @@ const SolutionSection = () => {
       title: "Peta Interaktif UMKM",
       description:
         "Temukan ribuan bisnis lokal di sekitarmu dengan pencarian berbasis lokasi real-time",
-      color: "from-brown-light to-brown-dark",
+      color: "from-brown-accent to-brown-dark",
       stats: "15K+ UMKM",
       emoji: "🗺️",
     },
@@ -49,7 +49,7 @@ const SolutionSection = () => {
       title: "Chat Langsung ke Penjual",
       description:
         "Tanya produk, nego harga, atau booking langsung tanpa ribet cari kontak",
-      color: "from-brown-dark to-brown-light",
+      color: "from-brown-dark to-brown-accent",
       stats: "24/7 Online",
       emoji: "💬",
     },
@@ -58,7 +58,7 @@ const SolutionSection = () => {
       title: "Dashboard Insight Bisnis",
       description:
         "Pantau performa toko, analisa pelanggan, dan tingkatkan penjualan dengan data real-time",
-      color: "from-brown-light to-[#A3B18A]",
+      color: "from-brown-accent to-brown-dark",
       stats: "Live Analytics",
       emoji: "📊",
     },
@@ -67,7 +67,7 @@ const SolutionSection = () => {
       title: "Promosi Otomatis",
       description:
         "Jangkau pelanggan baru dengan sistem rekomendasi cerdas dan notifikasi otomatis",
-      color: "from-[#A3B18A] to-brown-light",
+      color: "from-brown-dark to-brown-accent",
       stats: "Auto Promo",
       emoji: "⚡",
     },
@@ -203,7 +203,7 @@ const SolutionSection = () => {
               <br />
               ke Level Selanjutnya?
             </h3>
-            <p className="text-lg sm:text-xl text-brown-light]/90 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-brown-light]/90 mb-8 max-w-2xl mx-auto text-brown-light">
               Gabung dengan 15,000+ UMKM yang sudah berkembang bersama MapinAja
             </p>
 
@@ -218,7 +218,7 @@ const SolutionSection = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-2 bg-transparent border-white/30 text-white hover:bg-white/10 font-bold text-lg px-8 py-6 rounded-full backdrop-blur-sm transition-all duration-300"
+                className="border-2 bg-transparent border-white/30 text-white hover:bg-white/80 font-bold text-lg px-8 py-6 rounded-full backdrop-blur-sm transition-all duration-300"
               >
                 Lihat Demo Platform
               </Button>
@@ -227,22 +227,22 @@ const SolutionSection = () => {
             {/* Trust Indicator */}
             <div className="mt-8 flex items-center justify-center space-x-6 text-brown-light]/80 text-sm">
               <div className="flex items-center space-x-2">
-                <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center">
+                <div className="w-5 h-5 bg-brown-light rounded-full flex items-center justify-center">
                   <span className="text-xs">✓</span>
                 </div>
-                <span>Tanpa Biaya Bulanan</span>
+                <span className="text-brown-light">Tanpa Biaya Bulanan</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center">
+                <div className="w-5 h-5 bg-brown-light rounded-full flex items-center justify-center">
                   <span className="text-xs">✓</span>
                 </div>
-                <span>Setup 5 Menit</span>
+                <span className="text-brown-light">Setup 5 Menit</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center">
+                <div className="w-5 h-5 bg-brown-light rounded-full flex items-center justify-center">
                   <span className="text-xs">✓</span>
                 </div>
-                <span>Support 24/7</span>
+                <span className="text-brown-light">Support 24/7</span>
               </div>
             </div>
           </div>
