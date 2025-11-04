@@ -3,7 +3,6 @@
 import LayoutClient from "@/components/layout/dashboard/LayoutClient";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-// Ganti import dari CustomerLayoutClient spesifik
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +18,6 @@ export default function CustomerLayout({
 }) {
   return (
     <div className={inter.className}>
-      {/* Ganti CustomerLayoutClient dengan LayoutClient yang baru */}
       <LayoutClient>{children}</LayoutClient>
     </div>
   );
