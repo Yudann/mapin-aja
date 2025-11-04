@@ -27,11 +27,7 @@ export default function ChatInput({ onSendMessage }: ChatInputProps) {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-white/90 backdrop-blur-md border-t border-brown-light p-4 sticky  bottom-0"
-    >
+    <div className="bg-white/90 backdrop-blur-md border-t border-brown-light p-4 shrink-0">
       <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
         <div className="flex items-center gap-2">
           {/* Attachment Button */}
@@ -39,7 +35,7 @@ export default function ChatInput({ onSendMessage }: ChatInputProps) {
             type="button"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="p-2 text-brown-accent hover:bg-brown-light rounded-xl transition-colors shrink-0"
+            className="p-2.5 text-brown-accent hover:bg-brown-light rounded-xl transition-colors shrink-0 mb-0.5"
           >
             <Paperclip className="w-5 h-5" />
           </motion.button>
@@ -49,10 +45,10 @@ export default function ChatInput({ onSendMessage }: ChatInputProps) {
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               placeholder="Ketik pesan..."
               rows={1}
-              className="w-full px-4 py-3 pr-12 bg-brown-light/30 border border-brown-accent rounded-2xl focus:ring-2 focus:ring-brown-accent focus:border-transparent outline-none resize-none transition-all placeholder-gray-500 max-h-32"
+              className="w-full px-4 py-3 pr-12 bg-brown-light/30 border border-brown-accent/30 rounded-2xl focus:ring-2 focus:ring-brown-accent focus:border-transparent outline-none resize-none transition-all placeholder-gray-500 max-h-32"
               style={{
                 minHeight: "48px",
                 height: "auto",
@@ -76,7 +72,7 @@ export default function ChatInput({ onSendMessage }: ChatInputProps) {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             disabled={!message.trim()}
-            className={`p-3 rounded-xl transition-all shrink-0 ${
+            className={`p-3 rounded-xl transition-all shrink-0 mb-0.5 ${
               message.trim()
                 ? "bg-brown-accent text-white shadow-lg hover:shadow-xl"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -86,6 +82,6 @@ export default function ChatInput({ onSendMessage }: ChatInputProps) {
           </motion.button>
         </div>
       </form>
-    </motion.div>
+    </div>
   );
 }
