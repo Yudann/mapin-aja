@@ -43,7 +43,7 @@ const ValueSection = () => {
       title: "Terpercaya & Aman",
       description:
         "Verifikasi UMKM resmi dan sistem review transparan untuk pengalaman belanja yang aman",
-      color: "from-brown-light to-brown-dark",
+      color: "from-brown-accent to-brown-dark",
       stat: "15K+",
       statLabel: "UMKM Terverifikasi",
     },
@@ -52,7 +52,7 @@ const ValueSection = () => {
       title: "Teknologi Modern",
       description:
         "Platform berbasis AI untuk rekomendasi personal dan pencarian lokasi real-time",
-      color: "from-brown-dark to-brown-light",
+      color: "from-brown-dark to-brown-accent",
       stat: "99.9%",
       statLabel: "Uptime Guarantee",
     },
@@ -61,7 +61,7 @@ const ValueSection = () => {
       title: "Komunitas Lokal",
       description:
         "Dukung ekonomi lokal dan bangun hubungan langsung dengan pemilik bisnis",
-      color: "from-brown-light to-[#A3B18A]",
+      color: "from-brown-accent to-[#A3B18A]",
       stat: "75K+",
       statLabel: "Pengguna Aktif",
     },
@@ -140,7 +140,7 @@ const ValueSection = () => {
 
       {/* Benefits Grid */}
       <motion.div variants={cardVariant} className="mb-20">
-        <div className="bg-linear-to-r from-brown-dark to-brown-light rounded-3xl p-8 sm:p-12 lg:p-16 shadow-2xl relative overflow-hidden">
+        <div className="bg-linear-to-r from-brown-dark to-brown-accent rounded-3xl p-8 sm:p-12 lg:p-16 shadow-2xl relative overflow-hidden">
           {/* Decorative Elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -181,12 +181,12 @@ const ValueSection = () => {
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl p-6 shadow-lg border-2 border-brown-light text-center group hover:border-brown-light transition-all duration-300"
+              className="bg-white rounded-2xl p-6 shadow-lg border-2 border-brown-accent text-center group hover:border-brown-light transition-all duration-300"
             >
-              <div className="w-12 h-12 bg-brown-light/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-brown-light transition-colors duration-300">
-                <stat.icon className="w-6 h-6 text-brown-light group-hover:text-white transition-colors duration-300" />
+              <div className="w-12 h-12 bg-brown-light/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-brown-dark transition-colors duration-300">
+                <stat.icon className="w-6 h-6 text-brown-accent group-hover:text-white transition-colors duration-300" />
               </div>
-              <div className="text-4xl font-black text-brown-light mb-2">
+              <div className="text-4xl font-black text-brown-accent mb-2">
                 {stat.number}
               </div>
               <div className="text-sm text-gray-600 font-semibold">
@@ -204,7 +204,7 @@ const ValueSection = () => {
       >
         <p className="text-2xl sm:text-3xl font-bold text-gray-900 leading-relaxed">
           MapinAja bukan hanya platform —{" "}
-          <span className="bg-linear-to-r from-brown-light to-brown-dark bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-brown-accent to-brown-dark bg-clip-text text-transparent">
             kami adalah partner pertumbuhan bisnis Anda
           </span>
         </p>
