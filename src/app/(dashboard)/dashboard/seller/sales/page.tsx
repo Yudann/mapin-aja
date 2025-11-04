@@ -16,7 +16,7 @@ export default function SalesPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-linear-to-br from-brown-dartext-brown-dark via-brown-accent to-brown-dartext-brown-dark rounded-3xl p-8 text-white relative overflow-hidden"
+        className="bg-linear-to-br from-brown-dark via-brown-accent to-brown-dark rounded-3xl p-8 text-white relative overflow-hidden"
       >
         <div className="absolute inset-0 opacity-10">
           <div
@@ -84,7 +84,7 @@ export default function SalesPage() {
             Insight Cepat
           </h3>
           <div className="space-y-4">
-            <div className="p-4 bg-linear-to-br from-brown-light to-white rounded-xl border border-brown-accent/20">
+            <div className="p-4 bg-linear-to-br from-brown-light to-white rounded-xl border border-brownvia-brown-accent/20">
               <p className="text-xs font-semibold text-gray-500 mb-1">
                 Rata-rata per Transaksi
               </p>
