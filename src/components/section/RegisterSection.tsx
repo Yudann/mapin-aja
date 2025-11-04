@@ -108,6 +108,7 @@ const RegisterSection: React.FC<RegisterSectionProps> = ({
       withPattern={false}
       withCircles={false}
       className={className}
+      background="brown-light"
     >
       {/* Header dengan custom styling untuk section ini */}
       <div className="text-center mb-16">
@@ -241,7 +242,7 @@ const RegisterSection: React.FC<RegisterSectionProps> = ({
                 className="w-full group relative text-white font-black text-xl py-6 px-8 rounded-2xl hover:shadow-2xl transition-all duration-300 overflow-hidden"
                 style={{ backgroundImage: gradientPrimary }}
               >
-                <div className="absolute inset-0 bg-white/20 transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:-translate-x-100% transition-transform duration-1000" />
                 <span className="relative flex items-center justify-center space-x-3">
                   <span>Gabung MapinAja Sekarang!</span>
                   <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
@@ -315,7 +316,7 @@ const RegisterSection: React.FC<RegisterSectionProps> = ({
             {/* Main Visual Placeholder (Simulating the MapinAja Dashboard Preview) */}
             <div
               // Mengganti pink/rose gradient menjadi brown-light/accent gradient
-              className="relative rounded-[2rem] p-10 border-4 border-white/50 shadow-2xl overflow-hidden mt-60 lg:mt-0"
+              className="relative rounded-4xl p-10 border-4 border-white/50 shadow-2xl overflow-hidden mt-60 lg:mt-0"
               style={{ backgroundImage: gradientLight }}
             >
               <div className="text-center p-16 rounded-xl bg-white/80 border-2 border-brown-accent/50 border-dashed">
