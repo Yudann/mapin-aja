@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Bell, ChevronDown, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -52,8 +52,8 @@ interface TopbarProps {
   userInitials: string;
   userAvatarBg: string;
   setMobileSidebarOpen: (isOpen: boolean) => void;
-  isSidebarCollapsed: boolean; // Tambah prop status collapse
-  toggleSidebarCollapsed: () => void; // Tambah fungsi toggle collapse
+  isSidebarCollapsed: boolean;
+  toggleSidebarCollapsed: () => void;
 }
 
 export default function Topbar({
@@ -67,6 +67,25 @@ export default function Topbar({
   const [searchQuery, setSearchQuery] = useState("");
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [location, setLocation] = useState("Jakarta Pusat");
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Deteksi ukuran layar dengan useEffect
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    // Set initial value
+    checkIsMobile();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkIsMobile);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("resize", checkIsMobile);
+    };
+  }, []);
 
   const isCustomer = userRole === "customer";
   const searchPlaceholder = isCustomer
@@ -78,7 +97,7 @@ export default function Topbar({
     : ["Profile", "Pengaturan"];
 
   const handleToggleClick = () => {
-    if (window.innerWidth < 640) {
+    if (isMobile) {
       setMobileSidebarOpen(true);
     } else {
       toggleSidebarCollapsed();
@@ -90,7 +109,7 @@ export default function Topbar({
       <div className="h-full px-4 sm:px-6 flex items-center justify-between gap-4">
         {/* Tombol Toggle Universal */}
         <UniversalSidebarToggle
-          isMobile={window.innerWidth < 640}
+          isMobile={isMobile}
           isCollapsed={isSidebarCollapsed}
           onClick={handleToggleClick}
         />
@@ -124,7 +143,7 @@ export default function Topbar({
 
         {/* Right Section */}
         <div className="flex items-center gap-3">
-          {/* Notifications & User Menu (Sama seperti sebelumnya) */}
+          {/* Notifications & User Menu */}
           <button
             className="relative p-2 text-gray-600 hover:text-brown-dark hover:bg-gray-100 rounded-xl transition-colors"
             aria-label="Notifikasi"
@@ -132,6 +151,7 @@ export default function Topbar({
             <Bell className="w-5 h-5" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
           </button>
+
           {/* User Menu */}
           <div className="relative">
             <button
