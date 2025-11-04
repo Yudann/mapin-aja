@@ -1,8 +1,8 @@
 // src\app\(dashboard)\dashboard\seller\layout.tsx
 
+import LayoutClient from "@/components/layout/dashboard/LayoutClient";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import SellerLayoutClient from "./components/SellerLayoutClient";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +18,7 @@ export default function SellerLayout({
 }) {
   return (
     <div className={inter.className}>
-      <SellerLayoutClient>{children}</SellerLayoutClient>
+      <LayoutClient>{children}</LayoutClient>
     </div>
   );
 }
