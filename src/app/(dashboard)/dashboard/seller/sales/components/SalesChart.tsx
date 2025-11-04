@@ -41,7 +41,7 @@ export default function SalesChart() {
     >
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-[#B99470] to-[#3E2C23] rounded-xl flex items-center justify-center">
+          <div className="w-12 h-12 bg-linear-to-br from-brown-accent to-brown-dark rounded-xl flex items-center justify-center">
             <TrendingUp className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -51,9 +51,9 @@ export default function SalesChart() {
             <p className="text-sm text-gray-500">Grafik per jam</p>
           </div>
         </div>
-        <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#FAF3E0] rounded-xl">
-          <LineChart className="w-4 h-4 text-[#B99470]" />
-          <span className="text-sm font-bold text-[#3E2C23]">
+        <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-brown-light rounded-xl">
+          <LineChart className="w-4 h-4 text-brown-from-brown-accent" />
+          <span className="text-sm font-bold text-brown-darto-brown-dark">
             Total: Rp 3.690.000
           </span>
         </div>
@@ -67,10 +67,10 @@ export default function SalesChart() {
             margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
           >
             <defs>
-              <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+              <linearlinear id="colorTotal" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#B99470" stopOpacity={0.8} />
                 <stop offset="95%" stopColor="#3E2C23" stopOpacity={0.2} />
-              </linearGradient>
+              </linearlinear>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis
