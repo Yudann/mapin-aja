@@ -6,11 +6,22 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
+// --- ENUM UMKM_CATEGORY BARU (sesuai diskusi sebelumnya) ---
+export type UmkmCategory =
+  | "food_beverage"
+  | "fashion"
+  | "handicraft"
+  | "services"
+  | "retail"
+  | "health_beauty"
+  | "other"
+// -----------------------------------------------------------
+
+
 export type Database = {
   // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+    PostgrestVersion: "13.0.5" // Versi ini disesuaikan jika perlu
   }
   public: {
     Tables: {
@@ -21,6 +32,8 @@ export type Database = {
           id: string
           last_message: string | null
           last_message_at: string | null
+          
+          unread_count: number 
           umkm_id: string
           updated_at: string
         }
@@ -30,6 +43,8 @@ export type Database = {
           id?: string
           last_message?: string | null
           last_message_at?: string | null
+          
+          unread_count?: number
           umkm_id: string
           updated_at?: string
         }
@@ -39,10 +54,19 @@ export type Database = {
           id?: string
           last_message?: string | null
           last_message_at?: string | null
+          
+          unread_count?: number
           umkm_id?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "conversations_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "conversations_umkm_id_fkey"
             columns: ["umkm_id"]
@@ -58,7 +82,8 @@ export type Database = {
           conversation_id: string
           created_at: string
           id: string
-          read: boolean
+          // Nama kolom diperbarui
+          is_read: boolean
           sender_id: string
         }
         Insert: {
@@ -66,7 +91,8 @@ export type Database = {
           conversation_id: string
           created_at?: string
           id?: string
-          read?: boolean
+          // Nama kolom diperbarui
+          is_read?: boolean
           sender_id: string
         }
         Update: {
@@ -74,7 +100,8 @@ export type Database = {
           conversation_id?: string
           created_at?: string
           id?: string
-          read?: boolean
+          // Nama kolom diperbarui
+          is_read?: boolean
           sender_id?: string
         }
         Relationships: [
@@ -85,100 +112,227 @@ export type Database = {
             referencedRelation: "conversations"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          id: string
+          umkm_id: string
+          name: string
+          description: string | null
+         
+          price: number
+          image_url: string | null
+          is_available: boolean
+          category: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          umkm_id: string
+          name: string
+          description?: string | null
+         
+          price: number
+          image_url?: string | null
+          is_available?: boolean
+          category?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          umkm_id?: string
+          name?: string
+          description?: string | null
+         
+          price?: number
+          image_url?: string | null
+          is_available?: boolean
+          category?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_umkm_id_fkey"
+            columns: ["umkm_id"]
+            isOneToOne: false
+            referencedRelation: "umkm"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
         Row: {
-          avatar_url: string | null
-          created_at: string
-          full_name: string | null
-          id: string
+          
+          full_name: string
           phone: string | null
+          avatar_url: string | null
+          id: string
+          // Role dan Onboarding status baru/diperbarui
+          role: Database["public"]["Enums"]["app_role"]
+          onboarding_completed: boolean
+          created_at: string
           updated_at: string
+          // Kolom tambahan
+          business_name: string | null
+          business_description: string | null
         }
         Insert: {
-          avatar_url?: string | null
-          created_at?: string
-          full_name?: string | null
-          id: string
+          full_name: string
           phone?: string | null
+          avatar_url?: string | null
+          id: string
+          role?: Database["public"]["Enums"]["app_role"]
+          onboarding_completed?: boolean
+          created_at?: string
           updated_at?: string
+          business_name?: string | null
+          business_description?: string | null
         }
         Update: {
-          avatar_url?: string | null
-          created_at?: string
-          full_name?: string | null
-          id?: string
+          full_name?: string
           phone?: string | null
+          avatar_url?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          onboarding_completed?: boolean
+          created_at?: string
           updated_at?: string
+          business_name?: string | null
+          business_description?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reviews: {
+        Row: {
+          id: string
+          umkm_id: string
+          customer_id: string
+          rating: number
+          comment: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          umkm_id: string
+          customer_id: string
+          rating: number
+          comment?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          umkm_id?: string
+          customer_id?: string
+          rating?: number
+          comment?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_umkm_id_fkey"
+            columns: ["umkm_id"]
+            isOneToOne: false
+            referencedRelation: "umkm"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       umkm: {
         Row: {
-          address: string | null
-          category: string
-          created_at: string
-          description: string | null
           id: string
-          image_url: string | null
-          latitude: number | null
-          longitude: number | null
-          name: string
           owner_id: string
-          phone: string | null
+          name: string
+          
+          category: Database["public"]["Enums"]["umkm_category"] 
+          description: string | null
+          address: string
+         
+          latitude: number | null
+         
+          longitude: number | null
+          phone: string
+          image_url: string | null
+          
+          banner_url: string | null
+          is_active: boolean
+          
+          opening_hours: Json | null
+          
+          social_media: Json | null
+          created_at: string
           updated_at: string
         }
         Insert: {
-          address?: string | null
-          category: string
-          created_at?: string
-          description?: string | null
           id?: string
-          image_url?: string | null
-          latitude?: number | null
-          longitude?: number | null
-          name: string
           owner_id: string
-          phone?: string | null
-          updated_at?: string
-        }
-        Update: {
-          address?: string | null
-          category?: string
-          created_at?: string
+          name: string
+          category: Database["public"]["Enums"]["umkm_category"]
           description?: string | null
-          id?: string
-          image_url?: string | null
+          address: string
           latitude?: number | null
           longitude?: number | null
-          name?: string
-          owner_id?: string
-          phone?: string | null
+          phone: string
+          image_url?: string | null
+          banner_url?: string | null
+          is_active?: boolean
+          opening_hours?: Json | null
+          social_media?: Json | null
+          created_at?: string
           updated_at?: string
         }
-        Relationships: []
-      }
-      user_roles: {
-        Row: {
-          created_at: string
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
         Update: {
-          created_at?: string
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
+          owner_id?: string
+          name?: string
+          category?: Database["public"]["Enums"]["umkm_category"]
+          description?: string | null
+          address?: string
+          latitude?: number | null
+          longitude?: number | null
+          phone?: string
+          image_url?: string | null
+          banner_url?: string | null
+          is_active?: boolean
+          opening_hours?: Json | null
+          social_media?: Json | null
+          created_at?: string
+          updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "umkm_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -195,6 +349,8 @@ export type Database = {
     }
     Enums: {
       app_role: "customer" | "seller" | "admin"
+      // Tambahkan ENUM umkm_category sesuai skema DB
+      umkm_category: UmkmCategory
     }
     CompositeTypes: {
       [_ in never]: never
@@ -202,6 +358,7 @@ export type Database = {
   }
 }
 
+// --- UTILITY TYPES (Tidak Diubah, Bekerja dengan Database yang Diperbarui) ---
 type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
 type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
@@ -323,6 +480,15 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["customer", "seller", "admin"],
+      umkm_category: [
+        "food_beverage",
+        "fashion",
+        "handicraft",
+        "services",
+        "retail",
+        "health_beauty",
+        "other",
+      ],
     },
   },
 } as const
