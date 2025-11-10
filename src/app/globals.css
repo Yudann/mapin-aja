@@ -27,6 +27,23 @@
   --color-brown-accent: #B99470;
 }
 
+
+:root {
+    --color-bg-primary: #FAF3E0;
+    --color-bg-secondary: #FFFFFF;
+    --color-text-primary: #3E2C23;
+    --color-accent: #B99470;
+    --color-success: #10B981;
+}
+
+.dark {
+    --color-bg-primary: #261A13;
+    --color-bg-secondary: #3A2A21;
+    --color-text-primary: #EDEBE6;
+    --color-accent: #E8C694;
+    --color-success: #90EE90;
+}
+
 /* ===== 🌿 BASE LAYER ===== */
 @layer base {
   * {
