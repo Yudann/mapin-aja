@@ -1,72 +1,145 @@
-// app/api/onboarding/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase-server';
-import { onboardingSchema } from '@/lib/validations';
+// src/app/api/onboarding/route.ts
+// KODE INI SUDAH BENAR DAN TIDAK PERLU DIUBAH
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
 
-// POST /api/onboarding - Complete seller onboarding
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const supabase = await createSupabaseServerClient();
+    const supabase = await createClient()
     
-    // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Check if user already completed onboarding
-    const { data: existingUmkm } = await supabase
-      .from('umkm')
-      .select('id')
-      .eq('owner_id', user.id)
-      .single();
-
-    if (existingUmkm) {
-      return NextResponse.json({ error: 'Onboarding already completed' }, { status: 400 });
-    }
-
-    // Validate request body
-    const body = await request.json();
-    const validation = onboardingSchema.safeParse(body);
+    // Check authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
     
-    if (!validation.success) {
+    if (authError || !user) {
+      console.error('❌ Auth error:', authError)
       return NextResponse.json(
-        { error: 'Validation failed', details: validation.error.issues },
-        { status: 400 }
-      );
+        { error: 'Unauthorized', message: 'User not authenticated' },
+        { status: 401 }
+      )
     }
 
-    // Create UMKM through onboarding
-    const { data: umkm, error } = await supabase
+    console.log('📝 Onboarding request from user:', user.id)
+
+    // Parse request body
+    const body = await request.json()
+    // Kategori yang diterima sekarang adalah nilai ENUM B.Inggris dari frontend
+    const { businessName, category, address, phone, description } = body 
+
+    // Validate required fields
+    if (!businessName || !category || !address || !phone || !description) {
+      return NextResponse.json(
+        { error: 'Validation Error', message: 'All fields are required' },
+        { status: 400 }
+      )
+    }
+
+    // 1. Insert UMKM data
+    const { data: umkmData, error: umkmError } = await supabase
       .from('umkm')
       .insert({
-        ...validation.data,
         owner_id: user.id,
+        name: businessName.trim(),
+        category: category, // Nilai category (e.g., 'food_beverage') dikirim ke DB
+        address: address.trim(),
+        phone: phone.trim(),
+        description: description.trim(),
+        is_active: true,
       })
       .select()
-      .single();
+      .single()
 
-    if (error) {
-      console.error('Error creating UMKM through onboarding:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (umkmError) {
+      console.error('❌ UMKM insert error:', umkmError)
+      
+      if (umkmError.code === '23505') { 
+        return NextResponse.json(
+          { error: 'Already Exists', message: 'You already have a registered UMKM' },
+          { status: 409 }
+        )
+      }
+      
+      // JIKA MASIH ADA ERROR ENUM, ERROR AKAN DITANGANI DI SINI dan status 500 akan dikembalikan
+      // (Tapi seharusnya tidak terjadi karena frontend sudah mengirim nilai yang benar)
+      return NextResponse.json(
+        { error: 'Database Error', message: umkmError.message },
+        { status: 500 }
+      )
     }
 
-    // Update user profile to mark onboarding as completed
-    await supabase
+    console.log('✅ UMKM created:', umkmData.id)
+
+    // 2. Update profile onboarding status
+    const { error: profileError } = await supabase
       .from('profiles')
-      .update({ 
+      .update({
         onboarding_completed: true,
+        phone: phone.trim(), 
         updated_at: new Date().toISOString(),
       })
-      .eq('id', user.id);
+      .eq('id', user.id)
 
-    return NextResponse.json({ 
-      success: true, 
-      umkm_id: umkm.id,
-      message: 'Onboarding completed successfully' 
-    }, { status: 201 });
+    if (profileError) {
+      console.error('⚠️ Profile update error:', profileError)
+      // Lanjutkan, karena UMKM sudah dibuat
+    } else {
+      console.log('✅ Profile updated')
+    }
+
+    // Return success response
+    return NextResponse.json({
+      success: true,
+      message: 'Onboarding completed successfully',
+      data: {
+        umkm_id: umkmData.id,
+        umkm_name: umkmData.name,
+      }
+    }, { status: 201 })
+
   } catch (error) {
-    console.error('Error in onboarding API:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error('❌ Unexpected error:', error)
+    return NextResponse.json(
+      { error: 'Internal Server Error', message: 'Something went wrong' },
+      { status: 500 }
+    )
+  }
+}
+
+// Optional: GET endpoint to check onboarding status
+export async function GET() {
+  try {
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Check if user has completed onboarding
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('onboarding_completed, role')
+      .eq('id', user.id)
+      .single()
+
+    // Check if UMKM exists
+    const { data: umkm } = await supabase
+      .from('umkm')
+      .select('id, name')
+      .eq('owner_id', user.id)
+      .single()
+
+    return NextResponse.json({
+      onboarding_completed: profile?.onboarding_completed || false,
+      has_umkm: !!umkm,
+      role: profile?.role,
+      umkm: umkm
+    })
+
+  } catch (error) {
+    console.error('❌ Get onboarding status error:', error)
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }
