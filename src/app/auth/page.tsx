@@ -1,24 +1,19 @@
+// src/app/auth/page.tsx
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Loader2,
   MapPin,
   Users,
   Store,
-  Eye,
-  EyeOff,
   CheckCircle2,
+  Phone,
 } from "lucide-react";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase/client";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-type AuthMode = "login" | "register";
 type UserType = "customer" | "seller";
 
 interface Toast {
@@ -63,137 +58,74 @@ const ToastNotification = ({
 );
 
 function AuthContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
-  const initialMode = (searchParams.get("mode") as AuthMode) || "login";
   const initialType = (searchParams.get("type") as UserType) || "customer";
 
-  const [mode, setMode] = useState<AuthMode>(initialMode);
   const [userType, setUserType] = useState<UserType>(initialType);
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [toast, setToast] = useState<Toast | null>(null);
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    fullName: "",
-    confirmPassword: "",
-  });
 
   useEffect(() => {
     const params = new URLSearchParams();
-    params.set("mode", mode);
     params.set("type", userType);
     window.history.replaceState(null, "", `?${params.toString()}`);
-  }, [mode, userType]);
+  }, [userType]);
 
   const showToast = (toastData: Toast) => {
     setToast(toastData);
     setTimeout(() => setToast(null), 4000);
   };
 
-  const handleLogin = async () => {
-    if (!formData.email || !formData.password) {
-      showToast({
-        title: "Error",
-        description: "Email dan password wajib diisi",
-        variant: "destructive",
-      });
-      return;
-    }
-
+  const handleGoogleLogin = async () => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password,
+
+      const redirectTo =
+        userType === "seller" ? "/dashboard/seller" : "/explore";
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${
+            window.location.origin
+          }/api/auth/callback?user_type=${userType}&redirect=${encodeURIComponent(
+            redirectTo
+          )}`,
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
+        },
       });
 
-      if (error) throw error;
-
+      if (error) {
+        console.error("❌ Google login error:", error);
+        showToast({
+          title: "Login Gagal",
+          description: error.message,
+          variant: "destructive",
+        });
+        setLoading(false);
+      }
+      // Don't set loading false on success - user will be redirected
+    } catch (error) {
+      console.error("❌ Unexpected error:", error);
       showToast({
-        title: "Berhasil! 🎉",
-        description: "Selamat datang kembali",
-      });
-      setTimeout(
-        () => router.push(userType === "seller" ? "/dashboard-seller" : "/"),
-        1000
-      );
-    } catch (error: any) {
-      showToast({
-        title: "Login Gagal",
-        description: error.message,
+        title: "Error",
+        description: "Terjadi kesalahan yang tidak terduga",
         variant: "destructive",
       });
-    } finally {
       setLoading(false);
     }
   };
 
-  const handleRegister = async () => {
-    if (!formData.fullName || !formData.email || !formData.password) {
-      showToast({
-        title: "Error",
-        description: "Semua field wajib diisi",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      showToast({
-        title: "Error",
-        description: "Password tidak cocok",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      showToast({
-        title: "Error",
-        description: "Password minimal 6 karakter",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const { error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          data: { full_name: formData.fullName, user_type: userType },
-        },
-      });
-
-      if (error) throw error;
-
-      showToast({
-        title: "Berhasil! 🎉",
-        description: "Cek email untuk verifikasi",
-      });
-      setTimeout(() => {
-        setMode("login");
-        setFormData((prev) => ({
-          ...prev,
-          password: "",
-          fullName: "",
-          confirmPassword: "",
-        }));
-      }, 2000);
-    } catch (error: any) {
-      showToast({
-        title: "Registrasi Gagal",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
+  const handlePhoneLogin = () => {
+    showToast({
+      title: "Fitur Dalam Pengembangan",
+      description: "Login dengan nomor telepon akan segera hadir!",
+      variant: "default",
+    });
   };
 
   return (
@@ -214,12 +146,12 @@ function AuthContent() {
         style={{ backgroundColor: "var(--color-base-light)" }}
       >
         <div className="flex flex-col lg:flex-row">
-          {/* Left Side - Visual */}
+          {/* Left Side - Visual (Tetap sama, tapi lebih rapi) */}
           <div
             className="hidden h-[90%] lg:block lg:w-1/2 rounded-[3rem] p-8 lg:p-12 relative overflow-hidden"
             style={{ backgroundColor: "var(--color-brown-dark)" }}
           >
-            {/* Animated 3D Shapes Background */}
+            {/* Animated Background */}
             <div className="absolute inset-0 overflow-hidden">
               <motion.div
                 animate={{
@@ -275,16 +207,16 @@ function AuthContent() {
                 </span>
               </div>
 
-              {/* Stacked Cards with 3D Effect */}
-              <div className="relative flex-1 flex items-center justify-center perspective-1000 min-h-[500px]">
-                {/* Card 1 - Chat with Seller (Top Left) */}
+              {/* Stacked Cards - Diperkecil dan lebih rapi */}
+              <div className="relative flex-1 flex items-center justify-center perspective-1000 min-h-[400px]">
+                {/* Card 1 - Chat (Lebih Kecil) */}
                 <motion.div
                   initial={{ opacity: 0, y: 20, rotateX: -10 }}
                   animate={{
                     opacity: 1,
                     rotateX: 0,
-                    x: [0, -3, 0],
-                    y: [0, -5, 0],
+                    x: [0, -2, 0],
+                    y: [0, -3, 0],
                   }}
                   transition={{
                     duration: 0.6,
@@ -292,7 +224,7 @@ function AuthContent() {
                     x: { duration: 4, repeat: Infinity, ease: "easeInOut" },
                     y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
                   }}
-                  className="absolute top-4 left-4 w-64 rounded-2xl p-4 shadow-2xl transform -rotate-6 z-20"
+                  className="absolute top-8 left-4 w-72 rounded-2xl p-3 shadow-2xl transform -rotate-6 z-20"
                   style={{
                     background:
                       "linear-gradient(to bottom right, var(--color-brown-accent), #8B6F47)",
@@ -300,188 +232,95 @@ function AuthContent() {
                   }}
                 >
                   <div
-                    className="text-xs font-bold mb-2 flex items-center space-x-2"
+                    className="text-md font-bold mb-2 flex items-center space-x-2"
                     style={{ color: "var(--color-brown-light)" }}
                   >
                     <div
                       className="w-2 h-2 rounded-full animate-pulse"
                       style={{ backgroundColor: "var(--color-brown-light)" }}
                     />
-                    <span>💬 Chat dengan Seller</span>
+                    <span>💬 Chat Real-time</span>
                   </div>
-                  <div className="space-y-2 mb-2">
-                    <div className="bg-white/20 backdrop-blur-sm rounded-xl rounded-tl-sm p-2">
+                  <div className="space-y-1 mb-2">
+                    <div className="bg-white/20 backdrop-blur-sm rounded-lg rounded-tl-sm p-2">
                       <p
-                        className="text-xs"
+                        className="text-md"
                         style={{ color: "var(--color-base-light)" }}
                       >
-                        Halo! Ada yang bisa saya bantu? 😊
+                        Ada promo hari ini? 🎉
                       </p>
                     </div>
-                    <div className="bg-white/90 rounded-xl rounded-tr-sm p-2 ml-6">
+                    <div className="bg-white/90 rounded-lg rounded-tr-sm p-2 ml-4">
                       <p
-                        className="text-xs"
+                        className="text-md"
                         style={{ color: "var(--color-brown-dark)" }}
                       >
-                        Apakah masih buka hari ini?
+                        Ya! Diskon 20% 🎊
                       </p>
                     </div>
                   </div>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 1, 0] }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    className="flex items-center space-x-1 text-white/70 text-xs"
-                  >
-                    <div className="flex space-x-1">
-                      <motion.div
-                        animate={{ y: [0, -2, 0] }}
-                        transition={{
-                          duration: 0.6,
-                          repeat: Infinity,
-                          delay: 0,
-                        }}
-                        className="w-1 h-1 bg-white/70 rounded-full"
-                      />
-                      <motion.div
-                        animate={{ y: [0, -2, 0] }}
-                        transition={{
-                          duration: 0.6,
-                          repeat: Infinity,
-                          delay: 0.2,
-                        }}
-                        className="w-1 h-1 bg-white/70 rounded-full"
-                      />
-                      <motion.div
-                        animate={{ y: [0, -2, 0] }}
-                        transition={{
-                          duration: 0.6,
-                          repeat: Infinity,
-                          delay: 0.4,
-                        }}
-                        className="w-1 h-1 bg-white/70 rounded-full"
-                      />
-                    </div>
-                    <span className="text-xs">mengetik...</span>
-                  </motion.div>
                 </motion.div>
 
-                {/* Card 2 - Transaction Receipt (Top Right) */}
+                {/* Card 2 - Revenue (Lebih Kecil) */}
                 <motion.div
                   initial={{ opacity: 0, y: 20, rotateX: -10 }}
                   animate={{
                     opacity: 1,
                     rotateX: 0,
-                    x: [0, 5, 0],
-                    y: [0, -4, 0],
+                    x: [0, 3, 0],
+                    y: [0, -2, 0],
                   }}
                   transition={{
                     duration: 0.6,
                     delay: 0.4,
-                    x: {
-                      duration: 3.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 0.5,
-                    },
-                    y: {
-                      duration: 3.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 0.5,
-                    },
+                    x: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
+                    y: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
                   }}
-                  className="absolute top-16 right-8 w-56 rounded-2xl p-4 shadow-2xl transform rotate-[8deg] z-10"
+                  className="absolute top-20 right-6 w-48 rounded-2xl p-3 shadow-2xl transform rotate-[8deg] z-10"
                   style={{
                     backgroundColor: "var(--color-base-light)",
                     transformStyle: "preserve-3d",
                   }}
                 >
                   <div
-                    className="text-xs font-bold mb-2"
+                    className="text-md font-bold mb-1"
                     style={{ color: "var(--color-brown-dark)" }}
                   >
-                    💰 Total Revenue
+                    💰 Revenue
                   </div>
                   <div
-                    className="text-3xl font-black mb-3"
+                    className="text-2xl font-black mb-2"
                     style={{ color: "var(--color-brown-dark)" }}
                   >
                     Rp 850K
                   </div>
-                  <div
-                    className="rounded-xl p-2 mb-2"
-                    style={{ backgroundColor: "var(--color-brown-light)" }}
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <span
-                        className="text-xs"
-                        style={{ color: "var(--color-brown-dark)" }}
-                      >
-                        Transaksi
-                      </span>
-                      <span
-                        className="text-xs font-bold"
-                        style={{ color: "var(--color-brown-accent)" }}
-                      >
-                        +24
-                      </span>
-                    </div>
-                    <div
-                      className="w-full rounded-full h-1.5"
-                      style={{ backgroundColor: "#D4B896" }}
-                    >
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: "75%" }}
-                        transition={{ duration: 1, delay: 1 }}
-                        className="h-1.5 rounded-full"
-                        style={{ backgroundColor: "var(--color-brown-accent)" }}
-                      />
-                    </div>
-                  </div>
-                  <div
-                    className="flex items-center space-x-1 text-xs"
-                    style={{ color: "var(--color-brown-dark)" }}
-                  >
+                  <div className="flex items-center space-x-1 text-md">
                     <div
                       className="w-1.5 h-1.5 rounded-full"
                       style={{ backgroundColor: "var(--color-brown-accent)" }}
                     />
-                    <span>↗ +32% bulan ini</span>
+                    <span style={{ color: "var(--color-brown-dark)" }}>
+                      ↗ +32%
+                    </span>
                   </div>
                 </motion.div>
 
-                {/* Card 3 - Featured UMKM (Bottom Center-Left) */}
+                {/* Card 3 - UMKM (Lebih Kecil) */}
                 <motion.div
                   initial={{ opacity: 0, y: 20, rotateX: -10 }}
                   animate={{
                     opacity: 1,
                     rotateX: 0,
-                    x: [0, 2, 0],
-                    y: [0, -3, 0],
+                    x: [0, 1, 0],
+                    y: [0, -2, 0],
                   }}
                   transition={{
                     duration: 0.6,
                     delay: 0.6,
-                    x: {
-                      duration: 4.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 1,
-                    },
-                    y: {
-                      duration: 4.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 1,
-                    },
+                    x: { duration: 4.5, repeat: Infinity, ease: "easeInOut" },
+                    y: { duration: 4.5, repeat: Infinity, ease: "easeInOut" },
                   }}
-                  className="absolute bottom-12 left-16 w-72 rounded-2xl p-4 shadow-2xl transform rotate-[-4deg] z-30"
+                  className="absolute bottom-16 left-12 w-60 rounded-2xl p-3 shadow-2xl transform rotate-[-4deg] z-30"
                   style={{
                     background:
                       "linear-gradient(to bottom right, #8B6F47, var(--color-brown-accent))",
@@ -490,107 +329,63 @@ function AuthContent() {
                 >
                   <div className="relative z-10">
                     <div
-                      className="text-xs font-bold mb-2"
+                      className="text-md font-bold mb-1"
                       style={{ color: "var(--color-brown-light)" }}
                     >
-                      🔥 Featured UMKM
+                      🔥 Warung Kopi Asik
                     </div>
-                    <div className="flex items-center space-x-2 mb-3">
-                      <div className="w-12 h-12 bg-white/30 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <div className="w-8 h-8 bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center">
                         <Store
-                          className="w-6 h-6"
+                          className="w-4 h-4"
                           style={{ color: "var(--color-base-light)" }}
                         />
                       </div>
                       <div>
                         <div
-                          className="font-black text-base"
+                          className="font-black text-sm"
                           style={{ color: "var(--color-base-light)" }}
                         >
-                          Warung Kopi Asik
+                          Kopi Special
                         </div>
                         <div
-                          className="text-xs flex items-center space-x-1"
+                          className="text-md"
                           style={{ color: "var(--color-brown-light)" }}
                         >
-                          <span>⭐ 4.9</span>
-                          <span>•</span>
-                          <span>📍 0.5 km</span>
+                          ⭐ 4.9 • 📍 0.5 km
                         </div>
-                      </div>
-                    </div>
-                    <div className="bg-white/25 backdrop-blur-md rounded-xl p-2 mb-2">
-                      <p
-                        className="text-xs font-medium"
-                        style={{ color: "var(--color-base-light)" }}
-                      >
-                        💡 Kopi terbaik! Promo 30% pelanggan baru
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex -space-x-1">
-                        {["😊", "🎉", "⭐"].map((emoji, i) => (
-                          <div
-                            key={i}
-                            className="w-6 h-6 bg-white/30 rounded-full border-2 flex items-center justify-center text-xs"
-                            style={{ borderColor: "var(--color-base-light)" }}
-                          >
-                            {emoji}
-                          </div>
-                        ))}
-                      </div>
-                      <div className="bg-white/30 backdrop-blur-sm rounded-full px-2 py-1">
-                        <span
-                          className="font-bold text-xs"
-                          style={{ color: "var(--color-base-light)" }}
-                        >
-                          Buka ✓
-                        </span>
                       </div>
                     </div>
                   </div>
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-2xl" />
                 </motion.div>
 
-                {/* Card 4 - Stats Badge (Bottom Right) */}
+                {/* Card 4 - Stats (Lebih Kecil) */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{
                     opacity: 1,
                     scale: 1,
-                    y: [0, -8, 0],
-                    rotate: [0, 3, 0],
+                    y: [0, -6, 0],
                   }}
                   transition={{
                     duration: 0.6,
                     delay: 0.8,
-                    y: {
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 1.5,
-                    },
-                    rotate: {
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 1.5,
-                    },
+                    y: { duration: 3, repeat: Infinity, ease: "easeInOut" },
                   }}
-                  className="absolute bottom-24 right-6 rounded-xl p-3 shadow-xl z-20"
+                  className="absolute bottom-20 right-8 rounded-xl px-8 py-4 shadow-xl z-20"
                   style={{
                     background:
                       "linear-gradient(to bottom right, var(--color-brown-accent), #8B6F47)",
                   }}
                 >
                   <div
-                    className="font-black text-xl mb-0.5"
+                    className="font-black text-lg mb-0.5"
                     style={{ color: "var(--color-base-light)" }}
                   >
                     1000+
                   </div>
                   <div
-                    className="text-xs font-semibold"
+                    className="text-md font-semibold"
                     style={{ color: "var(--color-brown-light)" }}
                   >
                     UMKM Aktif
@@ -614,11 +409,11 @@ function AuthContent() {
             </div>
           </div>
 
-          {/* Right Side - Form */}
-          <div className="lg:w-1/2 px-8 pt-4 lg:px-12">
+          {/* Right Side - Form yang Disederhanakan */}
+          <div className="lg:w-1/2 px-8 pt-8 lg:px-12 lg:pt-12">
             <div className="w-full mx-auto">
               {/* Header */}
-              <div className="mb-8">
+              <div className="mb-8 text-center lg:text-left">
                 <div
                   className="text-sm font-bold uppercase tracking-wider mb-2"
                   style={{ color: "var(--color-brown-accent)" }}
@@ -629,7 +424,7 @@ function AuthContent() {
                   className="text-4xl font-black mb-2"
                   style={{ color: "var(--color-brown-dark)" }}
                 >
-                  {mode === "login" ? "WELCOME TO" : "CREATE ACCOUNT"}
+                  WELCOME TO
                   <br />
                   <span
                     style={{
@@ -643,36 +438,39 @@ function AuthContent() {
                     MAPINAJA
                   </span>
                 </h1>
+                <p className="text-gray-600 mt-4">
+                  Pilih role dan login untuk mulai menjelajahi UMKM lokal
+                </p>
               </div>
 
               {/* User Type Selection */}
-              <div className="mb-6">
+              <div className="mb-8">
                 <label
-                  className="text-sm font-bold block mb-3"
+                  className="text-sm font-bold block mb-4 text-center lg:text-left"
                   style={{ color: "var(--color-brown-dark)" }}
                 >
                   Bergabung sebagai:
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-4 max-w-md mx-auto lg:mx-0">
                   {[
                     {
                       id: "customer" as UserType,
                       label: "Customer",
                       icon: Users,
+                      description: "Jelajahi UMKM",
                     },
                     {
                       id: "seller" as UserType,
                       label: "Seller UMKM",
                       icon: Store,
+                      description: "Kelola bisnis",
                     },
                   ].map((type) => (
                     <button
                       key={type.id}
                       onClick={() => setUserType(type.id)}
-                      className={`p-3 rounded-xl border-2 transition-all flex items-center justify-center space-x-2 ${
-                        userType === type.id
-                          ? "text-gray-600 hover:border-gray-300"
-                          : ""
+                      className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center space-y-2 ${
+                        userType === type.id ? "shadow-lg" : "hover:shadow-md"
                       }`}
                       style={
                         userType === type.id
@@ -687,194 +485,87 @@ function AuthContent() {
                             }
                       }
                     >
-                      <type.icon className="w-5 h-5" />
+                      <type.icon className="w-6 h-6" />
                       <span className="font-semibold text-sm">
                         {type.label}
+                      </span>
+                      <span className="text-xs opacity-70 text-center">
+                        {type.description}
                       </span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Form Fields */}
-              <div className="space-y-4">
-                <AnimatePresence mode="wait">
-                  {mode === "register" && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                    >
-                      <label
-                        className="text-sm font-bold block mb-2"
-                        style={{ color: "var(--color-brown-dark)" }}
-                      >
-                        Full Name
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Nama Lengkap"
-                        value={formData.fullName}
-                        onChange={(e) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            fullName: e.target.value,
-                          }))
-                        }
-                        className="w-full px-4 py-2.5 border-2 rounded-xl focus:outline-none transition-colors"
-                        style={{ borderColor: "#E5E7EB" }}
-                        onFocus={(e) =>
-                          (e.target.style.borderColor =
-                            "var(--color-brown-accent)")
-                        }
-                        onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <div>
-                  <label
-                    className="text-sm font-bold block mb-2"
-                    style={{ color: "var(--color-brown-dark)" }}
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="email@example.com"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        email: e.target.value,
-                      }))
-                    }
-                    className="w-full px-4 py-2.5 border-2 rounded-xl focus:outline-none transition-colors"
-                    style={{ borderColor: "#E5E7EB" }}
-                    onFocus={(e) =>
-                      (e.target.style.borderColor = "var(--color-brown-accent)")
-                    }
-                    onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
-                  />
-                </div>
-
-                <div>
-                  <label
-                    className="text-sm font-bold block mb-2"
-                    style={{ color: "var(--color-brown-dark)" }}
-                  >
-                    Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={formData.password}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          password: e.target.value,
-                        }))
-                      }
-                      className="w-full px-4 py-2.5 border-2 rounded-xl focus:outline-none transition-colors pr-12"
-                      style={{ borderColor: "#E5E7EB" }}
-                      onFocus={(e) =>
-                        (e.target.style.borderColor =
-                          "var(--color-brown-accent)")
-                      }
-                      onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="w-5 h-5" />
-                      ) : (
-                        <Eye className="w-5 h-5" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                <AnimatePresence mode="wait">
-                  {mode === "register" && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                    >
-                      <label
-                        className="text-sm font-bold block mb-2"
-                        style={{ color: "var(--color-brown-dark)" }}
-                      >
-                        Confirm Password
-                      </label>
-                      <input
-                        type="password"
-                        placeholder="••••••••"
-                        value={formData.confirmPassword}
-                        onChange={(e) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            confirmPassword: e.target.value,
-                          }))
-                        }
-                        className="w-full px-4 py-2.5 border-2 rounded-xl focus:outline-none transition-colors"
-                        style={{ borderColor: "#E5E7EB" }}
-                        onFocus={(e) =>
-                          (e.target.style.borderColor =
-                            "var(--color-brown-accent)")
-                        }
-                        onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
+              {/* Login Buttons */}
+              <div className="space-y-4 max-w-md mx-auto lg:mx-0">
+                {/* Google Login Button */}
                 <button
-                  onClick={mode === "login" ? handleLogin : handleRegister}
+                  onClick={handleGoogleLogin}
                   disabled={loading}
-                  className="w-full py-4 font-bold rounded-xl hover:shadow-xl transition-all disabled:opacity-50 flex items-center justify-center"
+                  className="w-full py-4 font-bold rounded-xl border-2 transition-all disabled:opacity-50 flex items-center justify-center space-x-3 hover:shadow-lg group"
                   style={{
-                    backgroundColor: "var(--color-brown-accent)",
-                    color: "var(--color-base-light)",
+                    borderColor: "var(--color-brown-accent)",
+                    backgroundColor: "white",
+                    color: "var(--color-brown-dark)",
                   }}
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : mode === "login" ? (
-                    "Login"
                   ) : (
-                    "Create Account"
+                    <>
+                      <svg className="w-5 h-5" viewBox="0 0 24 24">
+                        <path
+                          fill="#4285F4"
+                          d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                        />
+                        <path
+                          fill="#34A853"
+                          d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                        />
+                        <path
+                          fill="#FBBC05"
+                          d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                        />
+                        <path
+                          fill="#EA4335"
+                          d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                        />
+                      </svg>
+                      <span>Continue with Google</span>
+                    </>
                   )}
+                </button>
+
+                {/* Phone Login Button (Dummy) */}
+                <button
+                  onClick={handlePhoneLogin}
+                  disabled={loading}
+                  className="w-full py-4 font-bold rounded-xl border-2 transition-all disabled:opacity-50 flex items-center justify-center space-x-3 hover:shadow-lg group opacity-70"
+                  style={{
+                    borderColor: "#E5E7EB",
+                    backgroundColor: "#F9FAFB",
+                    color: "#6B7280",
+                  }}
+                >
+                  <Phone className="w-5 h-5" />
+                  <span>Continue with Phone</span>
+                  <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
+                    Soon
+                  </span>
                 </button>
               </div>
 
-              {/* Switch Mode */}
-              <div className="text-center mt-4">
-                <span className="text-sm" style={{ color: "#6B7280" }}>
-                  {mode === "login"
-                    ? "Don't have an account? "
-                    : "Already have an account? "}
-                </span>
-                <button
-                  onClick={() => {
-                    setMode(mode === "login" ? "register" : "login");
-                    setFormData((prev) => ({
-                      ...prev,
-                      password: "",
-                      fullName: "",
-                      confirmPassword: "",
-                    }));
-                  }}
-                  className="font-bold text-sm hover:underline"
-                  style={{ color: "var(--color-brown-accent)" }}
-                >
-                  {mode === "login" ? "Sign Up" : "Login"}
-                </button>
+              {/* Info Text */}
+              <div className="mt-8 text-center lg:text-left">
+                <p className="text-sm text-gray-600">
+                  {userType === "seller"
+                    ? "Sebagai seller, Anda akan diarahkan ke proses onboarding setelah login"
+                    : "Sebagai customer, Anda bisa langsung menjelajahi UMKM lokal"}
+                </p>
+                <p className="text-xs text-gray-500 mt-2">
+                  *Login otomatis mendaftarkan akun baru jika belum terdaftar
+                </p>
               </div>
             </div>
           </div>
