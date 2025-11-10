@@ -1,3 +1,4 @@
+// src/components/navbar/UserDropdown.tsx
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -15,6 +16,7 @@ import { UserDropdownProps } from "./navbar.type";
 
 const UserDropdown: React.FC<UserDropdownProps> = ({
   user,
+  profile, // Menggunakan profile untuk data yang lebih detail (avatar, full_name, dll)
   userRole,
   onLogout,
 }) => {
@@ -44,6 +46,9 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
     { href: "/settings", label: "Pengaturan", icon: Settings },
   ];
 
+  const displayName =
+    profile?.full_name || user.email?.split("@")[0] || "Pengguna";
+
   return (
     <div className="relative" ref={dropdownRef}>
       <motion.button
@@ -57,7 +62,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
         </div>
         <div className="hidden sm:block text-left">
           <p className="text-xs font-semibold text-gray-900 truncate max-w-[100px]">
-            {user.email?.split("@")[0]}
+            {displayName}
           </p>
           <p className="text-[10px] text-gray-500 capitalize">{userRole}</p>
         </div>
@@ -84,7 +89,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-gray-900 truncate">
-                    {user.email}
+                    {profile?.full_name || user.email}
                   </p>
                   <span className="inline-block px-2 py-0.5 bg-brown-accent/10 text-brown-accent rounded-full text-[10px] font-semibold mt-1">
                     {userRole === "seller" ? "UMKM Seller" : "Customer"}

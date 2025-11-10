@@ -1,18 +1,23 @@
+// src/components/navbar/Navbar.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Menu, MapPin, Search, Sparkles, Store } from "lucide-react";
+import { Menu, Search, Sparkles, Store } from "lucide-react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import UserDropdown from "./UserDropdown";
 import MobileMenu from "./MobileMenu";
-import { NavigationItem, User } from "./navbar.type";
+import { NavigationItem } from "./navbar.type";
+import Image from "next/image";
+import { useUser } from "@/hooks/useUser";
+import { supabase } from "@/lib/supabase/client";
 
 const Navbar: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [userRole, setUserRole] = useState<string>("");
-  const [loading, setLoading] = useState(true);
+  const { user, profile, isLoading, isAuthenticated } = useUser();
+
+  const userRole = profile?.role ?? "customer";
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -26,34 +31,27 @@ const Navbar: React.FC = () => {
     { type: "link", href: "#", label: "Blog", icon: Sparkles },
   ];
 
-  // Routes where navbar should be hidden
   const hiddenRoutes = [
-    "/umkm/", // Semua route di bawah /umkm
+    "/umkm/",
     "/dashboard-seller",
     "/dashboard-seller/",
     "/auth",
     "/auth/",
   ];
 
-  // Check if current route should hide navbar
   const shouldHideNavbar = hiddenRoutes.some((route) =>
     pathname.startsWith(route)
   );
 
-  // Scroll behavior untuk hide/show navbar
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // Set scrolled state untuk background change
       setScrolled(currentScrollY > 20);
 
-      // Logic untuk hide/show navbar berdasarkan scroll direction
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Scroll ke bawah - hide navbar
         setIsVisible(false);
       } else {
-        // Scroll ke atas - show navbar
         setIsVisible(true);
       }
 
@@ -64,11 +62,6 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  useEffect(() => {
-    setLoading(false);
-  }, []);
-
-  // Check if a navigation item is active
   const isActiveItem = (item: NavigationItem): boolean => {
     if (item.type === "link" && item.href) {
       if (item.href === "/umkm" && pathname.startsWith("/umkm")) {
@@ -81,8 +74,7 @@ const Navbar: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      setUser(null);
-      setUserRole("");
+      await supabase.auth.signOut();
       setMobileMenuOpen(false);
       router.push("/");
     } catch (error) {
@@ -148,12 +140,11 @@ const Navbar: React.FC = () => {
     );
   };
 
-  // Jika route termasuk dalam hiddenRoutes, return null (navbar disembunyikan)
   if (shouldHideNavbar) {
     return null;
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-7xl px-4">
         <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-sm rounded-full">
@@ -201,7 +192,12 @@ const Navbar: React.FC = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <div className="w-9 h-9 bg-brown-accent rounded-xl flex items-center justify-center shadow-sm">
-                  <MapPin className="h-5 w-5 text-white" />
+                  <Image
+                    width={100}
+                    height={100}
+                    src="/mapinaja-logo-dark.png"
+                    alt="mapinaja logo"
+                  />
                 </div>
               </motion.div>
               <span className="hidden sm:block text-lg font-black text-brown-dark">
@@ -216,9 +212,10 @@ const Navbar: React.FC = () => {
             </nav>
 
             <div className="flex items-center gap-2">
-              {user ? (
+              {isAuthenticated && user && profile ? (
                 <UserDropdown
                   user={user}
+                  profile={profile}
                   userRole={userRole}
                   onLogout={handleLogout}
                 />

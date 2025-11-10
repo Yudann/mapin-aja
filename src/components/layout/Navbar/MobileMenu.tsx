@@ -1,3 +1,4 @@
+// src/components/navbar/MobileMenu.tsx
 "use client";
 
 import React from "react";
@@ -15,11 +16,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   userRole,
   onLogout,
   onNavigate,
-  currentPath, // Gunakan prop yang diterima
+  currentPath,
 }) => {
   const router = useRouter();
 
-  // Routes where navbar should be hidden
   const hiddenRoutes = [
     "/umkm/",
     "/dashboard-seller",
@@ -28,12 +28,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
     "/auth/",
   ];
 
-  // Check if current route should hide navbar
   const shouldHideNavbar = hiddenRoutes.some((route) =>
     currentPath.startsWith(route)
   );
 
-  // Jika route termasuk dalam hiddenRoutes, return null HANYA JIKA mobile menu tidak terbuka
   if (shouldHideNavbar && !isOpen) {
     return null;
   }
