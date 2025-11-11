@@ -84,6 +84,7 @@ function AuthContent() {
       const redirectTo =
         userType === "seller" ? "/dashboard/seller" : "/explore";
 
+      // Gunakan origin yang dinamis dari window.location
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
