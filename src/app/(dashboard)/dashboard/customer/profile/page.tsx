@@ -21,6 +21,7 @@ import {
   Star,
   LogOut,
 } from "lucide-react";
+import LogoutButton from "@/components/layout/LogoutButton";
 
 // Dummy data user
 const userData = {
@@ -425,10 +426,7 @@ export default function ProfilePage() {
                 Chat Saya
               </button>
 
-              <button className="w-full flex items-center gap-3 p-3 rounded-xl border-2 border-red-500 text-red-500 font-bold hover:bg-red-500/10 transition-all justify-center">
-                <LogOut className="w-5 h-5" />
-                Keluar
-              </button>
+              <LogoutButton />
             </div>
           </motion.div>
 

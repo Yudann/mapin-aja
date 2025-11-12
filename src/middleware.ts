@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value}) => 
+          cookiesToSet.forEach(({ name, value }) => 
             request.cookies.set(name, value)
           )
           supabaseResponse = NextResponse.next({
@@ -30,32 +30,75 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // IMPORTANT: Avoid writing any logic between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protected routes check
+  // Define route patterns
   const isAuthPage = request.nextUrl.pathname.startsWith('/auth')
-  const isProtectedRoute = 
-    request.nextUrl.pathname.startsWith('/dashboard') ||
-    request.nextUrl.pathname.startsWith('/onboarding')
+  const isAuthCallback = request.nextUrl.pathname.includes('/callback')
+  const isOnboardingPage = request.nextUrl.pathname.startsWith('/onboarding')
+  const isDashboardPage = request.nextUrl.pathname.startsWith('/dashboard')
+  const isPublicPage = 
+    request.nextUrl.pathname === '/' ||
+    request.nextUrl.pathname.startsWith('/explore') ||
+    request.nextUrl.pathname.startsWith('/umkm') ||
+    request.nextUrl.pathname.startsWith('/api')
 
-  // Redirect logic
-  if (!user && isProtectedRoute) {
-    // User not logged in, redirect to auth
-    const url = request.nextUrl.clone()
-    url.pathname = '/auth'
-    url.searchParams.set('redirect', request.nextUrl.pathname)
-    return NextResponse.redirect(url)
+  // Allow auth callbacks to pass through
+  if (isAuthCallback) {
+    return supabaseResponse
   }
 
-  if (user && isAuthPage && !request.nextUrl.pathname.includes('/callback')) {
-    // User already logged in, redirect to appropriate page
-    return NextResponse.redirect(new URL('/umkm', request.url))
+  // User not authenticated
+  if (!user) {
+    if (isDashboardPage || isOnboardingPage) {
+      // Redirect to main auth landing page
+      return NextResponse.redirect(new URL('/auth', request.url))
+    }
+    return supabaseResponse
+  }
+
+  // User is authenticated - get profile data
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('onboarding_completed, role')
+    .eq('id', user.id)
+    .maybeSingle()
+
+  // User authenticated but on auth page (except callback)
+  if (user && isAuthPage && !isAuthCallback) {
+    // Redirect based on role and onboarding status
+    if (profile?.role === 'seller') {
+      if (profile?.onboarding_completed) {
+        return NextResponse.redirect(new URL('/dashboard/seller', request.url))
+      } else {
+        return NextResponse.redirect(new URL('/onboarding/seller', request.url))
+      }
+    } else {
+      return NextResponse.redirect(new URL('/explore', request.url))
+    }
+  }
+
+  // Seller role specific logic
+  if (profile?.role === 'seller') {
+    // Seller trying to access dashboard without completing onboarding
+    if (isDashboardPage && !profile?.onboarding_completed) {
+      return NextResponse.redirect(new URL('/onboarding/seller', request.url))
+    }
+
+    // Seller trying to access onboarding after completion
+    if (isOnboardingPage && profile?.onboarding_completed) {
+      return NextResponse.redirect(new URL('/dashboard/seller', request.url))
+    }
+  }
+
+  // Customer role specific logic
+  if (profile?.role === 'customer') {
+    // Customer trying to access seller-only pages
+    if (isDashboardPage || isOnboardingPage) {
+      return NextResponse.redirect(new URL('/explore', request.url))
+    }
   }
 
   return supabaseResponse
@@ -63,14 +106,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     * - api routes that don't need auth
-     */
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

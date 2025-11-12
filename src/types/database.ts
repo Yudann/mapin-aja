@@ -3,9 +3,14 @@ export type AppRole = 'customer' | 'seller' | 'admin';
 
 export interface Profile {
   id: string;
+  email: string; // ADDED
   full_name: string | null;
   phone: string | null;
   avatar_url: string | null;
+  role: AppRole; // ADDED
+  onboarding_completed: boolean; // ADDED
+  business_name?: string | null; // ADDED (for sellers)
+  business_description?: string | null; // ADDED (for sellers)
   created_at: string;
   updated_at: string;
 }
@@ -30,8 +35,8 @@ export interface UMKM {
   image_url: string | null;
   created_at: string;
   updated_at: string;
-  rating?: number | null; // Opsional
-  email?: string | null; // Opsional
+  rating?: number | null;
+  email?: string | null;
 }
 
 export interface Message {

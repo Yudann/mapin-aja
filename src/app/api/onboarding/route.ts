@@ -1,5 +1,4 @@
 // src/app/api/onboarding/route.ts
-// KODE INI SUDAH BENAR DAN TIDAK PERLU DIUBAH
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
@@ -22,7 +21,6 @@ export async function POST(request: Request) {
 
     // Parse request body
     const body = await request.json()
-    // Kategori yang diterima sekarang adalah nilai ENUM B.Inggris dari frontend
     const { businessName, category, address, phone, description } = body 
 
     // Validate required fields
@@ -33,33 +31,39 @@ export async function POST(request: Request) {
       )
     }
 
+    // Check if user already has UMKM
+    const { data: existingUmkm } = await supabase
+      .from('umkm')
+      .select('id')
+      .eq('owner_id', user.id)
+      .single()
+
+    if (existingUmkm) {
+      return NextResponse.json(
+        { error: 'Already Exists', message: 'You already have a registered UMKM' },
+        { status: 409 }
+      )
+    }
+
     // 1. Insert UMKM data
     const { data: umkmData, error: umkmError } = await supabase
       .from('umkm')
       .insert({
         owner_id: user.id,
         name: businessName.trim(),
-        category: category, // Nilai category (e.g., 'food_beverage') dikirim ke DB
+        category: category,
         address: address.trim(),
         phone: phone.trim(),
         description: description.trim(),
         is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       })
       .select()
       .single()
 
     if (umkmError) {
       console.error('❌ UMKM insert error:', umkmError)
-      
-      if (umkmError.code === '23505') { 
-        return NextResponse.json(
-          { error: 'Already Exists', message: 'You already have a registered UMKM' },
-          { status: 409 }
-        )
-      }
-      
-      // JIKA MASIH ADA ERROR ENUM, ERROR AKAN DITANGANI DI SINI dan status 500 akan dikembalikan
-      // (Tapi seharusnya tidak terjadi karena frontend sudah mengirim nilai yang benar)
       return NextResponse.json(
         { error: 'Database Error', message: umkmError.message },
         { status: 500 }
@@ -82,7 +86,7 @@ export async function POST(request: Request) {
       console.error('⚠️ Profile update error:', profileError)
       // Lanjutkan, karena UMKM sudah dibuat
     } else {
-      console.log('✅ Profile updated')
+      console.log('✅ Profile updated - onboarding marked as completed')
     }
 
     // Return success response
@@ -104,7 +108,7 @@ export async function POST(request: Request) {
   }
 }
 
-// Optional: GET endpoint to check onboarding status
+// GET endpoint to check onboarding status
 export async function GET() {
   try {
     const supabase = await createClient()

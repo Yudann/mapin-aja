@@ -13,26 +13,40 @@ interface UserData {
 }
 
 async function fetchUserAndProfile(): Promise<UserData> {
-  // Get current user
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
+  try {
+    // Get current user
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
 
-  if (userError || !user) {
+    if (userError || !user) {
+      console.log('❌ No user found:', userError)
+      return { user: null, profile: null }
+    }
+
+    console.log('✅ User found:', user.id)
+
+    // Get profile data - GUNAKAN maybeSingle() BUKAN single()
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .maybeSingle() // ← PERUBAHAN UTAMA: maybeSingle() tidak error jika tidak ada data
+
+    if (profileError) {
+      console.error('❌ Error fetching profile:', profileError)
+      return { user, profile: null }
+    }
+
+    if (!profile) {
+      console.log('⚠️ Profile not found yet for user:', user.id)
+      return { user, profile: null }
+    }
+
+    console.log('✅ Profile found:', profile.role)
+    return { user, profile }
+  } catch (error) {
+    console.error('❌ Unexpected error in fetchUserAndProfile:', error)
     return { user: null, profile: null }
   }
-
-  // Get profile data
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
-
-  if (profileError) {
-    console.error('Error fetching profile:', profileError)
-    return { user, profile: null }
-  }
-
-  return { user, profile }
 }
 
 export function useUser() {
@@ -42,19 +56,24 @@ export function useUser() {
     queryKey: ['user'],
     queryFn: fetchUserAndProfile,
     staleTime: 1000 * 60 * 5, // 5 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
+    gcTime: 1000 * 60 * 10, // 10 minutes
+    retry: 2,
+    refetchOnWindowFocus: false, // ← Tambahan: hindari refetch berlebihan
   })
 
-  // Listen to auth state changes and invalidate cache
+  // Listen to auth state changes
   useEffect(() => {
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('🔄 Auth state changed:', event)
 
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        // Invalidate and refetch user data
-        queryClient.invalidateQueries({ queryKey: ['user'] })
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+        // Tambahkan delay untuk memastikan profile sudah dibuat di database
+        setTimeout(async () => {
+          console.log('🔄 Invalidating user query after auth state change')
+          await queryClient.invalidateQueries({ queryKey: ['user'] })
+        }, 1000) // Increase delay to 1 second
       } else if (event === 'SIGNED_OUT') {
         // Clear user data immediately
         queryClient.setQueryData(['user'], { user: null, profile: null })
@@ -73,5 +92,8 @@ export function useUser() {
     error,
     refetch,
     isAuthenticated: !!data?.user,
+    isSeller: data?.profile?.role === 'seller',
+    isCustomer: data?.profile?.role === 'customer',
+    onboardingCompleted: data?.profile?.onboarding_completed ?? false,
   }
 }
