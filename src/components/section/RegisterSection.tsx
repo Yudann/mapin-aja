@@ -108,7 +108,7 @@ const RegisterSection: React.FC<RegisterSectionProps> = ({
       withPattern={false}
       withCircles={false}
       className={className}
-      background="brown-light"
+      background="gradient-to-b"
     >
       {/* Header dengan custom styling untuk section ini */}
       <div className="text-center mb-16">

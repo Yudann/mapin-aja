@@ -8,7 +8,7 @@ import { LucideIcon } from "lucide-react";
 interface SectionWrapperProps {
   children: React.ReactNode;
   className?: string;
-  background?: "white" | "gradient" | "brown-light";
+  background?: "white" | "gradient" | "brown-light" | "gradient-to-b";
   container?: "default" | "wide";
   withPattern?: boolean;
   withCircles?: boolean;
@@ -170,6 +170,8 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
         return "bg-white";
       case "gradient":
         return "bg-linear-to-b from-white via-brown-light/30 to-white";
+      case "gradient-to-b":
+        return "bg-linear-to-b from-white via-brown-light/30 to-brown-light";
       case "brown-light":
         return "bg-brown-light/50";
       default:
