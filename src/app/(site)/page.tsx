@@ -8,7 +8,7 @@ import ValueSection from "@/components/section/ValueSection";
 
 export default function LandingPage() {
   return (
-    <div>
+    <div className="bg-white">
       <HeroSection />
       <ProblemSection />
       <SolutionSection />
