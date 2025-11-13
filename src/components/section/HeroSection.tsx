@@ -144,7 +144,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-linear-to-br from-brown-light via-base-light to-brown-light/50 pt-32 sm:pt-40 pb-16 sm:pb-20">
+    <section className="relative min-h-screen overflow-hidden bg-linear-to-br from-brown-light via-base-light to-brown-light/50 pt-32 sm:pt-44 pb-16 sm:pb-20">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div
@@ -175,7 +175,7 @@ export default function HeroSection() {
         className="absolute bottom-20 right-10 w-96 h-96 sm:w-[500px] sm:h-[500px] bg-brown-accent/15 rounded-full blur-3xl"
       />
 
-      <div className="relative z-10  mx-auto px-4 sm:px-6 lg:px-0">
+      <div className="relative z-10  mx-auto ">
         {/* Center Content */}
         <div className="text-center space-y-8 sm:space-y-10 mb-10">
           {/* Badge */}

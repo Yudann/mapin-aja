@@ -169,17 +169,19 @@ const Navbar: React.FC = () => {
           opacity: isVisible ? 1 : 1,
         }}
         transition={{
-          duration: 0.3,
+          duration: 0.8,
           ease: "easeInOut",
         }}
-        className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-7xl px-4 transition-all duration-300"
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full  px-4 transition-all duration-600  ${
+          scrolled ? "max-w-7xl" : "max-w-360"
+        }`}
         style={{
           transform: `translate(-50%, ${isVisible ? "0" : "-100%"})`,
           opacity: isVisible ? 1 : 1,
         }}
       >
         <div
-          className={`border border-gray-200 bg-white/50 rounded-full transition-all ${
+          className={`w-full rounded-full transition-all ${
             scrolled
               ? "shadow-xl border-gray-300 bg-white/80 backdrop-blur-md"
               : ""
