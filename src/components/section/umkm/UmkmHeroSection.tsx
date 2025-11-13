@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import {
   MapPin,
   Store,
-  Search,
   Sparkles,
   TrendingUp,
   Users,
@@ -17,7 +16,6 @@ import {
 } from "lucide-react";
 
 const UmkmHeroSection = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
   const categories = [
@@ -116,7 +114,7 @@ const UmkmHeroSection = () => {
 
             {/* Main Heading */}
             <motion.div variants={itemVariants}>
-              <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black leading-[0.95] mb-6">
+              <h1 className="text-6xl sm:text-7xl  font-black leading-[0.95] mb-6">
                 <span className="text-brown-dark">Jelajahi</span>
                 <br />
                 <span className="bg-linear-to-r from-brown-accent via-brown-dark to-brown-accent bg-clip-text text-transparent">
@@ -130,7 +128,7 @@ const UmkmHeroSection = () => {
             {/* Description */}
             <motion.p
               variants={itemVariants}
-              className="text-xl text-brown-dark/80 leading-relaxed max-w-xl"
+              className="text-lg text-brown-dark/80 leading-relaxed max-w-xl"
             >
               Temukan usaha kuliner, fashion, dan layanan lokal dengan mudah
               berdasarkan lokasi & kategori. Dukung ekonomi lokal bersama
