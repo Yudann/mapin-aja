@@ -1,386 +1,385 @@
 "use client";
 
-import React from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-  MapPin,
-  Store,
-  TrendingUp,
-  MessageCircle,
-  Users,
-  Heart,
   Search,
-  StoreIcon,
+  MapPin,
+  Sparkles,
+  TrendingUp,
+  Users,
+  ChevronRight,
+  Star,
+  Store,
+  Heart,
+  Navigation,
 } from "lucide-react";
-import Particles from "../layout/HeroBg";
-import { Button } from "../ui/button";
+import {
+  FaCoffee,
+  FaUtensils,
+  FaTshirt,
+  FaPaintBrush,
+  FaShoppingBag,
+  FaLeaf,
+} from "react-icons/fa";
+import { HiLocationMarker } from "react-icons/hi";
 
-// Gradient menggunakan variabel warna brown
-const gradientPrimary =
-  "linear-gradient(to bottom right, var(--color-brown-accent), var(--color-brown-dark))";
-const gradientSecondary =
-  "linear-gradient(to bottom right, var(--color-brown-accent), var(--color-brown-light))";
-const gradientAccent =
-  "linear-gradient(to bottom right, #A3B18A, var(--color-brown-accent))";
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.3,
-    },
+// Dummy UMKM images untuk slider
+const UMKM_IMAGES = [
+  {
+    id: 1,
+    image:
+      "https://images.unsplash.com/photo-1556740758-90de374c12ad?w=400&h=400&fit=crop",
+    title: "Kopi Kenangan",
+    category: "Kafe",
+    rating: 4.8,
+    distance: "0.8 km",
   },
-};
-
-const itemTitle = {
-  hidden: { y: 30, opacity: 0 },
-  show: { y: 0, opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
-};
-
-const itemContent = {
-  hidden: { opacity: 0, scale: 0.95 },
-  show: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.6, ease: "easeOut" },
+  {
+    id: 2,
+    image:
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=400&fit=crop",
+    title: "Warung Nasi Ibu",
+    category: "Kuliner",
+    rating: 4.6,
+    distance: "1.2 km",
   },
-};
+  {
+    id: 3,
+    image:
+      "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop",
+    title: "Batik Nusantara",
+    category: "Fashion",
+    rating: 4.9,
+    distance: "2.1 km",
+  },
+  {
+    id: 4,
+    image:
+      "https://images.unsplash.com/photo-1585399000684-d2f72660f092?w=400&h=400&fit=crop",
+    title: "Kerajinan Kayu",
+    category: "Kerajinan",
+    rating: 4.7,
+    distance: "3.5 km",
+  },
+  {
+    id: 5,
+    image:
+      "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=400&fit=crop",
+    title: "Toko Roti Manis",
+    category: "Bakery",
+    rating: 4.8,
+    distance: "0.5 km",
+  },
+  {
+    id: 6,
+    image:
+      "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=400&fit=crop",
+    title: "Fashion Lokal",
+    category: "Fashion",
+    rating: 4.5,
+    distance: "1.8 km",
+  },
+  {
+    id: 7,
+    image:
+      "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=400&fit=crop",
+    title: "Kafe Cozy",
+    category: "Kafe",
+    rating: 4.9,
+    distance: "2.3 km",
+  },
+  {
+    id: 8,
+    image:
+      "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=400&fit=crop",
+    title: "Pancake House",
+    category: "Kuliner",
+    rating: 4.7,
+    distance: "1.1 km",
+  },
+];
 
-const HeroSection = () => {
+const CATEGORIES = [
+  { icon: FaCoffee, label: "Kopi", color: "from-amber-500 to-orange-600" },
+  { icon: FaUtensils, label: "Kuliner", color: "from-red-500 to-pink-600" },
+  { icon: FaTshirt, label: "Fashion", color: "from-purple-500 to-indigo-600" },
+  {
+    icon: FaPaintBrush,
+    label: "Kerajinan",
+    color: "from-blue-500 to-cyan-600",
+  },
+  {
+    icon: FaShoppingBag,
+    label: "Retail",
+    color: "from-green-500 to-emerald-600",
+  },
+  { icon: FaLeaf, label: "Organik", color: "from-lime-500 to-green-600" },
+];
+
+export default function HeroSection() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
   return (
-    <section className="relative min-h-screen bg-base-dark overflow-hidden pt-20">
-      {/* Background Particles dengan warna earth tone */}
-      <div className="absolute inset-0 z-0">
-        <Particles
-          particleColors={[
-            "var(--color-brown-accent)",
-            "#A3B18A",
-            "var(--color-brown-dark)",
-          ]}
-          particleCount={150}
-          particleSpread={8}
-          speed={0.05}
-          particleBaseSize={80}
-          moveParticlesOnHover={true}
-          alphaParticles={true}
-          disableRotation={false}
-          className="w-full h-full"
+    <section className="relative min-h-screen overflow-hidden bg-linear-to-br from-brown-light via-base-light to-brown-light/50 pt-24 pb-12">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-[0.03]">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-linear(rgba(185, 148, 112, 0.5) 1px, transparent 1px), linear-linear(90deg, rgba(185, 148, 112, 0.5) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+          }}
         />
       </div>
 
-      {/* Kontainer Utama Animasi */}
+      {/* Floating Orbs */}
       <motion.div
-        className="relative z-10 max-w-7xl my-20 mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20"
-        variants={container}
-        initial="hidden"
-        animate="show"
-      >
-        {/* Main Hero Text */}
-        <div className="mb-16 sm:mb-24">
-          {/* Baris 1: Temukan Keunikan */}
-          <motion.h1
-            variants={itemTitle}
-            className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-none mb-4"
-          >
-            <span className="text-brown-light">Temukan</span>{" "}
-            <span className="relative inline-block">
-              <span className="text-brown-accent">UMKM</span>
-              {/* Icon Heart - Diperbaiki positioning */}
-              <div className="absolute top-4 sm:top-6 lg:top-10 xl:-top-12 -right-6 sm:-right-2 lg:-right-4 xl:-right-10 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 rounded-full overflow-hidden border-4 border-brown-light shadow-2xl transform rotate-12 z-20">
-                <div
-                  className="w-full h-full flex items-center justify-center"
-                  style={{ background: gradientPrimary }}
-                >
-                  <StoreIcon className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 xl:w-14 xl:h-14 text-white" />
-                </div>
-              </div>
-            </span>
-          </motion.h1>
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{ duration: 8, repeat: Infinity }}
+        className="absolute top-20 left-10 w-96 h-96 bg-brown-accent/20 rounded-full blur-3xl"
+      />
+      <motion.div
+        animate={{
+          scale: [1.2, 1, 1.2],
+          opacity: [0.4, 0.2, 0.4],
+        }}
+        transition={{ duration: 10, repeat: Infinity }}
+        className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-brown-accent/15 rounded-full blur-3xl"
+      />
 
-          {/* Baris 2: Lokal di */}
-          <motion.h1
-            variants={itemTitle}
-            className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-none mb-4"
-          >
-            <span className="text-brown-accent">Lokal</span>{" "}
-            <span className="relative inline-block">
-              <span className="text-brown-light">di</span>
-            </span>
-          </motion.h1>
-
-          {/* Baris 3: Sekitarmu. */}
-          <motion.h1
-            variants={itemTitle}
-            className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-none"
-          >
-            <span className="text-brown-light">Sekitar</span>
-            <span className="relative inline-block ml-4">
-              <span className="text-brown-light">mu.</span>
-              {/* Icon MapPin - Diperbaiki positioning */}
-              <div className="absolute -top-2 -right-2 w-12 h-12 sm:w-16 sm:h-16 lg:w-18 lg:h-18 xl:w-20 xl:h-20 rounded-full overflow-hidden border-4 border-brown-light shadow-2xl transform rotate-12 z-20">
-                <div
-                  className="w-full h-full flex items-center justify-center"
-                  style={{ background: gradientAccent }}
-                >
-                  <MapPin className="w-6 h-6 sm:w-8 sm:h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 text-white" />
-                </div>
-              </div>
-            </span>
-          </motion.h1>
-        </div>
-
-        {/* Cards Section */}
-        <div className="grid lg:grid-cols-2 gap-6 max-w-5xl">
-          {/* Left Card - UMKM Statistics */}
+      <div className="relative z-10  mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Center Content - More Compact */}
+        <div className="text-center space-y-6 mb-12">
+          {/* Badge */}
           <motion.div
-            variants={itemContent}
-            className="bg-base-light text-brown-dark  rounded-3xl p-6 sm:p-8 shadow-2xl relative z-10 border border-brown-light"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.9 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 bg-base-light/80 backdrop-blur-sm border-2 border-brown-accent/30 rounded-full px-6 py-3 shadow-lg"
           >
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-3">
-                <div className="flex -space-x-3">
-                  <div
-                    className="w-12 h-12 rounded-full border-4 border-base-light flex items-center justify-center text-base-light font-bold z-10 shadow-lg"
-                    style={{ background: gradientPrimary }}
-                  >
-                    K
-                  </div>
-                  <div
-                    className="w-12 h-12 rounded-full border-4 border-base-light flex items-center justify-center font-bold text-brown-dark z-20 shadow-lg"
-                    style={{ background: gradientSecondary }}
-                  >
-                    T
-                  </div>
-                  <div
-                    className="w-12 h-12 rounded-full border-4 border-base-light flex items-center justify-center text-base-light font-bold z-30 shadow-lg"
-                    style={{ background: gradientAccent }}
-                  >
-                    R
-                  </div>
+            <Sparkles className="w-5 h-5 text-brown-accent" />
+            <span className="text-sm font-bold text-brown-dark tracking-wide">
+              Jelajahi 15.000+ UMKM Lokal Terdaftar
+            </span>
+          </motion.div>
+
+          {/* Main Headline */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="space-y-4"
+          >
+            <h1 className="text-4xl lg:text-5xl xl:text-6xl font-black leading-tight text-brown-dark">
+              Temukan{" "}
+              <span className="bg-linear-to-r from-brown-accent via-brown-dark to-brown-accent bg-clip-text text-transparent">
+                Keunikan Lokal
+              </span>{" "}
+              <br />
+              di Sekitar Anda
+            </h1>
+
+            <p className="text-lg lg:text-xl text-brown-dark/70 max-w-2xl mx-auto leading-relaxed font-medium">
+              Dari kedai kopi tersembunyi hingga kerajinan tangan eksklusif.
+              Dukung ekonomi lokal sambil menemukan pengalaman berbelanja
+              terbaik.
+            </p>
+          </motion.div>
+
+          {/* Hero Search Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="max-w-2xl mx-auto"
+          >
+            <div className="relative group">
+              {/* Glow Effect */}
+              <div className="absolute inset-0 bg-linear-to-r from-brown-accent to-brown-dark rounded-2xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
+
+              {/* Search Bar */}
+              <div className="relative flex items-center bg-base-light rounded-2xl shadow-xl border-2 border-brown-accent/30 p-1.5 hover:border-brown-accent/50 transition-all">
+                <div className="flex items-center gap-3 pl-4 pr-3 flex-1">
+                  <Search className="w-5 h-5 text-brown-accent" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Cari kopi terdekat, makanan lokal, fashion, atau jasa..."
+                    className="flex-1 py-2 text-base bg-transparent border-none outline-none text-brown-dark placeholder:text-brown-dark/40 font-medium"
+                  />
                 </div>
-                <div className="text-2xl font-black text-brown-accent">
-                  +500
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-xs text-brown-accent font-semibold mb-1">
-                  UMKM Terdekat
-                </div>
-                <div className="flex items-center space-x-2 bg-brown-light px-3 py-2 rounded-xl border border-brown-light">
-                  <div
-                    className="w-6 h-6 rounded-lg"
-                    style={{ background: gradientPrimary }}
-                  ></div>
-                  <span className="font-bold text-sm text-brown-dark">
-                    kedai-kopi
-                  </span>
-                </div>
+                <button className="flex items-center gap-2 rounded-xl bg-linear-to-r from-brown-dark to-brown-accent hover:from-brown-accent hover:to-brown-dark text-base-light px-6 py-3 text-sm font-bold shadow-lg hover:shadow-xl transition-all hover:scale-105">
+                  <span>Cari</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-brown-light rounded-2xl p-4 border border-brown-light">
-                <div className="text-xs text-brown-accent font-semibold mb-2">
-                  UMKM Baru
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="text-3xl font-black text-brown-dark">+15</div>
-                  <TrendingUp className="w-5 h-5 text-brown-accent" />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2 bg-brown-light px-3 py-2 rounded-xl border border-brown-light">
-                  <div className="w-6 h-6 bg-brown-accent rounded-lg flex items-center justify-center">
-                    <MessageCircle className="w-4 h-4 text-base-light" />
-                  </div>
-                  <span className="font-bold text-sm text-brown-dark">
-                    chat-langsung
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2 bg-brown-light px-3 py-2 rounded-xl border border-brown-light">
-                  <div className="w-6 h-6 bg-brown-accent rounded-lg flex items-center justify-center">
-                    <Users className="w-4 h-4 text-base-light" />
-                  </div>
-                  <span className="font-bold text-sm text-brown-dark">
-                    komunitas
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4 bg-brown-light rounded-2xl p-4 border border-brown-light">
-              <div className="text-xs text-brown-accent font-semibold mb-2">
-                Rating Tertinggi
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="text-3xl font-black text-brown-dark">
-                  ⭐ 4.9
-                </div>
-                <div className="text-sm text-brown-accent">(2.4K reviews)</div>
-              </div>
+            {/* Quick Filters - Category Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+              {CATEGORIES.map((cat, idx) => {
+                const Icon = cat.icon;
+                return (
+                  <motion.button
+                    key={idx}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.6 + idx * 0.1 }}
+                    className={`flex items-center gap-2 px-4 py-2 bg-base-light border border-brown-accent/20 rounded-full hover:border-brown-accent hover:bg-brown-accent/10 transition-all font-medium text-xs text-brown-dark group hover:scale-105`}
+                  >
+                    <Icon className="w-3 h-3 text-brown-accent group-hover:scale-110 transition-transform" />
+                    {cat.label}
+                  </motion.button>
+                );
+              })}
             </div>
           </motion.div>
 
-          {/* Right Side - Text & Cards */}
-          <div className="space-y-6">
-            {/* Description Text & Button */}
-            <motion.div variants={itemContent} className="relative z-10">
-              <p className="text-xl sm:text-2xl lg:text-3xl text-brown-light leading-relaxed mb-8">
-                Dari kedai kopi tersembunyi sampai produk handmade berkualitas —
-                temukan cerita di balik setiap bisnis lokal di sekitarmu.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button className="z-20 rounded-full text-base-light hover:scale-105 py-6 px-8 text-lg font-semibold transition-all duration-300 shadow-lg bg-brown-accent hover:bg-brown-dark">
-                  <Search className="w-5 h-5 mr-2" />
-                  <span>Jelajahi UMKM Sekitar</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  className="z-20 rounded-full border-2 border-brown-light text-brown-light bg-transparent hover:bg-brown-accent hover:text-base-light py-6 px-8 text-lg font-semibold transition-all duration-300 shadow-lg"
+          {/* Stats - More Compact */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="flex flex-wrap items-center justify-center gap-8 pt-2"
+          >
+            {[
+              {
+                icon: Store,
+                value: "15K+",
+                label: "UMKM Terdaftar",
+                color: "text-brown-accent",
+              },
+              {
+                icon: Users,
+                value: "50K+",
+                label: "Pengguna Aktif",
+                color: "text-green-600",
+              },
+              {
+                icon: Star,
+                value: "4.9★",
+                label: "Rating Rata-rata",
+                color: "text-yellow-500",
+              },
+              {
+                icon: TrendingUp,
+                value: "98%",
+                label: "Kepuasan Pelanggan",
+                color: "text-blue-600",
+              },
+            ].map((stat, idx) => {
+              const Icon = stat.icon;
+              return (
+                <div key={idx} className="text-center group cursor-pointer">
+                  <div className="flex items-center justify-center gap-1 mb-1">
+                    <Icon
+                      className={`w-4 h-4 ${stat.color} group-hover:scale-110 transition-transform`}
+                    />
+                    <div className="text-lg font-black text-brown-dark group-hover:text-brown-accent transition-colors">
+                      {stat.value}
+                    </div>
+                  </div>
+                  <div className="text-xs text-brown-dark/60 font-semibold">
+                    {stat.label}
+                  </div>
+                </div>
+              );
+            })}
+          </motion.div>
+        </div>
+
+        {/* Image Slider Carousel - Full Width */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+          className="relative w-full"
+        >
+          {/* Slider Container with Infinite Scroll - Full Width */}
+          <div className="relative overflow-hidden rounded-2xl border border-brown-accent/20 shadow-xl bg-base-light/50 backdrop-blur-sm py-6 mx-[-1rem] lg:mx-[-2rem]">
+            <motion.div
+              animate={{
+                x: [0, -1600], // Adjusted for better visibility
+              }}
+              transition={{
+                x: {
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  duration: 35,
+                  ease: "linear",
+                },
+              }}
+              className="flex gap-4 px-4"
+            >
+              {/* Duplicate array for infinite loop */}
+              {[...UMKM_IMAGES, ...UMKM_IMAGES].map((umkm, idx) => (
+                <div
+                  key={idx}
+                  className="group relative shrink-0 w-64 h-72 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                 >
-                  <Store className="w-5 h-5 mr-2" />
-                  <span>Daftarkan Bisnismu</span>
-                </Button>
-              </div>
-            </motion.div>
+                  {/* Image */}
+                  <img
+                    src={umkm.image}
+                    alt={umkm.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
 
-            {/* Bottom Cards Container */}
-            <motion.div variants={container} className="space-y-4">
-              {/* UMKM Highlight Card */}
-              <motion.div
-                variants={itemContent}
-                className="bg-base-light text-brown-dark rounded-2xl p-6 shadow-xl relative z-10 border border-brown-light"
-              >
-                <div className="text-xs text-brown-accent font-semibold mb-3">
-                  UMKM Terdekat • 150m
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div
-                    className="w-12 h-12 rounded-2xl shrink-0 flex items-center justify-center text-base-light font-bold shadow-lg"
-                    style={{ background: gradientAccent }}
-                  >
-                    K
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-bold mb-1 text-lg">
-                      Kedai Kopi Senja
-                    </div>
-                    <p className="text-sm text-brown-dark/80 mb-2">
-                      Kopi lokal racikan spesial dengan suasana cozy
-                    </p>
-                    <div className="flex items-center space-x-4 text-xs">
-                      <span className="flex items-center space-x-1">
-                        <div className="w-2 h-2 bg-brown-accent rounded-full"></div>
-                        <span>Buka • Tutup 22:00</span>
-                      </span>
-                      <span className="flex items-center space-x-1 text-brown-accent">
-                        ⭐ 4.8 (124)
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+                  {/* linear Overlay */}
+                  <div className="absolute inset-0 bg-linear-to-t from-brown-dark/90 via-brown-dark/40 to-transparent" />
 
-              {/* Promo Card */}
-              <motion.div
-                variants={itemContent}
-                className="bg-base-light text-brown-dark rounded-2xl p-6 shadow-xl relative z-10 border border-brown-light"
-              >
-                <div className="text-xs text-brown-accent font-semibold mb-3">
-                  Promo Hari Ini
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between bg-brown-light px-4 py-3 rounded-xl border border-brown-light">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-brown-accent rounded-lg flex items-center justify-center">
-                        <div className="w-4 h-4 bg-base-light rounded-full"></div>
-                      </div>
-                      <span className="font-semibold">
-                        Kopi Gratis Pembelian ke-5
+                  {/* Content */}
+                  <div className="absolute inset-x-0 bottom-0 p-4 text-base-light">
+                    <div className="mb-2">
+                      <span className="inline-block px-2 py-1 bg-brown-accent/80 backdrop-blur-sm rounded-full text-xs font-bold">
+                        {umkm.category}
                       </span>
                     </div>
-                    <div className="w-6 h-6 bg-brown-accent rounded-full flex items-center justify-center">
-                      <div className="w-2 h-2 bg-base-light rounded-full"></div>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between bg-brown-light px-4 py-3 rounded-xl border border-brown-light">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-brown-accent rounded-lg flex items-center justify-center">
-                        <div className="w-4 h-4 bg-base-light rounded-full"></div>
+                    <h3 className="text-lg font-black mb-1">{umkm.title}</h3>
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1">
+                        <HiLocationMarker className="w-3 h-3" />
+                        <span>{umkm.distance}</span>
                       </div>
-                      <span className="font-semibold">
-                        Diskon 20% Produk Handmade
-                      </span>
-                    </div>
-                    <div className="w-6 h-6 bg-brown-accent rounded-full flex items-center justify-center">
-                      <div className="w-2 h-2 bg-base-light rounded-full"></div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                        <span className="font-bold">{umkm.rating}</span>
+                      </div>
                     </div>
                   </div>
+
+                  {/* Favorite Button */}
+                  <button className="absolute top-3 right-3 w-8 h-8 bg-base-light/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-base-light transition-all opacity-0 group-hover:opacity-100">
+                    <Heart className="w-4 h-4 text-brown-accent" />
+                  </button>
                 </div>
-              </motion.div>
+              ))}
             </motion.div>
           </div>
-        </div>
-      </motion.div>
 
-      {/* Bottom Ticker */}
-      <div className="absolute bottom-0 left-0 right-0 bg-brown-dark/80 backdrop-blur-sm py-6 overflow-hidden z-10 ">
-        <div className="flex space-x-12 animate-scroll whitespace-nowrap">
-          {[...Array(3)].map((_, index) => (
-            <div key={index} className="flex space-x-12">
-              <span className="text-brown-light uppercase tracking-wider text-sm font-bold">
-                KEDAI KOPI LOKAL
-              </span>
-              <span className="text-brown-light uppercase tracking-wider text-sm font-bold">
-                PRODUK HANDMADE
-              </span>
-              <span className="text-brown-light uppercase tracking-wider text-sm font-bold">
-                KULINER TRADISIONAL
-              </span>
-              <span className="text-brown-light uppercase tracking-wider text-sm font-bold">
-                KERAJINAN TANGAN
-              </span>
-              <span className="text-brown-light uppercase tracking-wider text-sm font-bold">
-                UMKM KREATIF
-              </span>
-              <span className="text-brown-light uppercase tracking-wider text-sm font-bold">
-                BISNIS LOKAL
-              </span>
-              <span className="text-brown-light uppercase tracking-wider text-sm font-bold">
-                EKONOMI KREATIF
-              </span>
-              <span className="text-brown-light uppercase tracking-wider text-sm font-bold">
-                WIRAUSAHA
-              </span>
-              <span className="text-brown-light uppercase tracking-wider text-sm font-bold">
-                KOMUNITAS BISNIS
-              </span>
-              <span className="text-brown-light uppercase tracking-wider text-sm font-bold">
-                PROMO TERDEKAT
-              </span>
-            </div>
-          ))}
-        </div>
+          {/* CTA Below Slider - More Compact */}
+          <div className="flex items-center justify-center gap-3 mt-6">
+            <button className="flex items-center gap-2 px-6 py-3 bg-linear-to-r from-brown-dark to-brown-accent text-base-light rounded-xl font-bold hover:shadow-lg hover:shadow-brown-accent/30 transition-all hover:scale-105 text-sm">
+              <MapPin className="w-4 h-4" />
+              Jelajahi Semua UMKM
+            </button>
+            <button className="flex items-center gap-2 px-6 py-3 bg-base-light border border-brown-accent/30 text-brown-accent rounded-xl font-bold hover:bg-brown-accent/10 transition-all hover:scale-105 text-sm">
+              <Navigation className="w-4 h-4" />
+              Lihat Peta
+            </button>
+          </div>
+        </motion.div>
       </div>
-
-      <style>{`
-        @keyframes scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-33.333%);
-          }
-        }
-        .animate-scroll {
-          animation: scroll 30s linear infinite;
-        }
-      `}</style>
     </section>
   );
-};
-
-export default HeroSection;
+}
