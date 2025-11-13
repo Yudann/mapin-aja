@@ -41,7 +41,6 @@ export async function middleware(request: NextRequest) {
   const isDashboardPage = request.nextUrl.pathname.startsWith('/dashboard')
   const isPublicPage = 
     request.nextUrl.pathname === '/' ||
-    request.nextUrl.pathname.startsWith('/explore') ||
     request.nextUrl.pathname.startsWith('/umkm') ||
     request.nextUrl.pathname.startsWith('/api')
 
@@ -76,7 +75,6 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/onboarding/seller', request.url))
       }
     } else {
-      return NextResponse.redirect(new URL('/explore', request.url))
     }
   }
 
@@ -97,7 +95,7 @@ export async function middleware(request: NextRequest) {
   if (profile?.role === 'customer') {
     // Customer trying to access seller-only pages
     if (isDashboardPage || isOnboardingPage) {
-      return NextResponse.redirect(new URL('/explore', request.url))
+      return NextResponse.redirect(new URL('/dashboard/customer', request.url))
     }
   }
 
