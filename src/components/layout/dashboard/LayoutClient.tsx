@@ -105,16 +105,12 @@ export default function LayoutClient({
     // Jika customer mencoba akses seller page atau sebaliknya
     const isSellerPath = pathname.includes("/dashboard/seller");
     const isCustomerPath =
-      pathname.includes("/dashboard/customer") || pathname.includes("/explore");
+      pathname.includes("/dashboard/customer") || pathname.includes("/umkm");
 
     if (profile.role === "seller" && isCustomerPath) {
-      console.log(
-        "⚠️ Seller accessing customer page, redirecting to seller dashboard"
-      );
       router.push("/dashboard/seller");
     } else if (profile.role === "customer" && isSellerPath) {
-      console.log("⚠️ Customer accessing seller page, redirecting to explore");
-      router.push("/explore");
+      router.push("/umkm");
     }
   }, [user, profile, isLoading, pathname, router]);
 
