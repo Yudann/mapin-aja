@@ -18,6 +18,7 @@ import {
   Hash,
 } from "lucide-react";
 import SectionWrapper, { SectionBadge } from "../layout/SectionWrapper";
+import Link from "next/link";
 // Pastikan komponen Badge Anda sudah diimport dengan benar
 // import { Badge } from "@/components/ui/badge";
 // Jika tidak ada Badge, ganti dengan div
@@ -243,10 +244,13 @@ const RegisterSection: React.FC<RegisterSectionProps> = ({
                 style={{ backgroundImage: gradientPrimary }}
               >
                 <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:-translate-x-100% transition-transform duration-1000" />
-                <span className="relative flex items-center justify-center space-x-3">
+                <Link
+                  href="/auth"
+                  className="relative flex items-center justify-center space-x-3"
+                >
                   <span>Gabung MapinAja Sekarang!</span>
                   <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                </span>
+                </Link>
               </motion.button>
               <p className="text-center text-gray-500 text-sm mt-3 font-semibold">
                 Gratis Daftar • Tanpa Kartu Kredit • Siap dalam Hitungan Menit
