@@ -83,86 +83,99 @@ const SolutionSection = () => {
         highlightText="Sebagai Solusi"
       />
 
-      {/* Solution Cards Grid - Asymmetric Layout */}
-      <div className="grid sm:grid-cols-2 gap-6 mb-12">
+      {/* Solution Cards Grid - Regular Grid Layout */}
+      <motion.div
+        variants={sectionContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="grid grid-cols-1 md:grid-cols-2  gap-6 mb-12"
+      >
         {solutions.map((solution, index) => (
           <motion.div
             key={index}
             variants={cardVariant}
-            whileHover={{ y: -12, scale: 1.02 }}
-            className={`group relative rounded-3xl p-8 overflow-hidden shadow-xl border-2 border-gray-100 hover:border-brown-light/30 transition-all duration-500 ${
-              index === 0 || index === 3 ? "sm:translate-y-8" : ""
-            }`}
+            whileHover={{
+              y: -8,
+              scale: 1.02,
+              transition: { duration: 0.3 },
+            }}
+            className="group relative rounded-2xl p-6 overflow-hidden shadow-lg hover:shadow-xl border border-gray-200 hover:border-brown-light/30 transition-all duration-300"
           >
             {/* Gradient Background */}
             <div
-              className={`absolute inset-0 bg-linear-to-br ${solution.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
+              className={`absolute inset-0 bg-gradient-to-br ${solution.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
             />
 
             {/* Content */}
             <div className="relative z-10">
               {/* Icon & Emoji */}
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-4">
                 <div
-                  className={`w-16 h-16 rounded-2xl bg-linear-to-br ${solution.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+                  className={`w-14 h-14 rounded-xl bg-gradient-to-br ${solution.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md`}
                 >
-                  <solution.icon className="w-8 h-8 text-white" />
+                  <solution.icon className="w-6 h-6 text-white" />
                 </div>
-                <div className="text-5xl group-hover:scale-125 transition-transform duration-300">
+                <div className="text-4xl group-hover:scale-110 transition-transform duration-300">
                   {solution.emoji}
                 </div>
               </div>
 
               {/* Title */}
-              <h3 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 leading-tight">
+              <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
                 {solution.title}
               </h3>
 
               {/* Description */}
-              <p className="text-gray-600 leading-relaxed mb-6">
+              <p className="text-gray-600 text-sm leading-relaxed mb-4">
                 {solution.description}
               </p>
 
               {/* Stats Badge */}
-              <div className="inline-flex items-center space-x-2 bg-brown-light border border-brown-light rounded-full px-4 py-2">
-                <div className="w-2 h-2 bg-brown-light rounded-full animate-pulse" />
-                <span className="text-sm font-bold text-brown-dark">
-                  {solution.stats}
-                </span>
-              </div>
-            </div>
+              <div className="flex items-center justify-between">
+                <div className="inline-flex items-center space-x-2 bg-brown-light/10 border border-brown-light/20 rounded-full px-3 py-1.5">
+                  <div className="w-2 h-2 bg-brown-accent rounded-full animate-pulse" />
+                  <span className="text-xs font-semibold text-brown-dark">
+                    {solution.stats}
+                  </span>
+                </div>
 
-            {/* Hover Arrow */}
-            <div className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <ArrowRight className="w-6 h-6 text-brown-light" />
+                {/* Hover Arrow */}
+                <div className="opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                  <ArrowRight className="w-5 h-5 text-brown-accent" />
+                </div>
+              </div>
             </div>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* CTA Section */}
       <motion.div
         variants={cardVariant}
-        className="relative bg-linear-to-r from-brown-accent to-brown-dark rounded-3xl p-8 sm:p-12 lg:p-16 shadow-2xl overflow-hidden"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="relative bg-gradient-to-r from-brown-accent to-brown-dark rounded-2xl p-8 lg:p-12 shadow-xl overflow-hidden"
       >
         {/* Decorative Elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
 
         <div className="relative z-10 text-center">
-          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-6 leading-tight">
+          <h3 className="text-2xl lg:text-3xl font-black text-white mb-4 leading-tight">
             Siap Membawa Bisnismu
             <br />
             ke Level Selanjutnya?
           </h3>
-          <p className="text-lg sm:text-xl text-brown-light]/90 mb-8 max-w-2xl mx-auto text-brown-light">
+          <p className="text-base text-brown-light/90 mb-6 max-w-2xl mx-auto">
             Gabung dengan 15,000+ UMKM yang sudah berkembang bersama MapinAja
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Button
               size="lg"
-              className="bg-white hover:bg-gray-100 text-brown-dark font-bold text-lg px-8 py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+              className="bg-white hover:bg-gray-100 text-brown-dark font-bold text-base px-6 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
             >
               <MapPin className="w-5 h-5 mr-2" />
               Mulai Sekarang Gratis
@@ -170,31 +183,31 @@ const SolutionSection = () => {
             <Button
               size="lg"
               variant="outline"
-              className="border-2 bg-transparent border-white/30 text-white hover:bg-white/80 font-bold text-lg px-8 py-6 rounded-full backdrop-blur-sm transition-all duration-300"
+              className="border-2 border-white/30 text-white hover:bg-white/10 font-bold text-base px-6 py-4 rounded-full backdrop-blur-sm transition-all duration-300"
             >
               Lihat Demo Platform
             </Button>
           </div>
 
           {/* Trust Indicator */}
-          <div className="mt-8 flex items-center justify-center space-x-6 text-brown-light]/80 text-sm">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-brown-light/80 text-xs sm:text-sm">
             <div className="flex items-center space-x-2">
-              <div className="w-5 h-5 bg-brown-light rounded-full flex items-center justify-center">
+              <div className="w-4 h-4 bg-brown-light rounded-full flex items-center justify-center">
                 <span className="text-xs">✓</span>
               </div>
-              <span className="text-brown-light">Tanpa Biaya Bulanan</span>
+              <span>Tanpa Biaya Bulanan</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-5 h-5 bg-brown-light rounded-full flex items-center justify-center">
+              <div className="w-4 h-4 bg-brown-light rounded-full flex items-center justify-center">
                 <span className="text-xs">✓</span>
               </div>
-              <span className="text-brown-light">Setup 5 Menit</span>
+              <span>Setup 5 Menit</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-5 h-5 bg-brown-light rounded-full flex items-center justify-center">
+              <div className="w-4 h-4 bg-brown-light rounded-full flex items-center justify-center">
                 <span className="text-xs">✓</span>
               </div>
-              <span className="text-brown-light">Support 24/7</span>
+              <span>Support 24/7</span>
             </div>
           </div>
         </div>
