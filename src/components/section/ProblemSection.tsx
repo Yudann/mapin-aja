@@ -127,7 +127,7 @@ const ProblemSection = () => {
             <h3 className="text-3xl sm:text-4xl font-black text-white mb-4">
               Untungnya, Sekarang Ada Solusinya
             </h3>
-            <p className="text-lg text-brown-light]/80 mb-6 max-w-2xl mx-auto">
+            <p className="text-lg text-brown-light mb-6 max-w-2xl mx-auto">
               MapinAja hadir membantu UMKM berkembang dengan teknologi yang
               mudah dan terjangkau
             </p>
