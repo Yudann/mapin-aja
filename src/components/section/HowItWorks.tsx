@@ -201,9 +201,6 @@ const HowItWorksSection = () => {
                   >
                     <step.icon className="w-10 h-10 text-white" />
                   </div>
-                  <div className="absolute -top-3 -left-3 text-7xl font-black text-brown-light] -z-0">
-                    {step.number}
-                  </div>
                 </div>
 
                 {/* Title */}
@@ -233,17 +230,6 @@ const HowItWorksSection = () => {
               </div>
 
               {/* Arrow - Desktop */}
-              {index < steps.length - 1 && (
-                <motion.div
-                  className="hidden lg:block absolute top-20 -right-4 z-20"
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                  viewport={{ once: true }}
-                >
-                  <ArrowRight className="w-8 h-8 text-brown-light" />
-                </motion.div>
-              )}
             </motion.div>
           ))}
         </div>
