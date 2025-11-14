@@ -126,7 +126,7 @@ const ValueSection = () => {
 
               {/* Stat */}
               <div className="bg-brown-light border border-brown-light rounded-2xl p-4">
-                <div className="text-3xl font-black text-brown-light mb-1">
+                <div className="text-3xl font-black text-brown-brown mb-1">
                   {value.stat}
                 </div>
                 <div className="text-sm text-gray-600 font-semibold">
@@ -150,7 +150,7 @@ const ValueSection = () => {
               <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4">
                 Keuntungan Bergabung dengan MapinAja
               </h3>
-              <p className="text-lg text-brown-light]/80 max-w-2xl mx-auto">
+              <p className="text-lg text-brown-light max-w-2xl mx-auto">
                 Semua fitur yang Anda butuhkan untuk mengembangkan bisnis UMKM
               </p>
             </div>
