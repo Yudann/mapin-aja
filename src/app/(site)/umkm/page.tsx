@@ -2,35 +2,45 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import UmkmHeroSection from "@/components/section/umkm/UmkmHeroSection";
 import QuickFiltersSection from "@/components/section/umkm/QuickFiltersSection";
-import CategoriesSection from "@/components/section/umkm/CategoriesSection";
 import MainUMKMList from "@/components/section/umkm/MainUMKMList";
 import CitiesSection from "@/components/section/umkm/CitiesSection";
 import WhyChooseSection from "@/components/section/umkm/WhyChooseSection";
 import CTASection from "@/components/section/umkm/CTASection";
 import { DUMMY_UMKMS } from "@/data/umkm";
+import CategoryFilter from "@/components/section/umkm/CategoriesSection";
+import MapPreviewSection from "@/components/section/umkm/MapPreviewSection";
 
 export default function UmkmPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("terdekat");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
 
-  const toggleFavorite = (id: string) => {
-    setFavorites((prev) => {
-      const newFavorites = new Set(prev);
-      if (newFavorites.has(id)) {
-        newFavorites.delete(id);
-      } else {
-        newFavorites.add(id);
-      }
-      return newFavorites;
-    });
-  };
+  // Filter UMKM based on search, category, and selected filter
+  const filteredUmkms = useMemo(() => {
+    let filtered = [...DUMMY_UMKMS];
 
-  const getFilteredUmkms = () => {
-    const filtered = [...DUMMY_UMKMS];
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (umkm) =>
+          umkm.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          umkm.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          umkm.address.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Category filter
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter((umkm) =>
+        umkm.category.toLowerCase().includes(selectedCategory.toLowerCase())
+      );
+    }
+
+    // Quick filters
     switch (selectedFilter) {
       case "terdekat":
         return filtered.sort((a, b) => (a.distance || 0) - (b.distance || 0));
@@ -51,9 +61,19 @@ export default function UmkmPage() {
       default:
         return filtered;
     }
-  };
+  }, [searchQuery, selectedCategory, selectedFilter]);
 
-  const filteredUmkms = getFilteredUmkms();
+  const toggleFavorite = (id: string) => {
+    setFavorites((prev) => {
+      const newFavorites = new Set(prev);
+      if (newFavorites.has(id)) {
+        newFavorites.delete(id);
+      } else {
+        newFavorites.add(id);
+      }
+      return newFavorites;
+    });
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -67,7 +87,10 @@ export default function UmkmPage() {
         setSelectedFilter={setSelectedFilter}
       />
 
-      <CategoriesSection />
+      <CategoryFilter
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+      />
 
       <MainUMKMList
         selectedFilter={selectedFilter}
@@ -77,26 +100,9 @@ export default function UmkmPage() {
       />
 
       <CitiesSection />
-
-      <WhyChooseSection />
+      <MapPreviewSection />
 
       <CTASection />
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-
-        .line-clamp-1 {
-          display: -webkit-box;
-          -webkit-line-clamp: 1;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-      `}</style>
     </div>
   );
 }

@@ -2,8 +2,24 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
-import { MAP_UMKMS, DEFAULT_CENTER, DEFAULT_ZOOM } from "@/data/umkm";
+import { DUMMY_UMKMS } from "@/data/umkm";
 import { UMKM } from "@/types/umkm";
+
+// Tambahkan di bagian atas file, setelah import
+const DEFAULT_CENTER = {
+  lat: -6.2088,
+  lng: 106.8456,
+};
+
+const DEFAULT_ZOOM = 13;
+
+// Buat mapping sederhana untuk data peta
+const MAP_UMKMS = DUMMY_UMKMS.map((umkm) => ({
+  id: umkm.id,
+  name: umkm.name,
+  latitude: umkm.latitude,
+  longitude: umkm.longitude,
+}));
 
 interface MapContainerProps {
   selectedUmkm: UMKM | null;
@@ -121,15 +137,23 @@ export default function MapContainer({ onUmkmSelect }: MapContainerProps) {
       popupAnchor: [0, -40],
     });
 
-    MAP_UMKMS.forEach((umkm) => {
+    MAP_UMKMS.forEach((mapUmkm) => {
       try {
-        const marker = L.marker([umkm.latitude, umkm.longitude], {
+        // Cari data UMKM lengkap dari DUMMY_UMKMS berdasarkan ID
+        const fullUmkmData = DUMMY_UMKMS.find((umkm) => umkm.id === mapUmkm.id);
+
+        if (!fullUmkmData) {
+          console.warn(`Data UMKM tidak ditemukan untuk ID: ${mapUmkm.id}`);
+          return;
+        }
+
+        const marker = L.marker([mapUmkm.latitude, mapUmkm.longitude], {
           icon: customIcon,
         })
           .addTo(map)
           .on("click", () => {
-            onUmkmSelect(umkm);
-            map.setView([umkm.latitude, umkm.longitude], 15, {
+            onUmkmSelect(fullUmkmData);
+            map.setView([mapUmkm.latitude, mapUmkm.longitude], 15, {
               animate: true,
               duration: 0.5,
             });
@@ -137,7 +161,7 @@ export default function MapContainer({ onUmkmSelect }: MapContainerProps) {
 
         markersRef.current.push(marker);
       } catch (error) {
-        console.error(`Error creating marker for ${umkm.name}:`, error);
+        console.error(`Error creating marker for ${mapUmkm.name}:`, error);
       }
     });
   }, [map, L, onUmkmSelect]);

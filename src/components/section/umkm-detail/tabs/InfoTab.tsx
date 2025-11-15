@@ -1,7 +1,9 @@
 // src\components\section\umkm-detail\tabs\InfoTab.tsx
 
 import React from "react";
-import { MapPin, Navigation, Clock, Phone, MessageCircle } from "lucide-react";
+import { Clock, Phone, MessageCircle } from "lucide-react";
+import UmkmDetailMap from "../UmkmDetailMap";
+import UmkmDetailGallery from "../UmkmDetailGallery";
 import { UMKM } from "@/types/umkm";
 
 interface InfoTabProps {
@@ -10,7 +12,14 @@ interface InfoTabProps {
 
 export default function InfoTab({ umkm }: InfoTabProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Gallery Section */}
+      <UmkmDetailGallery umkm={umkm} />
+
+      {/* Map Section */}
+      <UmkmDetailMap umkm={umkm} />
+
+      {/* About Section */}
       <div>
         <h3 className="text-lg font-bold text-brown-dark mb-3">Tentang</h3>
         <p className="text-sm text-brown-dark/70 leading-relaxed">
@@ -18,25 +27,7 @@ export default function InfoTab({ umkm }: InfoTabProps) {
         </p>
       </div>
 
-      <div>
-        <h3 className="text-lg font-bold text-brown-dark mb-3">Alamat</h3>
-        <div className="flex items-start gap-3 p-4 bg-brown-light rounded-xl">
-          <MapPin className="w-5 h-5 text-brown-accent shrink-0 mt-0.5" />
-          <div className="flex-1">
-            <p className="text-sm text-brown-dark font-medium mb-2">
-              {umkm.address}
-            </p>
-            <p className="text-xs text-brown-dark/60 mb-3">
-              {umkm.distance} km dari lokasi Anda
-            </p>
-            <button className="text-sm font-bold text-brown-accent hover:text-brown-dark transition-colors flex items-center gap-1">
-              <Navigation className="w-4 h-4" />
-              <span>Lihat di Peta</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
+      {/* Opening Hours */}
       <div>
         <h3 className="text-lg font-bold text-brown-dark mb-3">
           Jam Operasional
@@ -68,6 +59,7 @@ export default function InfoTab({ umkm }: InfoTabProps) {
         </div>
       </div>
 
+      {/* Contact */}
       <div>
         <h3 className="text-lg font-bold text-brown-dark mb-3">Kontak</h3>
         <div className="space-y-3">

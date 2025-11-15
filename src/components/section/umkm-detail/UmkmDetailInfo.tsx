@@ -43,7 +43,7 @@ export default function UmkmDetailInfo({ umkm }: UmkmDetailInfoProps) {
 
         <div className="text-center">
           <div className="flex items-center justify-center mb-1">
-            <span className="text-base font-black text-brown-dark">$$$</span>
+            <span className="text-base font-black text-brown-dark">Harga</span>
           </div>
           <p className="text-xs text-brown-dark/60 font-medium">
             {umkm.priceRange}
