@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Menu, Search, Sparkles, Store, LogIn } from "lucide-react";
+import { Menu, Search, Sparkles, Store, LogIn, MapPinned } from "lucide-react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
@@ -19,7 +19,7 @@ import { supabase } from "@/lib/supabase/client";
 // --- Konstanta Navigasi ---
 const navigationItems: NavigationItem[] = [
   { type: "link", href: "/umkm", label: "Jelajahi UMKM", icon: Search },
-  { type: "link", href: "#", label: "Tentang", icon: Store },
+  { type: "link", href: "/umkm/map", label: "Peta UMKM", icon: MapPinned },
   { type: "link", href: "/blog", label: "Blog", icon: Sparkles },
 ];
 
