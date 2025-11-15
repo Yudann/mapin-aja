@@ -24,6 +24,7 @@ const navigationItems: NavigationItem[] = [
 ];
 
 const HIDDEN_ROUTES_PREFIXES = [
+  "/umkm",
   "/umkm/",
   "/dashboard-seller",
   "/dashboard-seller/",
