@@ -116,7 +116,7 @@ export default function MapBottomSheet({
         animate="expanded"
         exit="collapsed"
         variants={sheetVariants}
-        className="absolute bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl shadow-2xl flex flex-col max-h-[85vh]"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl shadow-2xl flex flex-col max-h-[85vh]"
       >
         {/* Drag Handle */}
         <motion.div
@@ -146,7 +146,7 @@ export default function MapBottomSheet({
 
         {/* Scrollable Content */}
         <motion.div
-          className="flex-1 overflow-y-auto"
+          className="flex-1 mb-44 overflow-y-auto"
           variants={contentVariants}
           animate={isExpanded ? "expanded" : "collapsed"}
         >
@@ -388,7 +388,7 @@ export default function MapBottomSheet({
 
         {/* Action Buttons - Always Visible */}
         <motion.div
-          className="shrink-0 border-t border-gray-100 bg-white"
+          className="shrink-0 fixed bottom-0 left-0 right-0 border-t border-gray-100 bg-white"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
