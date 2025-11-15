@@ -121,22 +121,26 @@ npm start
 Akses di: http://localhost:3000
 
 7. Struktur Folder Utama
+
+```bash
 src/
 ├── app/
-│   ├── (site)/
-│   │   ├── umkm/
-│   │   │   ├── page.tsx                  # /umkm
-│   │   │   ├── [id]/page.tsx             # /umkm/[id]
-│   │   │   ├── map/page.tsx              # /umkm/map
-│   │   │   └── recommendation/page.tsx   # /umkm/recommendation
-│   ├── dashboard/
-│   ├── auth/
-│   ├── onboarding/
-│   └── layout.tsx
+│   ├── (site)/
+│   │   ├── umkm/
+│   │   │   ├── page.tsx                 # /umkm
+│   │   │   ├── [id]/page.tsx            # /umkm/[id]
+│   │   │   ├── map/page.tsx             # /umkm/map
+│   │   │   └── recommendation/page.tsx  # /umkm/recommendation
+│   ├── dashboard/
+│   ├── auth/
+│   ├── onboarding/
+│   └── layout.tsx
 ├── components/
 ├── data/
 ├── types/
 └── lib/
+```
+
 8.  Rencana Pengembangan Lanjutan
 Dashboard Seller
 
