@@ -150,7 +150,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
                   <div className="space-y-4">
                     {/* User Info */}
                     <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                      <div className="w-11 h-11 bg-brown-accent rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="w-11 h-11 bg-brown-accent rounded-full flex items-center justify-center shrink-0">
                         <User className="h-5 w-5 text-white" />
                       </div>
                       <div className="flex-1 min-w-0">
