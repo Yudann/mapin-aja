@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SectionWrapper, { SectionHeader } from "../layout/SectionWrapper";
+import Link from "next/link";
 
 const sectionContainer = {
   hidden: { opacity: 0 },
@@ -237,13 +238,15 @@ const HowItWorksSection = () => {
 
       {/* CTA */}
       <motion.div variants={stepVariant} className="text-center mt-20">
-        <Button
-          size="lg"
-          className="bg-linear-to-r from-brown-accent to-brown-dark hover:from-brown-accent/90 hover:to-brown-dark/90 text-white font-bold text-lg px-10 py-7 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105"
-        >
-          Mulai Sekarang - Gratis!
-          <ArrowRight className="w-5 h-5 ml-2" />
-        </Button>
+        <Link href="/auth">
+          <Button
+            size="lg"
+            className="bg-linear-to-r from-brown-accent to-brown-dark hover:from-brown-accent/90 hover:to-brown-dark/90 text-white font-bold text-lg px-10 py-7 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105"
+          >
+            Mulai Sekarang - Gratis!
+            <ArrowRight className="w-5 h-5 ml-2" />
+          </Button>
+        </Link>
         <p className="text-sm text-gray-500 mt-4 font-semibold">
           Tanpa biaya tersembunyi • Setup dalam 2 menit • Tidak perlu kartu
           kredit

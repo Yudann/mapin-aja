@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SectionWrapper, { SectionHeader } from "../layout/SectionWrapper";
+import Link from "next/link";
 
 const sectionContainer = {
   hidden: { opacity: 0 },
@@ -180,13 +181,15 @@ const SolutionSection = () => {
               <MapPin className="w-5 h-5 mr-2" />
               Mulai Sekarang Gratis
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-2 border-white/30 text-white hover:bg-white/10 font-bold text-base px-6 py-4 rounded-full backdrop-blur-sm transition-all duration-300"
-            >
-              Lihat Demo Platform
-            </Button>
+            <Link href="/umkm/map">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-2 border-white/30 bg-transparent hover:text-white text-white hover:bg-white/10 font-bold text-base px-6 py-4 rounded-full backdrop-blur-sm transition-all duration-300"
+              >
+                Jelajahi Fitur
+              </Button>
+            </Link>
           </div>
 
           {/* Trust Indicator */}

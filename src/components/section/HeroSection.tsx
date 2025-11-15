@@ -354,7 +354,7 @@ export default function HeroSection() {
               Jelajahi Semua UMKM
             </button>
             <button
-              onClick={() => router.push("/umkm?view=map")}
+              onClick={() => router.push("/umkm/map")}
               className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-base-light border border-brown-accent/30 text-brown-accent rounded-xl font-bold hover:bg-brown-accent/10 transition-all hover:scale-105 text-sm"
             >
               <Navigation className="w-4 h-4" />

@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
+import Link from "next/link"; // **[1] Import Link dari next/link**
 import {
   MapPin,
   MessageCircle,
@@ -10,7 +11,6 @@ import {
   Store,
   TrendingUp,
   Star,
-  Clock,
   ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -56,6 +56,7 @@ const FeaturesSection = () => {
       icon: MapPin,
       color: "var(--color-brown-dark)",
       cta: "Jelajahi Peta UMKM",
+      href: "/umkm/map", // **[2] Tambahkan href untuk fitur Peta**
       mockup: (
         <div className="bg-white rounded-3xl p-6 shadow-2xl border-4 border-brown-accent/50">
           <div className="aspect-video bg-linear-to-br from-brown-accent/50 to-brown-accent rounded-2xl mb-4 relative overflow-hidden">
@@ -143,6 +144,7 @@ const FeaturesSection = () => {
       icon: MessageCircle,
       color: "#3E2C23",
       cta: "Coba Fitur Chat",
+      href: "#",
       mockup: (
         <div className="bg-white rounded-3xl p-6 shadow-2xl border-4 border-brown-light">
           <div className="space-y-3">
@@ -200,6 +202,7 @@ const FeaturesSection = () => {
       icon: BarChart3,
       color: "#8B5E3C",
       cta: "Lihat Demo Dashboard",
+      href: "#",
       mockup: (
         <div className="bg-white rounded-3xl p-6 shadow-2xl border-4 border-brown-light">
           <div className="space-y-4">
@@ -287,7 +290,7 @@ const FeaturesSection = () => {
               variants={itemVariant}
               className={`${index % 2 === 1 ? "lg:order-2" : ""}`}
             >
-              <div className="inline-flex  bg-brown-accent/20 border-brown-accent/50 items-center space-x-2  border  rounded-full px-4 py-2 mb-6">
+              <div className="inline-flex  bg-brown-accent/20 border-brown-accent/50 items-center space-x-2  border  rounded-full px-4 py-2 mb-6">
                 <feature.icon className="w-4 h-4 text-brown-accent" />
                 <span className="text-sm font-bold text-gray-900">
                   {feature.tag}
@@ -302,12 +305,16 @@ const FeaturesSection = () => {
                 {feature.description}
               </p>
 
+              {/* **[3] Ganti Button dengan Link + Button asChild** */}
               <Button
+                asChild // Ini adalah pola umum untuk menggunakan Button sebagai child dari Link
                 size="lg"
                 className="bg-brown-accent hover:bg-brown-accent/90 text-white font-bold text-base px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
-                {feature.cta}
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <Link href={feature.href}>
+                  {feature.cta}
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
               </Button>
             </motion.div>
 
