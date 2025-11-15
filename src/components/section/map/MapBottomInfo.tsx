@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Store, ChevronRight } from "lucide-react";
-import { MAP_UMKMS } from "@/data/map";
+import { DUMMY_UMKMS } from "@/data/umkm";
 
 export default function MapBottomInfo() {
   return (
@@ -17,7 +17,7 @@ export default function MapBottomInfo() {
               Tersedia di peta
             </p>
             <p className="text-lg font-black text-brown-dark">
-              {MAP_UMKMS.length} UMKM
+              {DUMMY_UMKMS.length} UMKM
             </p>
           </div>
         </div>
