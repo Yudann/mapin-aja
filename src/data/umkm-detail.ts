@@ -1,0 +1,120 @@
+// src\data\umkm-detail.ts
+
+import { UMKM, Product, Review } from "@/types/umkm";
+
+export const UMKM_DETAIL_DATA: UMKM = {
+  id: "1",
+  name: "CFC, Cikokol",
+  category: "Cepat saji, Ayam & bebek, Aneka nasi",
+  rating: 4.9,
+  reviewCount: 300,
+  distance: 0.24,
+  priceRange: "20rb-100rb",
+  isOpen: true,
+  isVerified: true,
+  address: "Jl. Raya Cikokol No. 123, Tangerang",
+  phone: "+62 812-3456-7890",
+  openingHours: "10:00 - 22:00",
+  responseTime: "Balas dalam 5 menit",
+  isFavorite: false,
+  image: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=800&h=400&fit=crop",
+  bannerImage: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=800&h=400&fit=crop",
+  description: "Restoran cepat saji dengan menu ayam goreng krispi yang lezat. Kami menyajikan makanan berkualitas dengan harga terjangkau untuk keluarga Indonesia.",
+  taste: "300+ rating",
+  portion: "300+ rating",
+  packaging: "300+ rating",
+};
+
+export const PRODUCTS: Product[] = [
+  {
+    id: "1",
+    name: "Paket Ayam Goreng Komplit",
+    description: "1 potong ayam, nasi, sayur, sambal",
+    price: 25000,
+    image: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=300&h=300&fit=crop",
+    isAvailable: true,
+    category: "Paket",
+  },
+  {
+    id: "2",
+    name: "Ayam Goreng Crispy",
+    description: "Ayam goreng krispi dengan tepung rahasia",
+    price: 18000,
+    image: "https://images.unsplash.com/photo-1562967914-608f82629710?w=300&h=300&fit=crop",
+    isAvailable: true,
+    category: "Ayam",
+  },
+  {
+    id: "3",
+    name: "Nasi + Ayam Bakar",
+    description: "Nasi putih dengan ayam bakar bumbu kecap",
+    price: 22000,
+    image: "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=300&h=300&fit=crop",
+    isAvailable: true,
+    category: "Paket",
+  },
+  {
+    id: "4",
+    name: "Kentang Goreng",
+    description: "Kentang goreng crispy dengan saus",
+    price: 12000,
+    image: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=300&h=300&fit=crop",
+    isAvailable: true,
+    category: "Snack",
+  },
+  {
+    id: "5",
+    name: "Es Teh Manis",
+    description: "Teh manis dingin segar",
+    price: 5000,
+    image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300&h=300&fit=crop",
+    isAvailable: true,
+    category: "Minuman",
+  },
+  {
+    id: "6",
+    name: "Paket Hemat Nasi Ayam",
+    description: "Nasi + ayam goreng + es teh",
+    price: 28000,
+    image: "https://images.unsplash.com/photo-1633945274035-6c8c0fe5af61?w=300&h=300&fit=crop",
+    isAvailable: false,
+    category: "Paket",
+  },
+];
+
+export const REVIEWS: Review[] = [
+  {
+    id: "1",
+    userName: "Budi Santoso",
+    userAvatar: "https://ui-avatars.com/api/?name=Budi+Santoso&background=B99470&color=fff",
+    rating: 5,
+    date: "2 hari yang lalu",
+    comment: "Ayamnya enak banget! Crispy diluar, juicy didalam. Porsi juga besar. Penjualnya ramah dan pelayanan cepat. Recommended!",
+    images: [
+      "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop",
+      "https://images.unsplash.com/photo-1562967914-608f82629710?w=200&h=200&fit=crop",
+    ],
+    helpful: 12,
+  },
+  {
+    id: "2",
+    userName: "Siti Nurhaliza",
+    userAvatar: "https://ui-avatars.com/api/?name=Siti+Nurhaliza&background=3E2C23&color=fff",
+    rating: 5,
+    date: "5 hari yang lalu",
+    comment: "Langganan saya kalo mau makan ayam goreng. Harga terjangkau, rasa mantap. Tempatnya juga bersih.",
+    helpful: 8,
+  },
+  {
+    id: "3",
+    userName: "Ahmad Rizki",
+    userAvatar: "https://ui-avatars.com/api/?name=Ahmad+Rizki&background=B99470&color=fff",
+    rating: 4,
+    date: "1 minggu yang lalu",
+    comment: "Makanannya enak, tapi kadang harus nunggu agak lama karena rame. Overall puas!",
+    images: [
+      "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=200&h=200&fit=crop",
+    ],
+    helpful: 5,
+  },
+];
