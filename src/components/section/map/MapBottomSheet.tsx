@@ -146,7 +146,7 @@ export default function MapBottomSheet({
 
         {/* Scrollable Content */}
         <motion.div
-          className="flex-1 mb-44 overflow-y-auto"
+          className="flex-1 pb-42 overflow-y-auto"
           variants={contentVariants}
           animate={isExpanded ? "expanded" : "collapsed"}
         >

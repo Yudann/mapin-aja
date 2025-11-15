@@ -23,7 +23,7 @@ export default function QuickFiltersSection({
   setSelectedFilter,
 }: QuickFiltersSectionProps) {
   return (
-    <section className="max-w-7xl mx-auto px-4 -mt-4 relative z-10">
+    <section className="max-w-7xl mx-auto px-4 mt-8 relative z-10">
       <div className="bg-white rounded-2xl shadow-lg p-4">
         <h2 className="text-base font-bold text-brown-dark mb-3">
           Belum ada ide? Mulai dari sini aja dulu

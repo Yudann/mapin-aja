@@ -167,7 +167,7 @@ export default function MapContainer({ onUmkmSelect }: MapContainerProps) {
   }, [map, L, onUmkmSelect]);
 
   return (
-    <div ref={mapRef} className="absolute inset-0 z-0">
+    <div ref={mapRef} className="absolute inset-0 z-0 overflow-hidden">
       {!mapLoaded && (
         <div className="absolute inset-0 bg-brown-light flex items-center justify-center z-50">
           <div className="text-center">
