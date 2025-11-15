@@ -14,6 +14,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { UMKM } from "@/types/umkm";
+import { useRouter } from "next/navigation";
 
 interface MapBottomSheetProps {
   umkm: UMKM;
@@ -28,6 +29,7 @@ export default function MapBottomSheet({
   onToggleExpand,
   onClose,
 }: MapBottomSheetProps) {
+  const router = useRouter();
   // Variants untuk animasi
   const sheetVariants = {
     collapsed: {
@@ -101,6 +103,10 @@ export default function MapBottomSheet({
         ease: "easeOut",
       },
     },
+  };
+
+  const handleDetailClick = () => {
+    router.push(`/umkm/${umkm.id}`);
   };
 
   return (
@@ -401,7 +407,7 @@ export default function MapBottomSheet({
                 <span>Chat Penjual</span>
               </motion.button>
               <motion.button
-                onClick={() => (window.location.href = `/umkm/${umkm.id}`)}
+                onClick={handleDetailClick}
                 className="px-4 py-3 bg-brown-light border-2 border-brown-accent text-brown-accent rounded-xl font-bold hover:bg-brown-accent hover:text-white transition-all flex items-center justify-center"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

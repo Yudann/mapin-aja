@@ -1,23 +1,29 @@
 // src\components\section\umkm-detail\tabs\ProductsTab.tsx
 
 import React from "react";
-import { PRODUCTS } from "@/data/umkm-detail";
+import { UMKM } from "@/types/umkm";
 
 interface ProductsTabProps {
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
+  umkm: UMKM;
 }
-
-const categories = ["Semua", "Paket", "Ayam", "Snack", "Minuman"];
 
 export default function ProductsTab({
   selectedCategory,
   onCategoryChange,
+  umkm,
 }: ProductsTabProps) {
+  // Get unique categories from products
+  const categories = [
+    "Semua",
+    ...new Set(umkm.products.map((p) => p.category)),
+  ];
+
   const filteredProducts =
     selectedCategory === "Semua"
-      ? PRODUCTS
-      : PRODUCTS.filter((p) => p.category === selectedCategory);
+      ? umkm.products
+      : umkm.products.filter((p) => p.category === selectedCategory);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -29,6 +35,7 @@ export default function ProductsTab({
 
   return (
     <div>
+      {/* Category Filter */}
       <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide mb-4">
         {categories.map((cat) => (
           <button
@@ -45,6 +52,7 @@ export default function ProductsTab({
         ))}
       </div>
 
+      {/* Products Grid */}
       <div className="space-y-4">
         {filteredProducts.map((product) => (
           <div
@@ -91,6 +99,14 @@ export default function ProductsTab({
           </div>
         ))}
       </div>
+
+      {filteredProducts.length === 0 && (
+        <div className="text-center py-8">
+          <p className="text-brown-dark/60">
+            Tidak ada produk dalam kategori ini.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

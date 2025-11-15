@@ -9,19 +9,6 @@ interface InfoTabProps {
 }
 
 export default function InfoTab({ umkm }: InfoTabProps) {
-  const openingHours = [
-    {
-      day: "Senin - Jumat",
-      hours: "10:00 - 22:00",
-      isToday: true,
-    },
-    {
-      day: "Sabtu - Minggu",
-      hours: "09:00 - 23:00",
-      isToday: false,
-    },
-  ];
-
   return (
     <div className="space-y-6">
       <div>
@@ -55,7 +42,7 @@ export default function InfoTab({ umkm }: InfoTabProps) {
           Jam Operasional
         </h3>
         <div className="space-y-3">
-          {openingHours.map((schedule, idx) => (
+          {umkm.openingSchedules.map((schedule, idx) => (
             <div
               key={idx}
               className={`flex justify-between items-center py-3 px-4 rounded-xl ${

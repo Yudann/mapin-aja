@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Star, ThumbsUp, ChevronRight } from "lucide-react";
-import { REVIEWS } from "@/data/umkm-detail";
 import { UMKM } from "@/types/umkm";
 
 interface ReviewsTabProps {
@@ -52,7 +51,7 @@ export default function ReviewsTab({ umkm }: ReviewsTabProps) {
       </div>
 
       <div className="space-y-4">
-        {REVIEWS.map((review) => (
+        {umkm.reviews.map((review) => (
           <div
             key={review.id}
             className="border-b border-gray-100 pb-4 last:border-0"

@@ -24,10 +24,10 @@ export default function UmkmDetailHeader({
       />
       <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
 
-      <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between z-10">
+      <div className="fixed top-0 left-0 right-0 p-4 flex items-center justify-between z-10">
         <button
           onClick={() => window.history.back()}
-          className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+          className="w-10 cursor-pointer h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5 text-brown-dark" />
         </button>
@@ -35,7 +35,7 @@ export default function UmkmDetailHeader({
         <div className="flex gap-2">
           <button
             onClick={onToggleFavorite}
-            className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+            className="w-10 cursor-pointer h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
           >
             <Heart
               className={`w-5 h-5 ${
@@ -43,7 +43,7 @@ export default function UmkmDetailHeader({
               }`}
             />
           </button>
-          <button className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors">
+          <button className="w-10 cursor-pointer h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors">
             <Share2 className="w-5 h-5 text-brown-dark" />
           </button>
         </div>

@@ -1,42 +1,39 @@
-// src\components\section\umkm-detail\UmkmDetailTabs.tsx
+// src\components\section\umkm-detail\UmkmDetailTabs.client.tsx
 
-import React from "react";
-import { UMKM } from "@/types/umkm";
+"use client";
+
+import React, { useState } from "react";
 import ProductsTab from "./tabs/ProductsTab";
 import ReviewsTab from "./tabs/ReviewsTab";
 import InfoTab from "./tabs/InfoTab";
+import { UMKM } from "@/types/umkm";
 
 interface UmkmDetailTabsProps {
-  activeTab: "produk" | "ulasan" | "info";
-  onTabChange: (tab: "produk" | "ulasan" | "info") => void;
-  selectedCategory: string;
-  onCategoryChange: (category: string) => void;
   umkm: UMKM;
 }
 
-export default function UmkmDetailTabs({
-  activeTab,
-  onTabChange,
-  selectedCategory,
-  onCategoryChange,
-  umkm,
-}: UmkmDetailTabsProps) {
+export default function UmkmDetailTabsClient({ umkm }: UmkmDetailTabsProps) {
+  const [activeTab, setActiveTab] = useState<"produk" | "ulasan" | "info">(
+    "produk"
+  );
+  const [selectedCategory, setSelectedCategory] = useState("Semua");
+
   return (
     <>
       <div className="flex border-b border-gray-200 mb-6">
         <TabButton
           active={activeTab === "produk"}
-          onClick={() => onTabChange("produk")}
+          onClick={() => setActiveTab("produk")}
           label="Produk/Layanan"
         />
         <TabButton
           active={activeTab === "ulasan"}
-          onClick={() => onTabChange("ulasan")}
+          onClick={() => setActiveTab("ulasan")}
           label={`Ulasan (${umkm.reviewCount})`}
         />
         <TabButton
           active={activeTab === "info"}
-          onClick={() => onTabChange("info")}
+          onClick={() => setActiveTab("info")}
           label="Informasi"
         />
       </div>
@@ -44,9 +41,9 @@ export default function UmkmDetailTabs({
       <div className="pb-24">
         {activeTab === "produk" && (
           <ProductsTab
-            umkm={umkm}
             selectedCategory={selectedCategory}
-            onCategoryChange={onCategoryChange}
+            onCategoryChange={setSelectedCategory}
+            umkm={umkm}
           />
         )}
         {activeTab === "ulasan" && <ReviewsTab umkm={umkm} />}

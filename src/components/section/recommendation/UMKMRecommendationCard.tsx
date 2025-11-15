@@ -1,6 +1,7 @@
 // src\components\section\recommendation\UMKMRecommendationCard.tsx
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Star, MapPin, Timer, Heart } from "lucide-react";
 import { UMKM } from "@/types/umkm";
 
@@ -15,9 +16,20 @@ export default function UMKMRecommendationCard({
   isFavorite,
   onToggleFavorite,
 }: UMKMRecommendationCardProps) {
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    router.push(`/umkm/${umkm.id}`);
+  };
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onToggleFavorite(umkm.id);
+  };
+
   return (
     <div
-      onClick={() => (window.location.href = `/umkm/${umkm.id}`)}
+      onClick={handleCardClick}
       className="shrink-0 w-64 sm:w-72 bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-brown-accent/50 shadow-sm hover:shadow-xl transition-all duration-300 snap-start cursor-pointer group/card"
     >
       <div className="relative h-36 overflow-hidden">
@@ -44,10 +56,7 @@ export default function UMKMRecommendationCard({
         </div>
 
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleFavorite(umkm.id);
-          }}
+          onClick={handleFavoriteClick}
           className="absolute bottom-2 right-2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
         >
           <Heart

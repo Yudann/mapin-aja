@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
-import { MAP_UMKMS, DEFAULT_CENTER, DEFAULT_ZOOM } from "@/data/map";
+import { MAP_UMKMS, DEFAULT_CENTER, DEFAULT_ZOOM } from "@/data/umkm";
 import { UMKM } from "@/types/umkm";
 
 interface MapContainerProps {
@@ -10,9 +10,7 @@ interface MapContainerProps {
   onUmkmSelect: (umkm: UMKM) => void;
 }
 
-export default function MapContainer({
-  onUmkmSelect,
-}: MapContainerProps) {
+export default function MapContainer({ onUmkmSelect }: MapContainerProps) {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [L, setL] = useState<any>(null);
   const [map, setMap] = useState<any>(null);
