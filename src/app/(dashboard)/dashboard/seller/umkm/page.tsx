@@ -172,7 +172,7 @@ export default function UMKMPage() {
             <Share2 className="w-5 h-5" />
             Bagikan
           </button>
-          <button className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-brown-dark to-brown-accent text-base-light rounded-2xl hover:shadow-lg transition-all font-bold">
+          <button className="flex items-center gap-2 px-5 py-3 bg-linear-to-r from-brown-dark to-brown-accent text-base-light rounded-2xl hover:shadow-lg transition-all font-bold">
             <Edit3 className="w-5 h-5" />
             Edit UMKM
           </button>
@@ -180,7 +180,7 @@ export default function UMKMPage() {
       </div>
 
       {/* Premium Banner Card */}
-      <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-brown-dark via-brown-accent to-brown-dark shadow-xl">
+      <div className="relative rounded-3xl overflow-hidden bg-linear-to-br from-brown-dark via-brown-accent to-brown-dark shadow-xl">
         {/* Pattern Overlay */}
         <div className="absolute inset-0 opacity-10">
           <div
@@ -407,7 +407,7 @@ function OverviewTab({ umkmData }: { umkmData: any }) {
             {umkmData.social_media.instagram && (
               <a
                 href="#"
-                className="flex-1 p-4 bg-gradient-to-br from-pink-500 to-purple-600 text-base-light rounded-2xl hover:shadow-lg transition-all flex items-center justify-center gap-2 font-bold"
+                className="flex-1 p-4 bg-linear-to-br from-pink-500 to-purple-600 text-base-light rounded-2xl hover:shadow-lg transition-all flex items-center justify-center gap-2 font-bold"
               >
                 <Instagram className="w-5 h-5" />
                 Instagram
@@ -416,7 +416,7 @@ function OverviewTab({ umkmData }: { umkmData: any }) {
             {umkmData.social_media.facebook && (
               <a
                 href="#"
-                className="flex-1 p-4 bg-gradient-to-br from-blue-600 to-blue-700 text-base-light rounded-2xl hover:shadow-lg transition-all flex items-center justify-center gap-2 font-bold"
+                className="flex-1 p-4 bg-linear-to-br from-blue-600 to-blue-700 text-base-light rounded-2xl hover:shadow-lg transition-all flex items-center justify-center gap-2 font-bold"
               >
                 <Facebook className="w-5 h-5" />
                 Facebook
@@ -425,7 +425,7 @@ function OverviewTab({ umkmData }: { umkmData: any }) {
             {umkmData.social_media.twitter && (
               <a
                 href="#"
-                className="flex-1 p-4 bg-gradient-to-br from-blue-400 to-blue-500 text-base-light rounded-2xl hover:shadow-lg transition-all flex items-center justify-center gap-2 font-bold"
+                className="flex-1 p-4 bg-linear-to-br from-blue-400 to-blue-500 text-base-light rounded-2xl hover:shadow-lg transition-all flex items-center justify-center gap-2 font-bold"
               >
                 <Twitter className="w-5 h-5" />
                 Twitter
@@ -483,7 +483,7 @@ function ProductsTab({ products }: { products: any[] }) {
             Kelola semua produk dan layanan Anda
           </p>
         </div>
-        <button className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-brown-dark to-brown-accent text-base-light rounded-2xl hover:shadow-lg transition-all font-bold">
+        <button className="flex items-center gap-2 px-6 py-3 bg-linear-to-r from-brown-dark to-brown-accent text-base-light rounded-2xl hover:shadow-lg transition-all font-bold">
           <Plus className="w-5 h-5" />
           Tambah Produk
         </button>
@@ -561,7 +561,7 @@ function SettingsTab({ umkmData }: { umkmData: any }) {
   return (
     <div className="max-w-3xl space-y-8">
       {/* Status Info Banner */}
-      <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6">
+      <div className="bg-linear-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6">
         <div className="flex items-start gap-4">
           <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center shrink-0">
             <Check className="w-6 h-6 text-base-light" />
@@ -660,7 +660,7 @@ function SettingsTab({ umkmData }: { umkmData: any }) {
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t-2 border-brown-accent/10">
-        <button className="flex-1 px-6 py-4 bg-gradient-to-r from-brown-dark to-brown-accent text-base-light rounded-2xl hover:shadow-lg transition-all font-bold text-lg">
+        <button className="flex-1 px-6 py-4 bg-linear-to-r from-brown-dark to-brown-accent text-base-light rounded-2xl hover:shadow-lg transition-all font-bold text-lg">
           Simpan Perubahan
         </button>
         <button className="px-6 py-4 border-2 border-brown-accent/30 text-brown-dark rounded-2xl hover:bg-brown-light/50 transition-all font-bold">

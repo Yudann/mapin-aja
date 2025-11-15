@@ -93,7 +93,7 @@ export default function SalesTable() {
       className="bg-white p-6 rounded-2xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-shadow"
     >
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+        <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
           <Receipt className="w-6 h-6 text-white" />
         </div>
         <div>

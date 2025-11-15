@@ -104,7 +104,7 @@ export default function FavoritesPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-red-500 via-pink-500 to-red-600 rounded-3xl p-6 md:p-8 text-white relative overflow-hidden"
+        className="bg-linear-to-br from-red-500 via-pink-500 to-red-600 rounded-3xl p-6 md:p-8 text-white relative overflow-hidden"
       >
         <div className="absolute inset-0 opacity-10">
           <div
@@ -303,7 +303,7 @@ export default function FavoritesPage() {
                 >
                   <div className="flex gap-4">
                     {/* Image */}
-                    <div className="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0 rounded-xl overflow-hidden">
+                    <div className="relative w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-xl overflow-hidden">
                       <img
                         src={umkm.image}
                         alt={umkm.name}
@@ -333,7 +333,7 @@ export default function FavoritesPage() {
                         </div>
                         <button
                           onClick={() => removeFavorite(umkm.id)}
-                          className="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all flex-shrink-0"
+                          className="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all shrink-0"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

@@ -129,12 +129,12 @@ export default function ChatsPage() {
   };
 
   return (
-    <div className="absolute inset-0 flex bg-gradient-to-br from-brown-light/30 to-white overflow-hidden">
+    <div className="absolute inset-0 flex bg-linear-to-br from-brown-light/30 to-white overflow-hidden">
       {/* Sidebar - Always visible on desktop, conditionally on mobile */}
       <div
         className={`${
           isMobile && showChatView ? "hidden" : "flex"
-        } md:flex w-full md:w-80 lg:w-96 flex-shrink-0`}
+        } md:flex w-full md:w-80 lg:w-96 shrink-0`}
       >
         <ChatSidebar
           chats={dummyChats}
@@ -174,7 +174,7 @@ export default function ChatsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex-1 flex items-center justify-center bg-gradient-to-br from-brown-light/10 to-white/50"
+            className="flex-1 flex items-center justify-center bg-linear-to-br from-brown-light/10 to-white/50"
           >
             <div className="text-center max-w-md mx-6">
               <div className="w-24 h-24 bg-brown-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">

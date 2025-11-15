@@ -153,7 +153,7 @@ export default function ExplorePage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-brown-dark via-brown-accent to-brown-dark rounded-3xl p-8 text-base-light relative overflow-hidden"
+        className="bg-linear-to-br from-brown-dark via-brown-accent to-brown-dark rounded-3xl p-8 text-base-light relative overflow-hidden"
       >
         <div className="absolute inset-0 opacity-10">
           <div
@@ -382,7 +382,7 @@ export default function ExplorePage() {
             className="bg-base-light rounded-3xl border-2 border-brown-accent/20 shadow-lg overflow-hidden"
             style={{ height: "600px" }}
           >
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brown-light/30 to-brown-accent/10">
+            <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-brown-light/30 to-brown-accent/10">
               <div className="text-center">
                 <Map className="w-16 h-16 text-brown-accent mx-auto mb-4" />
                 <h3 className="text-xl font-black text-brown-dark mb-2">

@@ -72,7 +72,7 @@ export default function ProductsTable() {
                 className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
               >
                 <td className="py-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-brown-light] to-brown-accent] rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-linear-to-br from-brown-light] to-brown-accent] rounded-lg flex items-center justify-center">
                     <span className="text-xs font-semibold text-brown-dark">
                       KUE
                     </span>

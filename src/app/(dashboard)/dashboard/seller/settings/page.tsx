@@ -84,7 +84,7 @@ export default function SettingsPage() {
               ? "bg-green-500 text-base-light"
               : saveStatus === "saving"
               ? "bg-brown-accent/50 text-base-light cursor-not-allowed"
-              : "bg-gradient-to-r from-brown-dark to-brown-accent text-base-light hover:shadow-lg"
+              : "bg-linear-to-r from-brown-dark to-brown-accent text-base-light hover:shadow-lg"
           }`}
           whileHover={saveStatus === "idle" ? { scale: 1.02 } : {}}
           whileTap={saveStatus === "idle" ? { scale: 0.98 } : {}}
@@ -215,7 +215,7 @@ function ProfileTab() {
       {/* Profile Picture */}
       <div className="flex items-center gap-6">
         <div className="relative group">
-          <div className="w-32 h-32 bg-gradient-to-br from-brown-dark to-brown-accent rounded-3xl flex items-center justify-center">
+          <div className="w-32 h-32 bg-linear-to-br from-brown-dark to-brown-accent rounded-3xl flex items-center justify-center">
             <span className="text-5xl font-black text-base-light">C</span>
           </div>
           <button className="absolute inset-0 bg-brown-dark/80 backdrop-blur-sm rounded-3xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
@@ -451,7 +451,7 @@ function SecurityTab({
             className="bg-green-50 border-2 border-green-200 rounded-2xl p-6"
           >
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center shrink-0">
                 <Check className="w-6 h-6 text-base-light" />
               </div>
               <div>
@@ -878,7 +878,7 @@ function BillingTab() {
       className="space-y-8"
     >
       {/* Current Plan */}
-      <div className="bg-gradient-to-br from-brown-dark to-brown-accent rounded-2xl p-6 text-base-light">
+      <div className="bg-linear-to-br from-brown-dark to-brown-accent rounded-2xl p-6 text-base-light">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-base-light/80 font-semibold mb-1">
@@ -913,7 +913,7 @@ function BillingTab() {
               }`}
             >
               {plan.recommended && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-brown-dark to-brown-accent text-base-light rounded-full text-xs font-bold">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-linear-to-r from-brown-dark to-brown-accent text-base-light rounded-full text-xs font-bold">
                   Direkomendasikan
                 </div>
               )}
@@ -940,7 +940,7 @@ function BillingTab() {
                     key={index}
                     className="flex items-start gap-2 text-sm text-brown-dark"
                   >
-                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                    <Check className="w-5 h-5 text-green-500 shrink-0" />
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -950,7 +950,7 @@ function BillingTab() {
                 onClick={() => setSelectedPlan(plan.id)}
                 className={`w-full py-3 rounded-xl font-bold transition-all ${
                   selectedPlan === plan.id
-                    ? "bg-gradient-to-r from-brown-dark to-brown-accent text-base-light"
+                    ? "bg-linear-to-r from-brown-dark to-brown-accent text-base-light"
                     : "bg-brown-light/50 text-brown-dark hover:bg-brown-light"
                 }`}
               >
@@ -970,7 +970,7 @@ function BillingTab() {
         <div className="space-y-3">
           <div className="flex items-center justify-between p-4 bg-brown-light/30 rounded-2xl border-2 border-brown-accent/20">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
                 <CreditCard className="w-6 h-6 text-base-light" />
               </div>
               <div>

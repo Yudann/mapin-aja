@@ -313,7 +313,7 @@ export default function AuthCustomerPage() {
                     className="flex items-start space-x-4 p-4 rounded-xl bg-white/10 backdrop-blur-sm"
                   >
                     <div
-                      className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                      className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0"
                       style={{ backgroundColor: "var(--color-brown-accent)" }}
                     >
                       <feature.icon

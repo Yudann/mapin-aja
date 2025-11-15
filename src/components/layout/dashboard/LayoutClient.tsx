@@ -124,8 +124,8 @@ export default function LayoutClient({
     userInitials: getInitials(profile?.full_name || user?.email || "User"),
     userAvatarBg:
       userRole === "seller"
-        ? "bg-gradient-to-br from-brown-dark to-brown-accent"
-        : "bg-gradient-to-br from-brown-accent to-brown-dark",
+        ? "bg-linear-to-br from-brown-dark to-brown-accent"
+        : "bg-linear-to-br from-brown-accent to-brown-dark",
     activeBg: userRole === "seller" ? "bg-brown-dark" : "bg-brown-accent",
     activeText: userRole === "seller" ? "text-brown-light" : "text-base-light",
     hoverBg:
@@ -156,7 +156,7 @@ export default function LayoutClient({
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-brown-light/20">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-white to-brown-light/20">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-brown-accent border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-brown-dark font-medium">Memuat...</p>
@@ -168,7 +168,7 @@ export default function LayoutClient({
   // No user - akan di-handle oleh useEffect redirect
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-brown-light/20">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-white to-brown-light/20">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-brown-accent border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-brown-dark font-medium">
@@ -182,7 +182,7 @@ export default function LayoutClient({
   // Profile belum dimuat
   if (!profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-brown-light/20">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-white to-brown-light/20">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-brown-accent border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-brown-dark font-medium">
@@ -197,7 +197,7 @@ export default function LayoutClient({
   }
 
   return (
-    <div className="flex min-h-screen w-full bg-gradient-to-br from-white to-brown-light/20">
+    <div className="flex min-h-screen w-full bg-linear-to-br from-white to-brown-light/20">
       <Sidebar
         menuItems={menuItems}
         userRole={config.role}

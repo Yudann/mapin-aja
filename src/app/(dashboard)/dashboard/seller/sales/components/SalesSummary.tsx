@@ -59,7 +59,7 @@ export default function SalesSummary() {
             >
               <div className="flex items-start gap-3">
                 <div
-                  className={`w-10 h-10 ${item.bgColor} rounded-xl flex items-center justify-center flex-shrink-0`}
+                  className={`w-10 h-10 ${item.bgColor} rounded-xl flex items-center justify-center shrink-0`}
                 >
                   <Icon className={`w-5 h-5 ${item.color}`} />
                 </div>

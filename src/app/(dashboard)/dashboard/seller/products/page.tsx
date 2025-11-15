@@ -173,7 +173,7 @@ export default function ProductsPage() {
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-brown-dark to-brown-accent text-base-light rounded-2xl hover:shadow-lg transition-all font-bold"
+          className="flex items-center gap-2 px-6 py-3 bg-linear-to-r from-brown-dark to-brown-accent text-base-light rounded-2xl hover:shadow-lg transition-all font-bold"
         >
           <Plus className="w-5 h-5" />
           Tambah Produk
@@ -258,7 +258,7 @@ export default function ProductsPage() {
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 rounded-xl font-bold text-sm whitespace-nowrap transition-all ${
                   selectedCategory === category
-                    ? "bg-gradient-to-r from-brown-dark to-brown-accent text-base-light shadow-md"
+                    ? "bg-linear-to-r from-brown-dark to-brown-accent text-base-light shadow-md"
                     : "bg-brown-light/50 text-brown-dark hover:bg-brown-accent/10"
                 }`}
               >
@@ -338,7 +338,7 @@ export default function ProductsPage() {
                   />
 
                   {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-brown-dark/80 via-brown-dark/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute inset-0 bg-linear-to-t from-brown-dark/80 via-brown-dark/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                   {/* Checkbox */}
                   <input
@@ -677,7 +677,7 @@ export default function ProductsPage() {
               >
                 Batal
               </button>
-              <button className="flex-1 px-6 py-3 bg-gradient-to-r from-brown-dark to-brown-accent text-base-light rounded-2xl hover:shadow-lg transition-all font-bold">
+              <button className="flex-1 px-6 py-3 bg-linear-to-r from-brown-dark to-brown-accent text-base-light rounded-2xl hover:shadow-lg transition-all font-bold">
                 Simpan Produk
               </button>
             </div>

@@ -59,7 +59,7 @@ export default function ChatMessages({ messages }: ChatMessagesProps) {
   return (
     <div
       ref={containerRef}
-      className="flex-1 overflow-y-auto bg-gradient-to-b from-white to-brown-light/10"
+      className="flex-1 overflow-y-auto bg-linear-to-b from-white to-brown-light/10"
     >
       <div className="p-4">
         <div className="max-w-4xl mx-auto space-y-6">

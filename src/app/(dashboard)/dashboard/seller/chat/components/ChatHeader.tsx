@@ -11,7 +11,7 @@ interface ChatHeaderProps {
 
 export default function ChatHeader({ chat, onBack }: ChatHeaderProps) {
   return (
-    <div className="bg-white/90 backdrop-blur-md border-b border-brown-light px-4 py-3 flex-shrink-0">
+    <div className="bg-white/90 backdrop-blur-md border-b border-brown-light px-4 py-3 shrink-0">
       <div className="flex items-center justify-between">
         {/* Left Section */}
         <div className="flex items-center gap-3">
@@ -28,7 +28,7 @@ export default function ChatHeader({ chat, onBack }: ChatHeaderProps) {
 
           {/* Avatar */}
           <div className="relative">
-            <div className="w-10 h-10 bg-gradient-to-br from-brown-dark to-brown-accent rounded-full flex items-center justify-center text-white font-semibold">
+            <div className="w-10 h-10 bg-linear-to-br from-brown-dark to-brown-accent rounded-full flex items-center justify-center text-white font-semibold">
               {chat.name.charAt(0)}
             </div>
             {chat.isOnline && (

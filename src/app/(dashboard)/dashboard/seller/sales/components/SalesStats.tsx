@@ -9,7 +9,7 @@ const statsData = [
     label: "Total Penjualan Hari Ini",
     value: "Rp 1.245.000",
     icon: DollarSign,
-    gradient: "bg-gradient-to-br from-[#FAF3E0] to-[#B99470]/20",
+    gradient: "bg-linear-to-br from-[#FAF3E0] to-[#B99470]/20",
     iconColor: "text-[#B99470]",
   },
   {

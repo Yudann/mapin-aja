@@ -69,8 +69,8 @@ export default function ChatSidebar({
           >
             <div className="flex items-start gap-3">
               {/* Avatar with Online Indicator */}
-              <div className="relative flex-shrink-0">
-                <div className="w-12 h-12 bg-gradient-to-br from-brown-dark to-brown-accent rounded-full flex items-center justify-center text-white font-semibold">
+              <div className="relative shrink-0">
+                <div className="w-12 h-12 bg-linear-to-br from-brown-dark to-brown-accent rounded-full flex items-center justify-center text-white font-semibold">
                   {chat.name.charAt(0)}
                 </div>
                 {chat.isOnline && (
@@ -84,7 +84,7 @@ export default function ChatSidebar({
                   <h3 className="font-semibold text-brown-dark truncate">
                     {chat.name}
                   </h3>
-                  <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
+                  <span className="text-xs text-gray-500 shrink-0 ml-2">
                     {chat.time}
                   </span>
                 </div>
@@ -94,7 +94,7 @@ export default function ChatSidebar({
                     {chat.lastMessage}
                   </p>
                   {chat.unreadCount && chat.unreadCount > 0 && (
-                    <span className="bg-brown-accent text-white text-xs rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 ml-2">
+                    <span className="bg-brown-accent text-white text-xs rounded-full w-5 h-5 flex items-center justify-center shrink-0 ml-2">
                       {chat.unreadCount}
                     </span>
                   )}

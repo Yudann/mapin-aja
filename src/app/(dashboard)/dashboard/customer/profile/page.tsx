@@ -113,7 +113,7 @@ export default function ProfilePage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-brown-dark via-brown-accent to-brown-dark rounded-3xl p-6 md:p-8 text-base-light relative overflow-hidden"
+        className="bg-linear-to-br from-brown-dark via-brown-accent to-brown-dark rounded-3xl p-6 md:p-8 text-base-light relative overflow-hidden"
       >
         <div className="absolute inset-0 opacity-10">
           <div
@@ -312,7 +312,7 @@ export default function ProfilePage() {
               return (
                 <div
                   key={index}
-                  className={`bg-gradient-to-br ${stat.color} rounded-2xl p-4 text-base-light shadow-lg`}
+                  className={`bg-linear-to-br ${stat.color} rounded-2xl p-4 text-base-light shadow-lg`}
                 >
                   <Icon className="w-6 h-6 mb-2 opacity-80" />
                   <p className="text-2xl font-black">{stat.value}</p>
@@ -435,7 +435,7 @@ export default function ProfilePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-6 text-base-light"
+            className="bg-linear-to-br from-blue-500 to-blue-600 rounded-3xl p-6 text-base-light"
           >
             <h3 className="text-lg font-black mb-2">Butuh Bantuan?</h3>
             <p className="text-base-light/90 text-sm mb-4">
