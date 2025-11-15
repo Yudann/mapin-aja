@@ -30,7 +30,7 @@ export default function MapBottomSheet({
   onClose,
 }: MapBottomSheetProps) {
   const router = useRouter();
-  // Variants untuk animasi
+
   const sheetVariants = {
     collapsed: {
       y: "100%",
@@ -44,25 +44,6 @@ export default function MapBottomSheet({
     expanded: {
       y: 0,
       opacity: 1,
-      transition: {
-        type: "spring",
-        damping: 30,
-        stiffness: 300,
-      },
-    },
-  };
-
-  const contentVariants = {
-    collapsed: {
-      height: "auto",
-      transition: {
-        type: "spring",
-        damping: 30,
-        stiffness: 300,
-      },
-    },
-    expanded: {
-      height: "85vh",
       transition: {
         type: "spring",
         damping: 30,
@@ -116,7 +97,9 @@ export default function MapBottomSheet({
         animate="expanded"
         exit="collapsed"
         variants={sheetVariants}
-        className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl shadow-2xl flex flex-col max-h-[85vh]"
+        className={`fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl shadow-2xl flex flex-col ${
+          isExpanded ? "h-[85vh]" : "h-auto max-h-[60vh]"
+        }`}
       >
         {/* Drag Handle */}
         <motion.div
@@ -145,13 +128,9 @@ export default function MapBottomSheet({
         </motion.button>
 
         {/* Scrollable Content */}
-        <motion.div
-          className="flex-1 pb-42 overflow-y-auto"
-          variants={contentVariants}
-          animate={isExpanded ? "expanded" : "collapsed"}
-        >
+        <div className="flex-1 overflow-y-auto overscroll-contain">
           <motion.div
-            className="px-6 pb-4"
+            className="px-6 pb-16"
             variants={staggerVariants}
             initial="hidden"
             animate="visible"
@@ -168,7 +147,7 @@ export default function MapBottomSheet({
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               />
-              <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
 
               {/* Badges */}
               <motion.div
@@ -384,54 +363,52 @@ export default function MapBottomSheet({
               )}
             </AnimatePresence>
           </motion.div>
-        </motion.div>
+        </div>
 
-        {/* Action Buttons - Always Visible */}
+        {/* Action Buttons - Fixed at Bottom */}
         <motion.div
-          className="shrink-0 fixed bottom-0 left-0 right-0 border-t border-gray-100 bg-white"
+          className="shrink-0 border-t border-gray-100 bg-white p-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <div className="p-4">
-            <div className="flex gap-3 mb-3">
-              <motion.button
-                className="flex-1 py-3 bg-linear-to-r from-brown-accent to-brown-dark text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all flex items-center justify-center gap-2"
-                whileHover={{
-                  scale: 1.02,
-                  boxShadow: "0 10px 25px -5px rgba(185, 148, 112, 0.4)",
-                }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Chat Penjual</span>
-              </motion.button>
-              <motion.button
-                onClick={handleDetailClick}
-                className="px-4 py-3 bg-brown-light border-2 border-brown-accent text-brown-accent rounded-xl font-bold hover:bg-brown-accent hover:text-white transition-all flex items-center justify-center"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <ExternalLink className="w-4 h-4" />
-              </motion.button>
-            </div>
-
-            {/* Expand/Collapse Button */}
+          <div className="flex gap-3 mb-3">
             <motion.button
-              onClick={onToggleExpand}
-              className="w-full py-2 flex items-center justify-center gap-2 text-sm font-semibold text-brown-accent hover:bg-brown-light rounded-lg transition-colors"
-              whileHover={{ backgroundColor: "rgba(185, 148, 112, 0.1)" }}
+              className="flex-1 py-3 bg-gradient-to-r from-brown-accent to-brown-dark text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all flex items-center justify-center gap-2"
+              whileHover={{
+                scale: 1.02,
+                boxShadow: "0 10px 25px -5px rgba(185, 148, 112, 0.4)",
+              }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>Chat Penjual</span>
+            </motion.button>
+            <motion.button
+              onClick={handleDetailClick}
+              className="px-4 py-3 bg-brown-light border-2 border-brown-accent text-brown-accent rounded-xl font-bold hover:bg-brown-accent hover:text-white transition-all flex items-center justify-center"
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span>{isExpanded ? "Tutup" : "Lihat Selengkapnya"}</span>
-              <motion.div
-                animate={{ rotate: isExpanded ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ChevronDown className="w-4 h-4" />
-              </motion.div>
+              <ExternalLink className="w-4 h-4" />
             </motion.button>
           </div>
+
+          {/* Expand/Collapse Button */}
+          <motion.button
+            onClick={onToggleExpand}
+            className="w-full py-2 flex items-center justify-center gap-2 text-sm font-semibold text-brown-accent hover:bg-brown-light rounded-lg transition-colors"
+            whileHover={{ backgroundColor: "rgba(185, 148, 112, 0.1)" }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span>{isExpanded ? "Tutup" : "Lihat Selengkapnya"}</span>
+            <motion.div
+              animate={{ rotate: isExpanded ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ChevronDown className="w-4 h-4" />
+            </motion.div>
+          </motion.button>
         </motion.div>
       </motion.div>
     </AnimatePresence>

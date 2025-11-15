@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MapContainer from "@/components/section/map/MapContainer";
 import MapTopBar from "@/components/section/map/MapTopBar";
 import MapFloatingActions from "@/components/section/map/MapFloatingActions";
@@ -17,13 +17,26 @@ export default function UmkmMapPage() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
+  // Prevent body scroll when component mounts
+  useEffect(() => {
+    // Add overflow-hidden to body and html
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    };
+  }, []);
+
   const handleCloseBottomSheet = () => {
     setShowBottomSheet(false);
     setTimeout(() => setSelectedUmkm(null), 300);
   };
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-gray-100">
+    <div className="fixed inset-0 h-screen w-full overflow-hidden bg-gray-100">
       <MapContainer
         selectedUmkm={selectedUmkm}
         onUmkmSelect={(umkm) => {
