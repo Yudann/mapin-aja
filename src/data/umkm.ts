@@ -2,7 +2,7 @@ import { UMKM, Category, QuickFilter } from "@/types/umkm";
 
 export const DUMMY_UMKMS: UMKM[] = [
   {
-    id: "1",
+    id: "warung-kopi-kenangan",
     name: "Warung Kopi Kenangan",
     category: "Kafe & Minuman",
     description: "Kopi tradisional dengan rasa autentik dari biji pilihan. Kami menyajikan pengalaman ngopi yang hangat dan nyaman dengan suasana yang cozy.",
@@ -92,7 +92,7 @@ export const DUMMY_UMKMS: UMKM[] = [
     ]
   },
   {
-    id: "2",
+    id: "toko-kerajinan-batik-nusantara",
     name: "Toko Kerajinan Batik Nusantara",
     category: "Kerajinan",
     description: "Menjual berbagai macam kerajinan batik tangan asli dari berbagai daerah di Indonesia. Kualitas premium dengan motif tradisional yang autentik.",
@@ -160,7 +160,7 @@ export const DUMMY_UMKMS: UMKM[] = [
     ]
   },
   {
-    id: "3", 
+    id: "rumah-makan-padang-sederhana", 
     name: "Rumah Makan Padang Sederhana",
     category: "Kuliner",
     description: "Masakan Padang autentik dengan cita rasa asli Minang. Semua bahan dipilih yang terbaik dan dimasak dengan resep turun-temurun.",
@@ -227,7 +227,7 @@ export const DUMMY_UMKMS: UMKM[] = [
     ]
   },
   {
-    id: "4",
+    id: "barber-bros",
     name: "Barber Bros",
     category: "Kecantikan",
     description: "Barbershop modern dengan layanan premium dan barber berpengalaman. Tempat nyaman, wangi, dan pelayanan ramah.",
@@ -322,7 +322,7 @@ export const DUMMY_UMKMS: UMKM[] = [
     ]
   },
   {
-    id: "5",
+    id: "sweetly-bakery",
     name: "Sweetly Bakery",
     category: "Kuliner",
     description: "Toko roti rumahan dengan berbagai pilihan kue, roti, dan pastry segar setiap hari.",
