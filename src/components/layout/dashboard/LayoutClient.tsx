@@ -78,15 +78,12 @@ export default function LayoutClient({
 
     // Jika tidak ada user, redirect ke auth
     if (!user) {
-      console.log("⚠️ No user, redirecting to auth");
       router.push("/auth");
       return;
     }
 
     // Jika user ada tapi profile belum ada (new user), tunggu sebentar
     if (!profile) {
-      console.log("⚠️ User exists but profile not loaded yet, waiting...");
-      // Trigger refetch after short delay
       const timer = setTimeout(() => {
         window.location.reload();
       }, 2000);
@@ -96,7 +93,6 @@ export default function LayoutClient({
     // Jika seller belum complete onboarding
     if (profile.role === "seller" && !profile.onboarding_completed) {
       if (!pathname.includes("/onboarding")) {
-        console.log("⚠️ Seller needs onboarding, redirecting...");
         router.push("/onboarding/seller");
       }
       return;

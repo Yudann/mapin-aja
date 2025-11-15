@@ -17,7 +17,6 @@ export async function POST(request: Request) {
       )
     }
 
-    console.log('📝 Update profile request from user:', user.id)
 
     // Update profile to mark onboarding as completed
     const { error: profileError } = await supabase
@@ -36,7 +35,6 @@ export async function POST(request: Request) {
       )
     }
 
-    console.log('✅ Profile updated - onboarding completed')
 
     return NextResponse.json({
       success: true,

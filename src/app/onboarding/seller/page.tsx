@@ -164,7 +164,6 @@ export default function SellerOnboarding() {
         );
       }
 
-      console.log("✅ Onboarding success:", data);
       setStep(7); // Pindah ke step Selesai
     } catch (err) {
       console.error("❌ Submit error:", err);

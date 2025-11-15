@@ -52,9 +52,6 @@ const RegisterSection: React.FC<RegisterSectionProps> = ({
       mode: "register",
       type: selectedType,
     });
-    // Ganti dengan navigasi yang sebenarnya
-    console.log(`Navigating to /auth?${params.toString()}`);
-    // window.location.href = `/auth?${params.toString()}`;
   };
 
   // --- Copywriting Tetap ---

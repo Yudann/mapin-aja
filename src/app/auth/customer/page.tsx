@@ -70,10 +70,6 @@ export default function AuthCustomerPage() {
     try {
       setLoading(true);
 
-      console.log("═══════════════════════════════════");
-      console.log("👤 CUSTOMER LOGIN INITIATED");
-      console.log("═══════════════════════════════════");
-
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {

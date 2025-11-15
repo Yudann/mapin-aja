@@ -24,15 +24,12 @@ export default function AuthGuard({
     if (!isLoading) {
       // Not authenticated
       if (!user) {
-        console.log("🔒 AuthGuard: No user, redirecting to auth");
         router.push(redirectTo);
         return;
       }
 
       // User authenticated but profile not loaded yet
       if (!profile) {
-        console.log("⏳ AuthGuard: Profile not loaded, waiting...");
-        // Beri waktu untuk profile dimuat
         const timer = setTimeout(() => {
           window.location.reload();
         }, 2000);
@@ -41,14 +38,12 @@ export default function AuthGuard({
 
       // Check onboarding for sellers
       if (profile.role === "seller" && !profile.onboarding_completed) {
-        console.log("📝 AuthGuard: Seller needs onboarding");
         router.push("/onboarding/seller");
         return;
       }
 
       // Check role if required
       if (requiredRole && profile.role !== requiredRole) {
-        console.log("❌ AuthGuard: Wrong role, redirecting");
         if (profile.role === "seller") {
           router.push("/dashboard/seller");
         } else {

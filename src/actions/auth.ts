@@ -15,7 +15,6 @@ export async function signOut() {
     return { error: error.message }
   }
 
-  console.log('✅ User signed out')
   
   // Revalidate all paths to clear cached data
   revalidatePath('/', 'layout')

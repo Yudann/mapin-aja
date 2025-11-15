@@ -17,7 +17,6 @@ export async function POST(request: Request) {
       )
     }
 
-    console.log('📝 Onboarding request from user:', user.id)
 
     // Parse request body
     const body = await request.json()
@@ -70,7 +69,6 @@ export async function POST(request: Request) {
       )
     }
 
-    console.log('✅ UMKM created:', umkmData.id)
 
     // 2. Update profile onboarding status
     const { error: profileError } = await supabase
@@ -85,8 +83,6 @@ export async function POST(request: Request) {
     if (profileError) {
       console.error('⚠️ Profile update error:', profileError)
       // Lanjutkan, karena UMKM sudah dibuat
-    } else {
-      console.log('✅ Profile updated - onboarding marked as completed')
     }
 
     // Return success response

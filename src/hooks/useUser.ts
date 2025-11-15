@@ -18,11 +18,9 @@ async function fetchUserAndProfile(): Promise<UserData> {
     const { data: { user }, error: userError } = await supabase.auth.getUser()
 
     if (userError || !user) {
-      console.log('❌ No user found:', userError)
       return { user: null, profile: null }
     }
 
-    console.log('✅ User found:', user.id)
 
     // Get profile data - GUNAKAN maybeSingle() BUKAN single()
     const { data: profile, error: profileError } = await supabase
@@ -37,11 +35,9 @@ async function fetchUserAndProfile(): Promise<UserData> {
     }
 
     if (!profile) {
-      console.log('⚠️ Profile not found yet for user:', user.id)
       return { user, profile: null }
     }
 
-    console.log('✅ Profile found:', profile.role)
     return { user, profile }
   } catch (error) {
     console.error('❌ Unexpected error in fetchUserAndProfile:', error)
@@ -66,12 +62,10 @@ export function useUser() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('🔄 Auth state changed:', event)
 
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
         // Tambahkan delay untuk memastikan profile sudah dibuat di database
         setTimeout(async () => {
-          console.log('🔄 Invalidating user query after auth state change')
           await queryClient.invalidateQueries({ queryKey: ['user'] })
         }, 1000) // Increase delay to 1 second
       } else if (event === 'SIGNED_OUT') {

@@ -85,8 +85,6 @@ export default function ProfilePage() {
   });
 
   const handleSave = () => {
-    // Simpan perubahan ke API atau state management
-    console.log("Data saved:", formData);
     setIsEditing(false);
   };
 

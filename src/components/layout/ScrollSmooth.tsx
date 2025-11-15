@@ -18,7 +18,6 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     const isMobile = window.innerWidth <= 768; //  adjust breakpoint
 
     if (isMobile) {
-      //   console.log('Smooth scroll dimatikan di mobile');
       return;
     }
 
