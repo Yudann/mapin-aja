@@ -1,3 +1,4 @@
+// components/Footer.tsx
 "use client";
 
 import {
@@ -12,13 +13,33 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation"; // Import hook untuk mendapatkan rute
 
-// Definisi Warna Kustom Tailwind (asumsi sudah dikonfigurasi di tailwind.config.js)
-// brown-light: #FAF3E0
-// brown-dark: #3E2C23
-// brown-accent: #B99470
+// --- Konstanta Rute Tersembunyi (SAMA DENGAN NAVIGASI) ---
+// Footer akan disembunyikan jika rute saat ini dimulai dengan salah satu prefix ini.
+const HIDDEN_ROUTES_PREFIXES = [
+  "/umkm",
+  "/umkm/",
+  "/dashboard-seller",
+  "/dashboard-seller/",
+  "/auth",
+  "/auth/",
+];
 
+// --- Komponen Footer Utama ---
 const Footer = () => {
+  const pathname = usePathname(); // Dapatkan rute saat ini
+
+  // 1. Logika Pengecekan Kustomisasi
+  const shouldHideFooter = HIDDEN_ROUTES_PREFIXES.some((route) =>
+    pathname.startsWith(route)
+  );
+
+  // 2. Render Tersembunyi
+  if (shouldHideFooter) {
+    return null;
+  }
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -49,27 +70,24 @@ const Footer = () => {
       href: "https://instagram.com/mapinaja",
       label: "Instagram",
       icon: Instagram,
-      // Menggunakan warna custom brown-accent untuk hover social media yang netral
       color: "hover:text-brown-accent",
     },
     {
       href: "https://twitter.com/mapinaja",
       label: "Twitter",
       icon: Twitter,
-      // Menggunakan warna custom brown-accent untuk hover social media yang netral
       color: "hover:text-brown-accent",
     },
     {
       href: "https://facebook.com/mapinaja",
       label: "Facebook",
       icon: Facebook,
-      // Menggunakan warna custom brown-accent untuk hover social media yang netral
       color: "hover:text-brown-accent",
     },
   ];
 
   return (
-    <footer className="bg-linear-to-b from-brown-light to-brown-accent/50  relative overflow-hidden">
+    <footer className="bg-linear-to-b from-brown-light to-brown-accent/50 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-10 left-10 w-64 h-64 bg-brown-accent rounded-full blur-3xl" />
