@@ -104,7 +104,7 @@ const SolutionSection = () => {
           >
             {/* Gradient Background */}
             <div
-              className={`absolute inset-0 bg-gradient-to-br ${solution.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
+              className={`absolute inset-0 bg-linear-to-br ${solution.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
             />
 
             {/* Content */}
@@ -112,7 +112,7 @@ const SolutionSection = () => {
               {/* Icon & Emoji */}
               <div className="flex items-center justify-between mb-4">
                 <div
-                  className={`w-14 h-14 rounded-xl bg-gradient-to-br ${solution.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md`}
+                  className={`w-14 h-14 rounded-xl bg-linear-to-br ${solution.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md`}
                 >
                   <solution.icon className="w-6 h-6 text-white" />
                 </div>
@@ -156,7 +156,7 @@ const SolutionSection = () => {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="relative bg-gradient-to-r from-brown-accent to-brown-dark rounded-2xl p-8 lg:p-12 shadow-xl overflow-hidden"
+        className="relative bg-linear-to-r from-brown-accent to-brown-dark rounded-2xl p-8 lg:p-12 shadow-xl overflow-hidden"
       >
         {/* Decorative Elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
