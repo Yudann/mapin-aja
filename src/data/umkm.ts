@@ -1,6 +1,7 @@
 import { UMKM, Category, QuickFilter } from "@/types/umkm";
 
 export const DUMMY_UMKMS: UMKM[] = [
+  // DATA UMKM LAMA
   {
     id: "warung-kopi-kenangan",
     name: "Warung Kopi Kenangan",
@@ -219,10 +220,10 @@ export const DUMMY_UMKMS: UMKM[] = [
       }
     ],
     openingSchedules: [
-      {
+      { 
         day: "Setiap Hari", 
-        hours: "08:00 - 21:00",
-        isToday: true
+        hours: "08:00 - 21:00", 
+        isToday: true 
       }
     ]
   },
@@ -409,6 +410,286 @@ export const DUMMY_UMKMS: UMKM[] = [
       { day: "Setiap Hari", hours: "07:00 - 20:00", isToday: true }
     ]
   },
+  // 1. Warung Mie Aceh
+  {
+    id: "warung-mie-aceh-karawaci",
+    name: "Warung Mie Aceh ",
+    category: "Kuliner",
+    description: "Spesialis masakan Aceh. Menyajikan Mie Aceh kuah dan goreng dengan bumbu khas rempah yang kaya. Juga tersedia Nasi Goreng, Mie Goreng, dan berbagai minuman segar.",
+    address: "Jl. Kelapa Dua Raya No.93, Klp. Dua, Kec. Kelapa Dua, Kab. Tangerang, Banten 15810",
+    distance: 0.1,
+    rating: 4.6,
+    reviewCount: 95,
+    isOpen: true,
+    isVerified: true,
+    image: "/umkm/warung_aceh.jpeg", 
+    bannerImage: "/umkm/warung_aceh.jpeg",
+    phone: "+62 856-7890-1234",
+    responseTime: "Balas dalam 6 menit",
+    openingHours: "10:00 - 23:00",
+    priceRange: "Rp 15.000 - Rp 40.000",
+    deliveryTime: "20-30 min",
+    latitude: -6.232293,
+    longitude: 106.615340,
+    discount: "5%",
+    taste: "180+ rating",
+    portion: "150+ rating",
+    packaging: "100+ rating",
+    isFavorite: false,
+    products: [
+      {
+        id: "1",
+        name: "Mie Aceh Goreng Daging",
+        description: "Mie kuning tebal dimasak dengan bumbu khas Aceh dan potongan daging sapi.",
+        price: 35000,
+        image: "https://cdn.ngopibareng.id/uploads/2024/2024-09-22/menikmati-mie-aceh-langsung-di-aceh-bumbunya-nikmat-cocok-di-lidah--thumbnail-341.webp",
+        isAvailable: true,
+        category: "Mie Aceh"
+      },
+      {
+        id: "2",
+        name: "Nasi Goreng Spesial",
+        description: "Nasi goreng dengan bumbu rempah, telur, dan irisan sosis.",
+        price: 25000,
+        image: "https://images.tokopedia.net/img/JFrBQq/2022/8/9/886e7849-85fb-42c0-95dc-0a1839234615.jpg",
+        isAvailable: true,
+        category: "Nasi Goreng"
+      },
+      {
+        id: "3",
+        name: "Kopi Sanger Dingin",
+        description: "Kopi khas Aceh yang nikmat, dicampur susu dengan sedikit gula.",
+        price: 18000,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkHnLRhRPYnAxf7UUkWIbvLQ4Iog2W1NwV8Q&s",
+        isAvailable: true,
+        category: "Minuman"
+      }
+    ],
+    reviews: [
+      {
+        id: "1",
+        userName: "Fahmi R.",
+        userAvatar: "https://ui-avatars.com/api/?name=Fahmi+R&background=3E2C23&color=fff",
+        rating: 5,
+        date: "5 jam yang lalu",
+        comment: "Mie Aceh Gorengnya mantap, bumbunya pas. Porsi kenyang!",
+        helpful: 10
+      }
+    ],
+    openingSchedules: [
+      { day: "Setiap Hari", hours: "10:00 - 23:00", isToday: true }
+    ]
+  },
+
+  // 2. Ayam Geprek Gunadarma
+  {
+    id: "ayam-geprek-gunadarma",
+    name: "Ayam Geprek Gunadarma",
+    category: "Kuliner",
+    description: "Spesialis ayam geprek crispy dengan sambal bawang yang pedasnya nendang! Pilihan level pedas dari 1 sampai 5. Lokasi strategis dekat kampus.",
+    address: "Jl. Kelapa Dua Raya No.93, Klp. Dua, Kec. Kelapa Dua, Kab. Tangerang, Banten 15810",
+    distance: 0.1, 
+    rating: 4.7,
+    reviewCount: 210,
+    isOpen: true,
+    isVerified: true,
+    image: "/umkm/ayam_geprek1.jpeg", 
+    bannerImage: "/umkm/ayam_geprek1.jpeg",
+    phone: "+62 819-0011-2233",
+    responseTime: "Balas dalam 3 menit",
+    openingHours: "11:00 - 22:00",
+    priceRange: "Rp 18.000 - Rp 30.000",
+    deliveryTime: "15-20 min",
+    latitude: -6.232350, 
+    longitude: 106.615300,
+    taste: "350+ rating",
+    portion: "300+ rating",
+    packaging: "250+ rating",
+    isFavorite: true, 
+    products: [
+      {
+        id: "1",
+        name: "Ayam Geprek Dada + Nasi",
+        description: "Ayam geprek crispy bagian dada, sambal level 1-5, dan nasi putih.",
+        price: 25000,
+        image: "https://upload.wikimedia.org/wikipedia/commons/2/24/Ayam_geprek.png",
+        isAvailable: true,
+        category: "Ayam"
+      },
+      {
+        id: "2",
+        name: "Ayam Geprek Paha + Nasi",
+        description: "Ayam geprek crispy bagian paha, sambal level 1-5, dan nasi putih.",
+        price: 23000,
+        image: "https://i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/10a71c00-230f-4161-8fba-4bf04489300f_722a1ba8-4b9c-4877-9896-bd70320a6f84_Go-Biz_20200419_203339.jpeg",
+        isAvailable: true,
+        category: "Ayam"
+      },
+      {
+        id: "3",
+        name: "Es Teh Manis Jumbo",
+        description: "Es teh manis segar ukuran jumbo.",
+        price: 5000,
+        image: "https://nilaigizi.com/assets/images/produk/produk_1578041377.jpg",
+        isAvailable: true,
+        category: "Minuman"
+      }
+    ],
+    reviews: [
+      {
+        id: "1",
+        userName: "Rio W.",
+        userAvatar: "https://ui-avatars.com/api/?name=Rio+W&background=B99470&color=fff",
+        rating: 5,
+        date: "1 hari yang lalu",
+        comment: "Sambalnya juara! Pedasnya bikin nagih, ayamnya juga renyah.",
+        helpful: 25
+      }
+    ],
+    openingSchedules: [
+      { day: "Senin - Sabtu", hours: "11:00 - 22:00", isToday: true },
+      { day: "Minggu", hours: "Tutup", isToday: false }
+    ]
+  },
+
+  // 3. Laundry Coin
+  {
+    id: "laundry-coin-kilat",
+    name: "Laundry Coin Kilat Express",
+    category: "Jasa Servis",
+    description: "Layanan laundry koin 24 jam. Proses cepat, bersih, dan higienis. Tersedia mesin cuci dan pengering berkapasitas besar.",
+    address: "Jl. Kelapa Dua Raya No.93, Klp. Dua, Kec. Kelapa Dua, Kab. Tangerang, Banten 15810",
+    distance: 0.1,
+    rating: 4.5,
+    reviewCount: 78,
+    isOpen: true,
+    isVerified: true,
+    image: "/umkm/laundry1.jpeg",
+    bannerImage: "/umkm/laundry1.jpeg",
+    phone: "+62 811-3344-5566",
+    responseTime: "Balas dalam 15 menit",
+    openingHours: "Buka 24 Jam",
+    priceRange: "Rp 15.000 - Rp 45.000",
+    deliveryTime: "—",
+    latitude: -6.232200,
+    longitude: 106.615400,
+    taste: "—",
+    portion: "—",
+    packaging: "—",
+    isFavorite: false,
+    products: [
+      {
+        id: "1",
+        name: "Cuci Kering Lipat Reguler (3kg)",
+        description: "Layanan standar cuci, kering, dan lipat untuk maksimal 3kg pakaian.",
+        price: 25000,
+        image: "https://info.populix.co/articles/wp-content/uploads/2022/03/usaha-laundry.jpg",
+        isAvailable: true,
+        category: "Cuci"
+      },
+      {
+        id: "2",
+        name: "Cuci Koin Express (Per Mesin)",
+        description: "Menggunakan mesin sendiri, bayar per mesin cuci/pengering.",
+        price: 15000,
+        image: "https://info.populix.co/articles/wp-content/uploads/2022/03/usaha-laundry.jpg",
+        isAvailable: true,
+        category: "Koin"
+      },
+      {
+        id: "3",
+        name: "Setrika Saja (Per Kg)",
+        description: "Layanan setrika pakaian saja per kilogram.",
+        price: 8000,
+        image: "https://falishalaundryjogja.com/wp-content/uploads/2024/08/laundry-kilat-jogja-falisha.jpg",
+        isAvailable: true,
+        category: "Setrika"
+      }
+    ],
+    reviews: [
+      {
+        id: "1",
+        userName: "Dito P.",
+        userAvatar: "https://ui-avatars.com/api/?name=Dito+P&background=3E2C23&color=fff",
+        rating: 4,
+        date: "4 hari yang lalu",
+        comment: "Cepat dan hasilnya bersih. Mesin pengeringnya powerful!",
+        helpful: 5
+      }
+    ],
+    openingSchedules: [
+      { day: "Setiap Hari", hours: "Buka 24 Jam", isToday: true }
+    ]
+  },
+  {
+    id: "warung-jowo",
+    name: "Warung Jowo Gunadarma",
+    category: "Kuliner",
+    description: "Warung makan sederhana (Warteg style) dengan pilihan lauk pauk, sayur, dan masakan rumahan Jawa/Indonesia yang beragam. Harga sangat terjangkau, cocok untuk mahasiswa.",
+    address: "Jl. Kelapa Dua Raya No. 93 A, Klp. Dua, Kec. Kelapa Dua, Kab. Tangerang, Banten 15810",
+    distance: 0.1, 
+    rating: 4.5,
+    reviewCount: 130,
+    isOpen: true,
+    isVerified: false,
+    image: "/umkm/warteg1.jpeg",
+    bannerImage: "/umkm/warteg1.jpeg",
+    phone: "+62 821-4455-6677",
+    responseTime: "Balas dalam 10 menit",
+    openingHours: "07:00 - 20:00",
+    priceRange: "Rp 10.000 - Rp 30.000",
+    deliveryTime: "20-30 min",
+    latitude: -6.232400, 
+    longitude: 106.615250,
+    taste: "250+ rating",
+    portion: "200+ rating",
+    packaging: "150+ rating",
+    isFavorite: false,
+    products: [
+      {
+        id: "1",
+        name: "Nasi Sayur Asem & Ikan Asin",
+        description: "Paket nasi komplit dengan sayur asem segar dan lauk ikan asin.",
+        price: 18000,
+        image: "https://img-global.cpcdn.com/recipes/c512393244885590/400x400cq80/photo.jpg",
+        isAvailable: true,
+        category: "Paket Nasi"
+      },
+      {
+        id: "2",
+        name: "Ayam Goreng Laos",
+        description: "Potongan ayam goreng bumbu laos yang gurih dan renyah.",
+        price: 15000,
+        image: "https://www.astronauts.id/blog/wp-content/uploads/2023/04/Resep-Ayam-Goreng-Serundeng-ala-Rumahan-yang-Nggak-Kalah-Enak-dari-Restoran-1024x683.jpg",
+        isAvailable: true,
+        category: "Lauk Pauk"
+      },
+      {
+        id: "3",
+        name: "Telur Balado",
+        description: "Telur bulat dengan bumbu balado pedas manis.",
+        price: 7000,
+        image: "https://img.inews.co.id/files/networks/2024/01/20/9e58b_telur-balado.jpg",
+        isAvailable: true,
+        category: "Lauk Pauk"
+      }
+    ],
+    reviews: [
+      {
+        id: "1",
+        userName: "Joko Susilo",
+        userAvatar: "https://ui-avatars.com/api/?name=Joko+Susilo&background=B99470&color=fff",
+        rating: 5,
+        date: "2 jam yang lalu",
+        comment: "Masakannya beneran kayak masakan ibu di rumah, harganya juga ramah di kantong mahasiswa. Pilihan lauknya banyak!",
+        helpful: 18
+      }
+    ],
+    openingSchedules: [
+      { day: "Senin - Sabtu", hours: "07:00 - 20:00", isToday: true },
+      { day: "Minggu", hours: "07:00 - 15:00", isToday: false }
+    ]
+  }
 ];
 
 export const CATEGORIES: Category[] = [
