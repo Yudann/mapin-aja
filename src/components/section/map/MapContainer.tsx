@@ -5,15 +5,13 @@ import { Loader2 } from "lucide-react";
 import { DUMMY_UMKMS } from "@/data/umkm";
 import { UMKM } from "@/types/umkm";
 
-// Tambahkan di bagian atas file, setelah import
 const DEFAULT_CENTER = {
-  lat: -6.2088,
-  lng: 106.8456,
+  lat: -6.2323,
+  lng: 106.6153,
 };
 
-const DEFAULT_ZOOM = 13;
+const DEFAULT_ZOOM = 50;
 
-// Buat mapping sederhana untuk data peta
 const MAP_UMKMS = DUMMY_UMKMS.map((umkm) => ({
   id: umkm.id,
   name: umkm.name,
