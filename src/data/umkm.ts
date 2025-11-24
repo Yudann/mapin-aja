@@ -413,7 +413,7 @@ export const DUMMY_UMKMS: UMKM[] = [
   // 1. Warung Mie Aceh
   {
     id: "warung-mie-aceh-karawaci",
-    name: "Warung Mie Aceh ",
+    name: "Warung Mie Aceh ", 
     category: "Kuliner",
     description: "Spesialis masakan Aceh. Menyajikan Mie Aceh kuah dan goreng dengan bumbu khas rempah yang kaya. Juga tersedia Nasi Goreng, Mie Goreng, dan berbagai minuman segar.",
     address: "Jl. Kelapa Dua Raya No.93, Klp. Dua, Kec. Kelapa Dua, Kab. Tangerang, Banten 15810",
@@ -429,8 +429,8 @@ export const DUMMY_UMKMS: UMKM[] = [
     openingHours: "10:00 - 23:00",
     priceRange: "Rp 15.000 - Rp 40.000",
     deliveryTime: "20-30 min",
-    latitude: -6.232293,
-    longitude: 106.615340,
+    latitude: -6.232500,
+    longitude: 106.615100,
     discount: "5%",
     taste: "180+ rating",
     portion: "150+ rating",
@@ -501,7 +501,7 @@ export const DUMMY_UMKMS: UMKM[] = [
     priceRange: "Rp 18.000 - Rp 30.000",
     deliveryTime: "15-20 min",
     latitude: -6.232350, 
-    longitude: 106.615300,
+    longitude: 106.615500,
     taste: "350+ rating",
     portion: "300+ rating",
     packaging: "250+ rating",
@@ -552,7 +552,7 @@ export const DUMMY_UMKMS: UMKM[] = [
     ]
   },
 
-  // 3. Laundry Coin
+  // 3. Laundry Coin Kilat Express
   {
     id: "laundry-coin-kilat",
     name: "Laundry Coin Kilat Express",
@@ -571,8 +571,8 @@ export const DUMMY_UMKMS: UMKM[] = [
     openingHours: "Buka 24 Jam",
     priceRange: "Rp 15.000 - Rp 45.000",
     deliveryTime: "—",
-    latitude: -6.232200,
-    longitude: 106.615400,
+    latitude: -6.232150,
+    longitude: 106.615250,
     taste: "—",
     portion: "—",
     packaging: "—",
@@ -621,6 +621,8 @@ export const DUMMY_UMKMS: UMKM[] = [
       { day: "Setiap Hari", hours: "Buka 24 Jam", isToday: true }
     ]
   },
+  
+  // 4. Warung Jowo Gunadarma
   {
     id: "warung-jowo",
     name: "Warung Jowo Gunadarma",
@@ -639,8 +641,8 @@ export const DUMMY_UMKMS: UMKM[] = [
     openingHours: "07:00 - 20:00",
     priceRange: "Rp 10.000 - Rp 30.000",
     deliveryTime: "20-30 min",
-    latitude: -6.232400, 
-    longitude: 106.615250,
+    latitude: -6.232300, 
+    longitude: 106.615700,
     taste: "250+ rating",
     portion: "200+ rating",
     packaging: "150+ rating",
@@ -690,6 +692,7 @@ export const DUMMY_UMKMS: UMKM[] = [
       { day: "Minggu", hours: "07:00 - 15:00", isToday: false }
     ]
   }
+
 ];
 
 export const CATEGORIES: Category[] = [
